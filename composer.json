@@ -1,5 +1,5 @@
 {
-    "name": "lumos",
+    "name": "lukasmundt/lumosbaseapplication",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
     "keywords": [],
