@@ -2,20 +2,22 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Process;
 
 class Install extends Command
 {
     private $data = [
-        "db_host" => "",
-        "db_port" => "",
-        "db_name" => "",
-        "db_username" => "",
-        "db_password" => "",
-        "db_prefix" => "",
-        "admin_email" => "",
-        "admin_password" => "",
+        "db_host" => ["localhost", 'What is the host of the database?'],
+        "db_port" => ["3306", "What is the port of the database?"],
+        "db_name" => ["lumos", "What is the name of the database?"],
+        "db_username" => ["root", "Which username should be used to access the database?"],
+        "db_password" => ["", 'What is the user\'s password for the database?', ['secure', 'allowed_empty']],
+        "db_prefix" => ["", 'Which prefix should be used for the tables of the database?', ['allowed_empty']],
+        "admin_email" => ["", 'What is the email of the super-admin?'],
+        "admin_password" => ["", 'What is the password of the super-admin?', ['secure', 'allowed_empty']],
     ];
 
     private $allowed_empty = ['db_password', 'db_prefix'];
@@ -25,14 +27,14 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'install {--db-host= : Database host}
-                                    {--db-port=3306 : Port of the database host}
-                                    {--db-name= : Name of the database}
-                                    {--db-username=root : Username to use to access the database}
-                                    {--db-password= : Password to use to access the database}
-                                    {--db-prefix= : Table name prefix}
-                                    {--admin-email= : Admin user email}
-                                    {--admin-password= : Admin user password}
+    protected $signature = 'install {--db_host= : Database host}
+                                    {--db_port= : Port of the database host}
+                                    {--db_name= : Name of the database}
+                                    {--db_username= : Username to use to access the database}
+                                    {--db_password= : Password to use to access the database}
+                                    {--db_prefix= : Table name prefix}
+                                    {--admin_email= : Admin user email}
+                                    {--admin_password= : Admin user password}
                                     {--locale=de-DE : Language used in the app}';
 
     /**
@@ -42,16 +44,50 @@ class Install extends Command
      */
     protected $description = 'This is an installation command. It is asking for some configurations.';
 
-    private function checkArguments(){
-        // $this->info($this->option("db-host"));
-        if(empty($this->option("db-host")))
-        {
-            $response = $this->ask("What is the host of the database? ['localhost']");
-            $this->data['db_host'] = empty($response)?'localhost':$response;
-        }else{
-            $this->data['db_host'] = $this->option("db-host");
+    private function checkArgument(string $argumentName)
+    {
+        // if the first value in the array of a specific argument in the data array isn't null there is a default value
+        // the second value in the array of an argument is the question which will be displayed in the terminal
+        if (empty($this->option($argumentName))) {
+            $first = true;
+            $allowed_empty = in_array('allowed_empty', array_key_exists(2, $this->data[$argumentName]) ? $this->data[$argumentName][2] : []);
+            $question = $this->data[$argumentName][1] . (empty($this->data[$argumentName][0]) ? "" : " [" . $this->data[$argumentName][0] . "]");
+
+            if (in_array('secure', array_key_exists(2, $this->data[$argumentName]) ? $this->data[$argumentName][2] : [])) {
+                while ((empty($this->data[$argumentName][0]) && !$allowed_empty) || $first) {
+                    $first = false;
+                    $response = $this->secret($question);
+                    if (empty($response) && empty($this->data[$argumentName][0]) && !$allowed_empty) {
+                        $this->error('An input is required.');
+                    } else {
+                        $this->data[$argumentName][0] = empty($response) ? $this->data[$argumentName][0] : $response;
+                        // $this->info('set to'.$response);
+                    }
+                }
+            } else {
+                while ((empty($this->data[$argumentName][0]) && !$allowed_empty) || $first) {
+                    $first = false;
+                    $response = $this->ask($question);
+                    if (empty($response) && empty($this->data[$argumentName][0]) && !$allowed_empty) {
+                        $this->error('An input is required.');
+                    } else {
+                        $this->data[$argumentName][0] = empty($response) ? $this->data[$argumentName][0] : $response;
+                        $this->info('Set to: ' . $this->data[$argumentName][0]);
+                    }
+                }
+            }
+
+        } else {
+            $this->data[$argumentName] = $this->option($argumentName);
         }
-        $this->info($this->data['db_host']);
+    }
+
+    private function checkArguments()
+    {
+        foreach (array_keys($this->data) as $value) {
+            // $this->info($value);
+            $this->checkArgument($value);
+        }
     }
 
     /**
@@ -60,11 +96,27 @@ class Install extends Command
     public function handle()
     {
         $this->checkArguments();
-        // \App\Models\User::factory()->create([
-        //         'name' => 'Admin',
-        //         'email' => 'test@example.com',
-        //     ]);
-        // $this->info($this->option("db-host"));
-        // $this->info(config());
+        // fill in the collected data in the .env file
+        // putenv('DB_HOST='.$this->data['db_host'][0]);
+        // config(['database.connections.mysql.host' => $this->data['db_host'][0]]);
+
+        // execute migrations
+        $this->info('Migrating...');
+        Artisan::call('migrate');
+
+
+        // Admin-User is created
+        $this->info('Create admin account ['.$this->data['admin_email'][0]."]");
+        \App\Models\User::factory()->create([
+            'name' => 'Admin',
+            'email' => $this->data['admin_email'][0],
+            'password' => $this->data['admin_password'][0],
+            'status' => 'active',
+        ]);
+
+        $this->info('Creating the basic set of roles...');
+        Artisan::call('create-basic-role-set');
+
+        
     }
 }
