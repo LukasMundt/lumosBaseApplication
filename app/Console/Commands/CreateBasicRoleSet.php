@@ -28,6 +28,7 @@ class CreateBasicRoleSet extends Command
     public function handle()
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        setPermissionsTeamId(0);
 
         Permission::findOrCreate('create-role','web');
         Permission::findOrCreate('edit-role','web');
@@ -44,7 +45,7 @@ class CreateBasicRoleSet extends Command
         Permission::findOrCreate('edit-team','web');
         Permission::findOrCreate('delete-team','web');
 
-        Permission::findOrCreate('use-api','api');
+        // Permission::findOrCreate('use-api','api');
 
         $role = Role::findOrCreate('admin','web');
         $role->syncPermissions(['create-user','edit-user','delete-user', 'create-team', 'edit-team', 'delete-team']);
