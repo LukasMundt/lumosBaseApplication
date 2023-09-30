@@ -23,7 +23,7 @@
     "dependencies": {
         "@heroicons/react": "^2.0.18",
         "@tanstack/react-table": "^8.9.3",
-        "flowbite-react": "^0.4.10",
+        "flowbite-react": "^0.4.11",
         "react-select": "^5.7.4"
     }
 }

@@ -19,8 +19,19 @@ export default class Index extends React.Component {
                 <div className="py-12">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                         <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow sm:rounded-lg">
-                            Diese Seite ist das Admin-Dashboard! Hier werden mal Karten angeordnet! Man kann weiter zu den Usern, Rollen und den Teams.
-                            <br/><br/><Link href={route('admin.users.index')}>Users-Index</Link><br/>
+                            Diese Seite ist das Admin-Dashboard! Hier werden mal
+                            Karten angeordnet! Man kann weiter zu den Usern,
+                            Rollen und den Teams.
+                            <br />
+                            <br />
+                            <Link href={route("admin.users.index")}>
+                                Users-Index
+                            </Link>
+                            <br />
+                            <br />
+                            <Link href={route("admin.roles.index")}>
+                                Roles-Index
+                            </Link>
                         </div>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ export default class Edit extends React.Component {
     render() {
         const { auth, user} = this.props;
 
-        console.log(user);
+        console.log(this.props);
 
         return (
             <AuthenticatedLayout

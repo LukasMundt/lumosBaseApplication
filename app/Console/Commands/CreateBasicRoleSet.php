@@ -33,6 +33,7 @@ class CreateBasicRoleSet extends Command
         Permission::findOrCreate('create-role','web');
         Permission::findOrCreate('edit-role','web');
         Permission::findOrCreate('delete-role','web');
+        Permission::findOrCreate('view-roles', 'web');
 
         Permission::findOrCreate('edit-admin','web');
         Permission::findOrCreate('delete-admin','web');
@@ -40,6 +41,7 @@ class CreateBasicRoleSet extends Command
         Permission::findOrCreate('create-user','web');
         Permission::findOrCreate('edit-user','web');
         Permission::findOrCreate('delete-user','web');
+        // Permission::findOrCreate('view-all-users-list', 'web');
 
         Permission::findOrCreate('create-team','web');
         Permission::findOrCreate('edit-team','web');

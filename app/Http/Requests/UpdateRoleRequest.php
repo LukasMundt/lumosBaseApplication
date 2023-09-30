@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\HasPermissionsOfRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
-class UpdateUserRequest extends FormRequest
+class UpdateRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +14,7 @@ class UpdateUserRequest extends FormRequest
     public function authorize(): bool
     {
         setPermissionsTeamId(0);
-        return Auth::user()->hasPermissionTo('edit-user');
+        return Auth::user()->hasPermissionTo('edit-role');
     }
 
     /**
@@ -27,17 +25,14 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => [
+            'name' => [
                 'required',
-                'email',
-                Rule::unique('users', 'email')->ignore($this->user->id),
+                'string',
+                'max:255',
+                Rule::unique('roles', 'name')->ignore($this->role->id),
             ],
-            'status' => 'required|string|max:255',
-            'roles' => [
-                'array',
-                new HasPermissionsOfRole
-            ],
+            'permissions' => 'required|array',
+            // 'team' => 'required|array'
         ];
     }
 }

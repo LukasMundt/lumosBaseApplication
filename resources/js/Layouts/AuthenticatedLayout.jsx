@@ -6,6 +6,8 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import { Button } from "flowbite-react";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
+import NavDropdown from "@/Components/NavDropdown";
+import NavDropdownItem from "@/Components/NavDropdownItem";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -32,6 +34,18 @@ export default function Authenticated({ user, header, children }) {
                                 >
                                     Dashboard
                                 </NavLink>
+                                {/* <NavLink
+                                    href={route("admin.index")}
+                                    active={route().current().includes('admin')}
+                                > */}
+                                <NavDropdown
+                                    label="Verwaltung"
+                                    active={route().current().includes("admin")}
+                                >
+                                    <NavDropdownItem href='admin.users.index'>Benutzer-Übersicht</NavDropdownItem>
+                                    <NavDropdownItem href='admin.roles.index'>Rollen-Übersicht</NavDropdownItem>
+                                </NavDropdown>
+                                {/* </NavLink> */}
                             </div>
                         </div>
 
@@ -39,7 +53,7 @@ export default function Authenticated({ user, header, children }) {
                             <div className="ml-3 relative flex">
                                 <Button
                                     className={
-                                        "text-gray-800 dark:text-gray-200"
+                                        "text-gray-800 dark:text-gray-200 p-0"
                                     }
                                     onClick={() =>
                                         document.documentElement.classList.toggle(
@@ -47,8 +61,12 @@ export default function Authenticated({ user, header, children }) {
                                         )
                                     }
                                 >
-                                    <SunIcon className={"w-5 hidden dark:flex"} />
-                                    <MoonIcon className={"w-5 dark:hidden flex"} />
+                                    <SunIcon
+                                        className={"w-5 hidden dark:flex"}
+                                    />
+                                    <MoonIcon
+                                        className={"w-5 dark:hidden flex"}
+                                    />
                                 </Button>
                                 <Dropdown>
                                     <Dropdown.Trigger>

@@ -4,26 +4,55 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
-import { Select } from "flowbite-react";
+import { Select as TSelect } from "flowbite-react";
+import Select from "react-select";
 
-export default function EditForm({
-    mustVerifyEmail,
-    status,
-    className = "",
-}) {
-    const user = usePage().props.user;
+export default function EditForm({ className = "" }) {
+    const { user, roles } = usePage().props;
+    console.log(user);
+
+    const rolesSelect = [];
+    roles.map((role) => {
+        rolesSelect.push({
+            key: role.id,
+            value: role.id,
+            label: role.name,
+        });
+    });
+
+    const rolesDefault = [];
+    user.roles.map((role) => {
+        // console.log(role)
+        rolesDefault.push({
+            key: role.id,
+            value: role.id,
+            label: role.name,
+        });
+    });
+    console.log(rolesDefault);
+
+    const tempUserRoles = [];
+    user.roles.map((role) => {
+        tempUserRoles.push({
+            key: role.id,
+            value: role.id,
+            label: role.name,
+        });
+    });
 
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
             email: user.email,
             status: user.status,
+            roles: tempUserRoles,
         });
 
     const submit = (e) => {
         e.preventDefault();
+        console.log(data);
 
-        post(route("admin.users.update", {user: user.id}));
+        post(route("admin.users.update", { user: user.id }));
     };
 
     return (
@@ -64,7 +93,7 @@ export default function EditForm({
                 <div>
                     <InputLabel htmlFor="status" value="Status" />
 
-                    <Select
+                    <TSelect
                         id="status"
                         type="text"
                         className="mt-1 block w-full"
@@ -72,39 +101,28 @@ export default function EditForm({
                         onChange={(e) => setData("status", e.target.value)}
                         required
                     >
-                        <option>
-                            active
-                        </option>
-                        <option>
-                            inactive
-                        </option>
-                    </Select>
+                        <option>active</option>
+                        <option>inactive</option>
+                    </TSelect>
 
                     <InputError className="mt-2" message={errors.status} />
                 </div>
 
-                {/* {mustVerifyEmail && user.email_verified_at === null && (
-                    <div>
-                        <p className="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                            The email address is unverified.
-                            <Link
-                                href={route("verification.send")}
-                                method="post"
-                                as="button"
-                                className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
-                            >
-                                Click here to re-send the verification email.
-                            </Link>
-                        </p>
-
-                        {status === "verification-link-sent" && (
-                            <div className="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                                A new verification link has been sent to your
-                                email address.
-                            </div>
-                        )}
+                <div>
+                    <InputLabel htmlFor="roles" value="Rollen" />
+                    <div className="text-gray-800">
+                        <Select
+                            id="roles"
+                            defaultValue={rolesDefault}
+                            options={rolesSelect}
+                            isMulti
+                            isSearchable
+                            isClearable
+                            onChange={(choice) => setData("roles", choice)}
+                        />
                     </div>
-                )} */}
+                    <InputError className="mt-2" message={errors.roles} />
+                </div>
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>

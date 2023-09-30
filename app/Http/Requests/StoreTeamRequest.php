@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\HasPermissionsOfRole;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class StoreUserRequest extends FormRequest
+class StoreTeamRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,8 +12,7 @@ class StoreUserRequest extends FormRequest
     public function authorize(): bool
     {
         setPermissionsTeamId(0);
-        return Auth::user()->hasPermissionTo('create-user');
-        // return true;
+        return false;
     }
 
     /**
@@ -26,13 +23,7 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:App\Models\User,email',
-            'status' => 'required|string|max:255',
-            'roles' => [
-                'array',
-                new HasPermissionsOfRole
-            ],
+            //
         ];
     }
 }

@@ -7,9 +7,11 @@ use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Database\Factories\UserFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -18,7 +20,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->deletedUsers){
+        setPermissionsTeamId(0);
+        if ($request->deletedUsers) {
             return Inertia::render('Admin/Users/Index', ['users' => User::withTrashed()->with('roles')->get()]);
         }
         return Inertia::render('Admin/Users/Index', ['users' => User::with('roles')->get()]);
@@ -29,7 +32,11 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        return Inertia::render('Admin/Users/Create');
+        setPermissionsTeamId(0);
+        if (!Auth::user()->hasPermissionTo('create-user')) {
+            abort(403);
+        }
+        return Inertia::render('Admin/Users/Create', ['roles' => Role::all()]);
     }
 
     /**
@@ -37,7 +44,12 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        setPermissionsTeamId(0);
+        if (!Auth::user()->hasPermissionTo('create-user')) {
+            abort(403);
+        }
         User::factory()->createOne($request->validated());
+
         return redirect(route("admin.users.index"));
     }
 
@@ -54,7 +66,29 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return Inertia::render('Admin/Users/Edit', ['user' => $user]);
+        setPermissionsTeamId(0);
+        if (!Auth::user()->hasPermissionTo('edit-user')) {
+            abort(403);
+        }
+        
+        // Es werden nur globale Rollen zur Verfügung gestellt. Das lässt sich an der Team-Id 0 erkennen.
+        $tempRoles = Role::where('team_id', 0)->get();
+        // Rollen, die der aktuelle Benutzer auch verleihen kann
+        $roles = [];
+        foreach ($tempRoles as $role) {
+            if (Auth::user()->hasAllPermissions($role->permissions)) {
+                $roles[] = $role;
+            }
+        }
+
+
+        return Inertia::render(
+            'Admin/Users/Edit',
+            [
+                'user' => $user->load('roles'),
+                'roles' => $roles,
+            ]
+        );
     }
 
     /**
@@ -62,8 +96,19 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        Log::debug("The update-function in the controller got called.");
+        setPermissionsTeamId(0);
+        if (!Auth::user()->hasPermissionTo('edit-user')) {
+            abort(403);
+        }
+
         $user->update($request->validated());
+
+        
+        $roles = [];
+        foreach ($request->validated('roles') as $role) {
+            $roles[] = $role['value'];
+        }
+        $user->syncRoles($roles);
         return redirect(route("admin.users.index"));
     }
 
@@ -72,10 +117,26 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        setPermissionsTeamId(0);
+        // Zunächst wird überprüft ob der zu löschende Nutzer eine der beiden Admin-
+        // Rollen hat. Ist das der Fall muss der löschende Nutzer die Berechtigung dazu
+        // haben einen Admin zu löschen. Ist der zu löschende Nutzer kein Admin
+        // muss der Löschende dennoch das Recht dazu haben Nutzer zu löschen.
+        if (
+            ($user->hasRole('admin') || $user->hasRole('super-admin')) &&
+            Auth::user()->hasPermissionTo('delete-admin')
+        ) {
+            $user->delete();
+
+        } else if (Auth::user()->hasPermissionTo('delete-user')) {
+            $user->delete();
+        } else {
+            abort(403);
+        }
     }
 
-    public function restore(User $user){
-        return $user->restore();
+    public function restore(User $user)
+    {
+        $user->restore();
     }
 }

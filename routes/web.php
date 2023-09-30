@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Foundation\Application;
@@ -39,15 +40,32 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
-Route::middleware('auth')->prefix("admin")->group(function () {
+/**
+ * Routes to manage the users
+ */
+Route::middleware(['auth', 'verified'])->prefix("admin")->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
     Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
-    Route::post('users/{user}',[UserController::class,'update'])->name('admin.users.update');
+    Route::post('users/{user}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.delete');
     Route::get('/users/{user}/restore', [UserController::class, 'restore'])->name('admin.users.restore');
+});
+
+/**
+ * Routes to manage the roles
+ */
+Route::middleware(['auth', 'verified'])->prefix("admin")->group(function () {
+    Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+    Route::get('/roles/{role}', [RoleController::class, 'show'])->name('admin.roles.show');
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
+    Route::post('roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.delete');
+    Route::patch('/roles/{role}/restore', [RoleController::class, 'restore'])->name('admin.roles.restore');
 });
 
 require __DIR__ . '/auth.php';
