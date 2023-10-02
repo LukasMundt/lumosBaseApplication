@@ -1,19 +1,19 @@
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
+import InputError from "@/Components/Inputs/InputError";
+import InputLabel from "@/Components/Inputs/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
+import TextInput from "@/Components/Inputs/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
-import { Select as TSelect } from "flowbite-react";
-import Select from "react-select";
+import { Select } from "flowbite-react";
+import ReactSelect from "@/Components/Inputs/ReactSelect";
 
 export default function EditForm({ className = "" }) {
-    const { user, roles } = usePage().props;
+    const { user, roles, teams} = usePage().props;
     console.log(user);
 
-    const rolesSelect = [];
+    const rolesOptions = [];
     roles.map((role) => {
-        rolesSelect.push({
+        rolesOptions.push({
             key: role.id,
             value: role.id,
             label: role.name,
@@ -22,21 +22,28 @@ export default function EditForm({ className = "" }) {
 
     const rolesDefault = [];
     user.roles.map((role) => {
-        // console.log(role)
         rolesDefault.push({
             key: role.id,
             value: role.id,
             label: role.name,
         });
     });
-    console.log(rolesDefault);
 
-    const tempUserRoles = [];
-    user.roles.map((role) => {
-        tempUserRoles.push({
-            key: role.id,
-            value: role.id,
-            label: role.name,
+    const teamsOptions = [];
+    teams.map((team) => {
+        teamsOptions.push({
+            key: team.id,
+            value: team.id,
+            label: team.name,
+        });
+    });
+
+    const teamsDefault = [];
+    user.teams.map((team) => {
+        teamsDefault.push({
+            // key: team.id,
+            value: team.id,
+            label: team.name,
         });
     });
 
@@ -45,7 +52,8 @@ export default function EditForm({ className = "" }) {
             name: user.name,
             email: user.email,
             status: user.status,
-            roles: tempUserRoles,
+            roles: rolesDefault,
+            teams: teamsDefault,
         });
 
     const submit = (e) => {
@@ -93,7 +101,7 @@ export default function EditForm({ className = "" }) {
                 <div>
                     <InputLabel htmlFor="status" value="Status" />
 
-                    <TSelect
+                    <Select
                         id="status"
                         type="text"
                         className="mt-1 block w-full"
@@ -103,7 +111,7 @@ export default function EditForm({ className = "" }) {
                     >
                         <option>active</option>
                         <option>inactive</option>
-                    </TSelect>
+                    </Select>
 
                     <InputError className="mt-2" message={errors.status} />
                 </div>
@@ -111,10 +119,10 @@ export default function EditForm({ className = "" }) {
                 <div>
                     <InputLabel htmlFor="roles" value="Rollen" />
                     <div className="text-gray-800">
-                        <Select
+                        <ReactSelect
                             id="roles"
                             defaultValue={rolesDefault}
-                            options={rolesSelect}
+                            options={rolesOptions}
                             isMulti
                             isSearchable
                             isClearable
@@ -122,6 +130,22 @@ export default function EditForm({ className = "" }) {
                         />
                     </div>
                     <InputError className="mt-2" message={errors.roles} />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="teams" value="Teams" />
+                    <div className="text-gray-800">
+                        <ReactSelect
+                            id="teams"
+                            defaultValue={data.teams}
+                            options={teamsOptions}
+                            isMulti
+                            isSearchable
+                            isClearable
+                            onChange={(choice) => setData("teams", choice)}
+                        />
+                    </div>
+                    <InputError className="mt-2" message={errors.teams} />
                 </div>
 
                 <div className="flex items-center gap-4">

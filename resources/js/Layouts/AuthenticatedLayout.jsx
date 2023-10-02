@@ -1,13 +1,14 @@
 import { useState } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
-import NavLink from "@/Components/NavLink";
+import NavLink from "@/Components/Navigation/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import { Button } from "flowbite-react";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
-import NavDropdown from "@/Components/NavDropdown";
-import NavDropdownItem from "@/Components/NavDropdownItem";
+import NavDropdown from "@/Components/Navigation/NavDropdown";
+import NavDropdownItem from "@/Components/Navigation/NavDropdownItem";
+import NavDropdownDivider from "@/Components/Navigation/NavDropdownDivider";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -34,18 +35,25 @@ export default function Authenticated({ user, header, children }) {
                                 >
                                     Dashboard
                                 </NavLink>
-                                {/* <NavLink
-                                    href={route("admin.index")}
-                                    active={route().current().includes('admin')}
-                                > */}
+
                                 <NavDropdown
                                     label="Verwaltung"
                                     active={route().current().includes("admin")}
                                 >
-                                    <NavDropdownItem href='admin.users.index'>Benutzer-Übersicht</NavDropdownItem>
-                                    <NavDropdownItem href='admin.roles.index'>Rollen-Übersicht</NavDropdownItem>
+                                    <NavDropdownItem href="admin.index">
+                                        Übersicht
+                                    </NavDropdownItem>
+                                    {/* <NavDropdownDivider /> */}
+                                    <NavDropdownItem href="admin.users.index">
+                                        Benutzer-Übersicht
+                                    </NavDropdownItem>
+                                    <NavDropdownItem href="admin.teams.index">
+                                        Team-Übersicht
+                                    </NavDropdownItem>
+                                    <NavDropdownItem href="admin.roles.index">
+                                        Rollen-Übersicht
+                                    </NavDropdownItem>
                                 </NavDropdown>
-                                {/* </NavLink> */}
                             </div>
                         </div>
 

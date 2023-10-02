@@ -1,7 +1,7 @@
 import { Head, Link } from "@inertiajs/react";
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Breadcrumb, Button, Checkbox, Label, Table } from "flowbite-react";
+import { Table } from "flowbite-react";
 import {
     ArrowPathIcon,
     EyeIcon,
@@ -10,32 +10,29 @@ import {
     PencilSquareIcon,
     TrashIcon,
 } from "@heroicons/react/24/solid";
-import PrimaryButton from "@/Components/PrimaryButton";
-import CreatableSelect from "react-select/creatable";
 import PrimaryLinkButton from "@/Components/PrimaryLinkButton";
 
 export default class Index extends React.Component {
     render() {
-        const { auth, roles } = this.props;
-
-        console.log(roles);
+        const { auth, teams } = this.props;
+        console.log(teams);
 
         return (
             <AuthenticatedLayout
                 user={auth.user}
                 header={
                     <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        Rollen
+                        Teams
                     </h2>
                 }
             >
-                <Head title="Rollen" />
+                <Head title="Teams" />
 
                 <div className="py-12">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-gray-800 dark:text-gray-200">
                         <div className="w-full flex justify-end">
-                            <PrimaryLinkButton href={route("admin.roles.create")}>
-                                Rolle erstellen
+                            <PrimaryLinkButton href={route("admin.teams.create")}>
+                                Team erstellen
                             </PrimaryLinkButton>
                         </div>
 
@@ -44,14 +41,13 @@ export default class Index extends React.Component {
                                 <Table.Head>
                                     <Table.HeadCell>#</Table.HeadCell>
                                     <Table.HeadCell>Name</Table.HeadCell>
-                                    {/* <Table.HeadCell>Team</Table.HeadCell> */}
                                     <Table.HeadCell>
-                                        Berechtigungen
+                                        Beschreibung
                                     </Table.HeadCell>
                                 </Table.Head>
                                 <Table.Body>
-                                    {roles.map((role) => (
-                                        <Table.Row key={role.id}>
+                                    {teams.map((team) => (
+                                        <Table.Row key={team.id}>
                                             <Table.Cell className="flex gap-2">
                                                 {/* <a
                                                     href={route(
@@ -68,9 +64,9 @@ export default class Index extends React.Component {
                                                 </a> */}
                                                 <a
                                                     href={route(
-                                                        "admin.roles.edit",
+                                                        "admin.teams.edit",
                                                         {
-                                                            role: role.id,
+                                                            team: team.id,
                                                         }
                                                     )}
                                                     // hidden={
@@ -81,21 +77,21 @@ export default class Index extends React.Component {
                                                 </a>
                                                 <Link
                                                     href={route(
-                                                        "admin.roles.delete",
-                                                        { role: role.id }
+                                                        "admin.teams.delete",
+                                                        { team: team.id }
                                                     )}
                                                     method="delete"
                                                     as="button"
                                                     type="button"
                                                     title="delete"
-                                                    hidden={!role.deletable}
+                                                    hidden={team.id === 0}
                                                 >
                                                     <TrashIcon className="w-5 text-red-500" />
                                                 </Link>
                                             </Table.Cell>
-                                            <Table.Cell>{role.name}</Table.Cell>
-                                            {/* <Table.Cell>{role.team}</Table.Cell> */}
-                                            <Table.Cell>
+                                            <Table.Cell>{team.name}</Table.Cell>
+                                            <Table.Cell>{team.description}</Table.Cell>
+                                            {/* <Table.Cell>
                                                 <ul>
                                                     {role.permissions.length >
                                                     0 ? (
@@ -117,7 +113,7 @@ export default class Index extends React.Component {
                                                         <></>
                                                     )}
                                                 </ul>
-                                            </Table.Cell>
+                                            </Table.Cell> */}
                                         </Table.Row>
                                     ))}
                                 </Table.Body>

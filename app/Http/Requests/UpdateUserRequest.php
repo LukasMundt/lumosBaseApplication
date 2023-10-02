@@ -38,6 +38,9 @@ class UpdateUserRequest extends FormRequest
                 'array',
                 new HasPermissionsOfRole
             ],
+            'teams' => [
+                'array',
+            ],
         ];
     }
 }

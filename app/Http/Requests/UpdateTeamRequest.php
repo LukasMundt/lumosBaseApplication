@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateTeamRequest extends FormRequest
 {
@@ -11,7 +13,8 @@ class UpdateTeamRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        setPermissionsTeamId(0);
+        return Auth::user()->hasPermissionTo('edit-team');
     }
 
     /**
@@ -22,7 +25,13 @@ class UpdateTeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('teams', 'name')->ignore($this->team->id),
+            ],
+            'description' => 'required|string|max:255',
         ];
     }
 }

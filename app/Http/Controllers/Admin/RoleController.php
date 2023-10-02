@@ -22,9 +22,9 @@ class RoleController extends Controller
 
     public function create()
     {
-        if (!Auth::user()->hasPermissionTo('create-role')) {
-            abort(403);
-        }
+        setPermissionsTeamId(0);
+        abort_if(!Auth::user()->hasPermissionTo('create-role'), 403, 'Du hast nicht die nötige Berechtigung!');
+        
         return Inertia::render(
             'Admin/Roles/Create',
             ['permissions' => Permission::all()]
@@ -36,10 +36,9 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        if (!Auth::user()->hasPermissionTo('create-role')) {
-            abort(403);
-        }
         setPermissionsTeamId(0);
+        abort_if(!Auth::user()->hasPermissionTo('create-role'), 403, 'Du hast nicht die nötige Berechtigung!');
+
         $role = new Role();
         $role->name = $request->validated('name');
         $role->team_id = 0;
@@ -65,9 +64,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         setPermissionsTeamId(0);
-        if (!Auth::user()->hasPermissionTo('edit-role')) {
-            abort(403);
-        }
+        abort_if(!Auth::user()->hasPermissionTo('edit-role'), 403, 'Du hast nicht die nötige Berechtigung!');
 
         return Inertia::render(
             'Admin/Roles/Edit',
@@ -84,10 +81,8 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         setPermissionsTeamId(0);
-        if (!Auth::user()->hasPermissionTo('edit-role')) {
-            abort(403);
-        }
-        setPermissionsTeamId(0);
+        abort_if(!Auth::user()->hasPermissionTo('edit-role'), 403, 'Du hast nicht die nötige Berechtigung!');
+
         $role->name = $request->validated('name');
         $role->team_id = 0;
         // $role->deletable = 1;
@@ -111,7 +106,7 @@ class RoleController extends Controller
         if ($role->deletable && Auth::user()->hasPermissionTo('delete-role')) {
             $role->delete();
         } else {
-            abort(403);
+            abort(403, 'Du hast nicht die nötige Berechtigung!');
         }
     }
 }

@@ -1,12 +1,13 @@
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
+import InputError from "@/Components/Inputs/InputError";
+import InputLabel from "@/Components/Inputs/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
+import TextInput from "@/Components/Inputs/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import { Select as NormalSelect } from "flowbite-react";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import ReactSelect from "@/Components/Inputs/ReactSelect";
 // import { Select as SelectMultiple } from "react-select";
 
 export default function EditForm({ status, className = "" }) {
@@ -87,7 +88,7 @@ export default function EditForm({ status, className = "" }) {
                     <InputLabel htmlFor="permissions" value="Berechtigungen" />
 
                     <div className="text-gray-800">
-                        <Select
+                        <ReactSelect
                             id="permissions"
                             options={permissionsSelect}
                             defaultValue={data.permissions}

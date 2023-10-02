@@ -33,6 +33,9 @@ class StoreUserRequest extends FormRequest
                 'array',
                 new HasPermissionsOfRole
             ],
+            'teams' => [
+                'array',
+            ],
         ];
     }
 }

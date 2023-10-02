@@ -4,32 +4,32 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/Inputs/TextInput";
 import { useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
-import CreatableSelect from "react-select/creatable";
+// import Select from "react-select";
+import TextareaInput from "@/Components/Inputs/TextareaInput";
 import ReactSelect from "@/Components/Inputs/ReactSelect";
 
 export default function CreateForm({ status, className = "" }) {
-    const { user, permissions } = usePage().props;
-    console.log(permissions);
-    const permissionsSelect = [];
-    permissions.map((permission) => {
-        permissionsSelect.push({
-            value: permission.id,
-            label: permission.name + " (" + permission.guard_name + ")",
+    const { users } = usePage().props;
+
+    const usersOptions = [];
+    users.map((user) => {
+        usersOptions.push({
+            value: user.id,
+            label: user.name + " (" + user.email + ")",
         });
     });
 
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             name: "",
-            permissions: {},
-            team: {},
+            description: "",
         });
 
     const submit = (e) => {
         e.preventDefault();
         console.log(e);
 
-        post(route("admin.roles.store"));
+        post(route("admin.teams.store"));
     };
 
     return (
@@ -52,49 +52,36 @@ export default function CreateForm({ status, className = "" }) {
                     <InputError className="mt-2" message={errors.name} />
                 </div>
 
-                {/* Team/Gruppe */}
-                <div className="hidden">
-                    <InputLabel htmlFor="team" value="Gruppe" />
-                    {/* <TextInput
-                        id="team"
-                        // type="email"
-                        className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData("team", e.target.value)}
-                        required
-                        autoComplete="username"
-                    /> */}
+                {/* Beschreibung */}
+                <div>
+                    <InputLabel htmlFor="description" value="Beschreibung" />
 
-                    <div className="text-gray-800">
-                        <CreatableSelect
-                            id="team"
-                            // options={options}
-                            isMulti
-                            isSearchable
-                            isClearable
-                            onChange={(choice) => setData("team", choice)}
-                        />
-                    </div>
-                    <InputError className="mt-2" message={errors.team} />
+                    <TextareaInput
+                        id="description"
+                        className="mt-1 block w-full"
+                        value={data.description}
+                        maxLength={255}
+                        onChange={(e) => setData("description", e.target.value)}
+                        required
+                    />
+
+                    <InputError className="mt-2" message={errors.description} />
                 </div>
 
+                {/* Benutzer */}
                 <div>
-                    <InputLabel htmlFor="permissions" value="Berechtigungen" />
+                    <InputLabel htmlFor="users" value="Benutzer" />
 
-                    <div className="text-gray-800">
-                        <ReactSelect
-                            id="permissions"
-                            options={permissionsSelect}
-                            isMulti
-                            isSearchable
-                            isClearable
-                            onChange={(choice) =>
-                                setData("permissions", choice)
-                            }
-                        />
-                    </div>
+                    <ReactSelect
+                        id="users"
+                        options={usersOptions}
+                        isMulti
+                        isSearchable
+                        isClearable
+                        onChange={(choice) => setData("users", choice)}
+                    />
 
-                    <InputError className="mt-2" message={errors.permissions} />
+                    <InputError className="mt-2" message={errors.users} />
                 </div>
 
                 <div className="flex items-center gap-4">
