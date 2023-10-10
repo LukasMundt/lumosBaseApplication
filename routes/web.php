@@ -66,7 +66,7 @@ Route::middleware(['auth', 'verified'])->prefix("admin")->group(function () {
     Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
     Route::post('roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.delete');
-    Route::patch('/roles/{role}/restore', [RoleRoleControllerController::class, 'restore'])->name('admin.roles.restore');
+    Route::patch('/roles/{role}/restore', [RoleController::class, 'restore'])->name('admin.roles.restore');
 });
 
 /**

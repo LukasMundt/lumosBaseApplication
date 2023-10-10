@@ -8,6 +8,7 @@ export default {
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.jsx",
+        "../../modules/**/src/resources/js/Pages/**/*.jsx",
         "./node_modules/flowbite/**/*.js",
     ],
 

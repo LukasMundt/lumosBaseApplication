@@ -162,6 +162,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Lukasmundt\Akquise\Providers\AkquiseProvider::class,
 
+
         /*
          * Application Service Providers...
          */
