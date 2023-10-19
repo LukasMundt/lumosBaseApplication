@@ -8,8 +8,10 @@ export default {
         "./storage/framework/views/*.php",
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.jsx",
-        "../../modules/**/src/resources/js/Pages/**/*.jsx",
         "./node_modules/flowbite/**/*.js",
+        "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+        // auch aus allen modulen werden die Klassen der css-Datei hinzugefügt
+        "./modules/**/*.jsx",
     ],
 
     theme: {

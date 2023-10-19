@@ -38,7 +38,7 @@ export default function Authenticated({ user, header, children }) {
 
                                 <NavDropdown
                                     label="Verwaltung"
-                                    active={route().current().includes("admin")}
+                                    // active={route().current().includes("admin")}
                                 >
                                     <NavDropdownItem href="admin.index">
                                         Übersicht
@@ -60,8 +60,9 @@ export default function Authenticated({ user, header, children }) {
                         <div className="hidden sm:flex sm:items-center sm:ml-6">
                             <div className="ml-3 relative flex">
                                 <Button
+                                    color="gray"
                                     className={
-                                        "text-gray-800 dark:text-gray-200 p-0"
+                                        "hidden text-gray-800 dark:text-gray-200 p-0"
                                     }
                                     onClick={() =>
                                         document.documentElement.classList.toggle(

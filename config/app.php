@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Berlin',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'de',
 
     /*
     |--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'de',
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'de_DE',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,6 +161,8 @@ return [
          */
         Spatie\Permission\PermissionServiceProvider::class,
         Lukasmundt\Akquise\Providers\AkquiseProvider::class,
+        // Lukasmundt\Finances\Providers\FinancesProvider::class,
+        Lukasmundt\ProjectCI\Providers\ProjectCIProvider::class,
 
 
         /*
@@ -171,6 +173,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\NavigationServiceProvider::class,
     ])->toArray(),
 
     /*
