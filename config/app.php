@@ -163,6 +163,7 @@ return [
         Lukasmundt\Akquise\Providers\AkquiseProvider::class,
         // Lukasmundt\Finances\Providers\FinancesProvider::class,
         Lukasmundt\ProjectCI\Providers\ProjectCIProvider::class,
+        Elibyy\TCPDF\ServiceProvider::class,
 
 
         /*
@@ -189,6 +190,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'PDF' => Elibyy\TCPDF\Facades\TCPDF::class
     ])->toArray(),
 
 ];
