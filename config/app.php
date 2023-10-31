@@ -160,11 +160,11 @@ return [
          * Package Service Providers...
          */
         Spatie\Permission\PermissionServiceProvider::class,
-        Lukasmundt\Akquise\Providers\AkquiseProvider::class,
+        // Lukasmundt\Akquise\Providers\AkquiseProvider::class,
         // Lukasmundt\Finances\Providers\FinancesProvider::class,
-        Lukasmundt\ProjectCI\Providers\ProjectCIProvider::class,
-        Elibyy\TCPDF\ServiceProvider::class,
-
+        // Lukasmundt\ProjectCI\Providers\ProjectCIProvider::class,
+        // Elibyy\TCPDF\ServiceProvider::class,
+        // Lukasmundt\ProjectCI\Providers\DAVServiceProvider::class,
 
         /*
          * Application Service Providers...
