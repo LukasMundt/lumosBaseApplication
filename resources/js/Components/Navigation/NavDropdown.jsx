@@ -7,6 +7,7 @@ export default function NavDropdown({
     label = "Dropdown",
     className = "",
     children,
+    hidden = false,
     ...props
 }) {
     return (
@@ -23,9 +24,11 @@ export default function NavDropdown({
                         className
                     }
                 >
-                    {label}<ChevronDownIcon className="w-5 ml-1"/>
+                    {label}
+                    <ChevronDownIcon className="w-5 ml-1" />
                 </span>
             )}
+            hidden={hidden}
             className={
                 "inline-flex border-transparent items-center text-sm font-medium leading-5 focus:outline-none " +
                 (active

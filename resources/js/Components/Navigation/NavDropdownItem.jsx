@@ -3,14 +3,16 @@ import { Dropdown } from "flowbite-react";
 
 export default function NavDropdownItem({
     href,
-    active = href===''?false:route().current(href),
+    active = href === "" ? false : route().current(href),
     label = "Dropdown",
     className = "",
     children,
+
     ...props
 }) {
     return (
         <Dropdown.Item
+            {...props}
             inline
             href={route(href)}
             {...props}

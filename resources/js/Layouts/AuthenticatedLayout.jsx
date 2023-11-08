@@ -5,16 +5,17 @@ import NavLink from "@/Components/Navigation/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link } from "@inertiajs/react";
 import { Button } from "flowbite-react";
-import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
+import { Cog6ToothIcon, MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import NavDropdown from "@/Components/Navigation/NavDropdown";
 import NavDropdownItem from "@/Components/Navigation/NavDropdownItem";
 import NavDropdownDivider from "@/Components/Navigation/NavDropdownDivider";
+import { MapIcon, PlusIcon, TableCellsIcon } from "@heroicons/react/24/outline";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
-    console.log(document.getElementsByTagName("html").item(0));
+    // console.log(document.getElementsByTagName("html").item(0));
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -30,7 +31,7 @@ export default function Authenticated({ user, header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink
-                                    href={route("dashboard")}
+                                    href={route("akquise.dashboard")}
                                     active={route().current("dashboard")}
                                 >
                                     Dashboard
@@ -40,10 +41,10 @@ export default function Authenticated({ user, header, children }) {
                                     label="Verwaltung"
                                     // active={route().current().includes("admin")}
                                 >
-                                    <NavDropdownItem href="admin.index">
+                                    <NavDropdownItem href="admin.index" >
                                         Übersicht
                                     </NavDropdownItem>
-                                    {/* <NavDropdownDivider /> */}
+                                    <NavDropdownDivider />
                                     <NavDropdownItem href="admin.users.index">
                                         Benutzer-Übersicht
                                     </NavDropdownItem>
@@ -52,6 +53,31 @@ export default function Authenticated({ user, header, children }) {
                                     </NavDropdownItem>
                                     <NavDropdownItem href="admin.roles.index">
                                         Rollen-Übersicht
+                                    </NavDropdownItem>
+                                    <NavDropdownDivider />
+                                    <NavDropdownItem href="admin.index">
+                                        Einstellungen
+                                    </NavDropdownItem>
+                                </NavDropdown>
+                                <NavDropdown label="Akquise">
+                                    <NavDropdownItem
+                                        href="akquise.akquise.index"
+                                        icon={TableCellsIcon}
+                                    >
+                                        Übersicht
+                                    </NavDropdownItem>
+                                    <NavDropdownItem
+                                        href="akquise.akquise.map"
+                                        icon={MapIcon}
+                                    >
+                                        Karte
+                                    </NavDropdownItem>
+                                    <NavDropdownDivider />
+                                    <NavDropdownItem
+                                        href="akquise.akquise.create.1"
+                                        icon={PlusIcon}
+                                    >
+                                        Projekt erstellen
                                     </NavDropdownItem>
                                 </NavDropdown>
                             </div>
