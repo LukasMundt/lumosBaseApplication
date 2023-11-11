@@ -32,6 +32,7 @@ export default function ReactCreatableSelect({
                 option: (state) => "dark:text-gray-300",
                 menu: (state) => "dark:bg-gray-800",
                 multiValueRemove: (state) => "bg-red-300 text-gray-700",
+                singleValue: (state) => "dark:text-gray-200 text-gray-800"
             }}
             theme={(theme) => ({
                 ...theme,
