@@ -28,7 +28,9 @@ export default function ReactSelect({
                 menu: (state) => "dark:bg-gray-800",
                 menuPortal: (state) => "bg-red-800",
                 multiValueRemove: (state) => "bg-red-300 text-gray-700",
-                singleValue: (state) => "dark:text-gray-200 text-gray-800"
+                singleValue: (state) => "dark:text-gray-200 text-gray-800",
+                noOptionsMessage: (state) => "dark:text-gray-200 text-gray-800",
+                input: (state) => "dark:text-gray-200 text-gray-800",
             }}
             theme={(theme) => ({
                 ...theme,
