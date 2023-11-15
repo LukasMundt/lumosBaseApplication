@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  a {
+    @apply dark:text-blue-300 text-blue-600 underline;
+  }
+  /* ... */
+}
+
 /* latin */
 @font-face {
     font-family: 'Figtree';

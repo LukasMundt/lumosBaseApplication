@@ -5,6 +5,7 @@ export default function ({
     className = "",
     directClassName = "",
     children,
+    color="",
     ...props
 }) {
     return (
@@ -15,7 +16,7 @@ export default function ({
                 className
             }
             {...props}
-            
+            color={color}
         >
             <div className={directClassName}>{children}</div>
         </Card>
