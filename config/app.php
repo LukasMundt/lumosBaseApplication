@@ -162,11 +162,11 @@ return [
          */
         Spatie\Permission\PermissionServiceProvider::class,
         Spatie\Navigation\NavigationServiceProvider::class,
-        Lukasmundt\Akquise\Providers\AkquiseProvider::class,
-        Lukasmundt\Finances\Providers\FinancesProvider::class,
-        Lukasmundt\ProjectCI\Providers\ProjectCIProvider::class,
+        // Lukasmundt\Akquise\Providers\AkquiseProvider::class,
+        // Lukasmundt\Finances\Providers\FinancesProvider::class,
+        // Lukasmundt\ProjectCI\Providers\ProjectCIProvider::class,
         Elibyy\TCPDF\ServiceProvider::class,
-        Lukasmundt\ProjectCI\Providers\DAVServiceProvider::class,
+        // Lukasmundt\ProjectCI\Providers\DAVServiceProvider::class,
 
         /*
          * Application Service Providers...

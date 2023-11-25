@@ -10,7 +10,7 @@
     @apply text-xl;
   }
   a {
-    @apply dark:text-blue-300 text-blue-600 underline;
+    @apply dark:text-blue-300 text-blue-600;
   }
   /* ... */
 }

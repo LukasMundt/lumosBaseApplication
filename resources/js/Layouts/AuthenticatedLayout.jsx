@@ -9,7 +9,7 @@ import { Cog6ToothIcon, MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import NavDropdown from "@/Components/Navigation/NavDropdown";
 import NavDropdownItem from "@/Components/Navigation/NavDropdownItem";
 import NavDropdownDivider from "@/Components/Navigation/NavDropdownDivider";
-import { MapIcon, PlusIcon, TableCellsIcon } from "@heroicons/react/24/outline";
+import { MapIcon, MegaphoneIcon, PlusIcon, TableCellsIcon } from "@heroicons/react/24/outline";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -80,6 +80,12 @@ export default function Authenticated({ user, header, children }) {
                                         Projekt erstellen
                                     </NavDropdownItem>
                                 </NavDropdown>
+                                <NavLink
+                                    href={route("akquise.dashboard")}
+                                    active={route().current("dashboard")}
+                                >
+                                    <MegaphoneIcon className="w-5 mr-2"/>Kampagnen
+                                </NavLink>
                             </div>
                         </div>
 
