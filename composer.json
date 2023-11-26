@@ -39,9 +39,9 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Lukasmundt\\Akquise\\": "modules/lukasmundt/akquise/src/",
-            "Lukasmundt\\ProjectCI\\": "modules/lukasmundt/projectci/src/",
-            "Lukasmundt\\Finances\\": "modules/lukasmundt/finances/src/"
+            "Lukasmundt\\Akquise\\": "vendor/lukasmundt/akquise/src/",
+            "Lukasmundt\\ProjectCI\\": "vendor/lukasmundt/projectci/src/",
+            "Lukasmundt\\Finances\\": "vendor/lukasmundt/finances/src/"
         }
     },
     "autoload-dev": {
@@ -67,11 +67,6 @@
     "extra": {
         "laravel": {
             "dont-discover": []
-        },
-        "installer-paths": {
-            "modules/{$name}": [
-                "vendor:lukasmundt"
-            ]
         }
     },
     "config": {

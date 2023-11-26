@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Process;
+use Spatie\Permission\Models\Role;
 
 class Install extends Command
 {
@@ -103,19 +104,22 @@ class Install extends Command
         // execute migrations
         $this->info('Migrating...');
         Artisan::call('migrate');
+        $this->info('Migration was successful!');
 
+        $this->info('Creating the basic set of roles...');
+        Artisan::call('create-basic-role-set');
 
         // Admin-User is created
         $this->info('Create admin account ['.$this->data['admin_email'][0]."]");
-        \App\Models\User::factory()->create([
+        $user = \App\Models\User::factory()->create([
             'name' => 'Admin',
             'email' => $this->data['admin_email'][0],
             'password' => $this->data['admin_password'][0],
             'status' => 'active',
         ]);
+        $user->assignRole(Role::all());
 
-        $this->info('Creating the basic set of roles...');
-        Artisan::call('create-basic-role-set');
+        
 
         
     }

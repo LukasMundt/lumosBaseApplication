@@ -22,14 +22,14 @@ createInertiaApp({
             // );
 
             return resolvePageComponent(
-                `../../modules/${name.substring(
+                `../../vendor/${name.substring(
                     0,
                     name.indexOf("::")
                 )}/src/resources/js/Pages/${name.substring(
                     name.indexOf("::") + 2
                 )}.jsx`,
                 import.meta.glob(
-                    "../../modules/**/src/resources/js/Pages/**/*.jsx"
+                    "../../vendor/**/src/resources/js/Pages/**/*.jsx"
                 )
             );
         } else {

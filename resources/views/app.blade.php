@@ -20,7 +20,7 @@
     <!-- Scripts -->
     @routes
     @viteReactRefresh
-    @vite(['resources/js/app.jsx', str_contains($page['component'], '::')?"modules/".substr($page['component'], 0,
+    @vite(['resources/js/app.jsx', str_contains($page['component'], '::')?"vendor/".substr($page['component'], 0,
     strpos($page['component'],'::'))."/src/resources/js/Pages/".substr($page['component'],
     strpos($page['component'],'::')+2).".jsx":"resources/js/Pages/{$page['component']}.jsx"])
     @inertiaHead

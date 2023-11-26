@@ -11,7 +11,7 @@ export default {
         "./node_modules/flowbite/**/*.js",
         "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
         // auch aus allen modulen werden die Klassen der css-Datei hinzugefügt
-        "./modules/**/*.jsx",
+        "./vendor/lukasmundt/**/*.jsx",
     ],
 
     theme: {
