@@ -15,6 +15,12 @@
   /* ... */
 }
 
+@layer utilities {
+  .default-text-color{
+    @apply text-gray-800 dark:text-gray-200;
+  }
+}
+
 /* latin */
 @font-face {
     font-family: 'Figtree';

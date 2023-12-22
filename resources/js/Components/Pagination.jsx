@@ -10,7 +10,7 @@ import ButtonGroup from "flowbite-react/lib/esm/components/Button/ButtonGroup";
 import React from "react";
 import { useForm } from "@inertiajs/react";
 
-export default function Pagination({ last_page = 1, current_page = 1 }) {
+export default function Pagination({ last_page = 1, current_page = 1, params = {}}) {
     const { get } = useForm();
     // console.log(pagination);
 
@@ -18,7 +18,7 @@ export default function Pagination({ last_page = 1, current_page = 1 }) {
     let paramsRaw = new URLSearchParams(window.location.search)
         .toString()
         .split("&");
-    const params = {};
+    // const params = params;
     paramsRaw.map((param) => {
         if (param !== "") {
             let split = param.split("=");

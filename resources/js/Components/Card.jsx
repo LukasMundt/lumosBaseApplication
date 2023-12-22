@@ -11,7 +11,7 @@ export default function ({
     return (
         <Card
             className={
-                "text-gray-800 dark:text-gray-200 rounded-none md:rounded-lg " +
+                "default-text-color rounded-none md:rounded-lg " +
                 (!border ? "border-0 " : " ") +
                 className
             }
