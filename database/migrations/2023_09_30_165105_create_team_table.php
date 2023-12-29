@@ -31,10 +31,11 @@ return new class extends Migration {
         //     $table->foreign('team_id')->references('id')->on('teams');
         // });
 
-        // Schema::table('roles', function (Blueprint $table) {
-        //     $table->foreign('team_id')->references('id')->on('teams')
-        //         ->cascadeOnUpdate()->cascadeOnDelete();
-        // });
+        // modify roles table
+        $tableNames = config('permission.table_names');
+        Schema::table($tableNames['roles'], function (Blueprint $table) {
+            $table->boolean('deletable')->default(false);
+        });
     }
 
     /**

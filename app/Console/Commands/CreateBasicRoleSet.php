@@ -28,31 +28,40 @@ class CreateBasicRoleSet extends Command
     public function handle()
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        setPermissionsTeamId(0);
+        setPermissionsTeamId(0); // set to global team
 
-        Permission::findOrCreate('create-role','web');
-        Permission::findOrCreate('edit-role','web');
-        Permission::findOrCreate('delete-role','web');
-        Permission::findOrCreate('view-roles', 'web');
+        Permission::findOrCreate('create-global-role', 'web');
+        Permission::findOrCreate('edit-global-role', 'web');
+        Permission::findOrCreate('delete-global-role', 'web');
+        Permission::findOrCreate('view-global-roles', 'web');
 
-        Permission::findOrCreate('edit-admin','web');
-        Permission::findOrCreate('delete-admin','web');
+        Permission::findOrCreate('edit-global-admin', 'web');
+        Permission::findOrCreate('delete-global-admin', 'web');
 
-        Permission::findOrCreate('create-user','web');
-        Permission::findOrCreate('edit-user','web');
-        Permission::findOrCreate('delete-user','web');
-        // Permission::findOrCreate('view-all-users-list', 'web');
+        Permission::findOrCreate('create-user', 'web');
+        Permission::findOrCreate('edit-user', 'web');
+        Permission::findOrCreate('delete-user', 'web');
+        Permission::findOrCreate('view-all-users', 'web');
 
-        Permission::findOrCreate('create-team','web');
-        Permission::findOrCreate('edit-team','web');
-        Permission::findOrCreate('delete-team','web');
+        Permission::findOrCreate('edit-user-in-own-team', 'web');
+        Permission::findOrCreate('view-team-users', 'web');
 
-        // Permission::findOrCreate('use-api','api');
+        Permission::findOrCreate('manage-all-teams', 'web');
+        // Permission::findOrCreate('manage-own-team', 'web');
+        Permission::findOrCreate('manage-users-of-own-team', 'web');
 
-        $role = Role::findOrCreate('admin','web');
-        $role->syncPermissions(['create-user','edit-user','delete-user', 'create-team', 'edit-team', 'delete-team']);
 
-        $role = Role::findOrCreate('super-admin','web');
-        $role->syncPermissions(Permission::all());
+        $role = Role::findOrCreate('admin', 'web');
+        $role->syncPermissions(['create-global-role', 'edit-global-role', 'delete-global-role', 'create-user', 'view-global-roles', 'edit-user', 'delete-user', 'manage-all-teams', 'view-all-users']);
+
+        $role = Role::findOrCreate('super-admin', 'web');
+
+        $role = Role::findOrCreate('team-owner', 'web'); // and who pays for the team ressources
+        $role->syncPermissions(['manage-users-of-own-team', 'create-user', 'edit-user-in-own-team', 'view-team-users']);
+
+        $role = Role::findOrCreate('team-admin', 'web');
+        $role->syncPermissions(['manage-users-of-own-team', 'create-user', 'edit-user-in-own-team', 'view-team-users']);
+
+        $role = Role::findOrCreate('team-contributor', 'web');
     }
 }
