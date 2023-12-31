@@ -13,7 +13,7 @@ export default function NavDropdownItem({
     return (
         <Dropdown.Item
             {...props}
-            inline
+            inline="true"
             href={route(href)}
             {...props}
             className={
