@@ -112,7 +112,8 @@ export default class Index extends React.Component {
                                                     {role.name}
                                                     {role.name.indexOf(
                                                         "team-"
-                                                    ) === 0 ? (
+                                                    ) === 0 &&
+                                                    role.team_id === 0 ? (
                                                         <Badge color="gray">
                                                             Team-Vorlage
                                                         </Badge>
