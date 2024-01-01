@@ -19,11 +19,6 @@ return new class extends Migration {
                 $table->timestamps();
                 $table->softDeletes();
             });
-
-            $team = new Team();
-            $team->id = 0;
-            $team->name = 'default';
-            $team->save();
         }
 
 

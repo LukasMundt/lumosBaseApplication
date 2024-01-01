@@ -16,24 +16,22 @@ class Install extends Command
         "db_name" => ["lumos", "What is the name of the database?"],
         "db_username" => ["root", "Which username should be used to access the database?"],
         "db_password" => ["", 'What is the user\'s password for the database?', ['secure', 'allowed_empty']],
-        "db_prefix" => ["", 'Which prefix should be used for the tables of the database?', ['allowed_empty']],
         "admin_email" => ["", 'What is the email of the super-admin?'],
         "admin_password" => ["", 'What is the password of the super-admin?', ['secure', 'allowed_empty']],
     ];
 
-    private $allowed_empty = ['db_password', 'db_prefix'];
+    private $allowed_empty = ['db_password'];
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'install {--db_host= : Database host}
+    protected $signature = 'lumos:install {--db_host= : Database host}
                                     {--db_port= : Port of the database host}
                                     {--db_name= : Name of the database}
                                     {--db_username= : Username to use to access the database}
                                     {--db_password= : Password to use to access the database}
-                                    {--db_prefix= : Table name prefix}
                                     {--admin_email= : Admin user email}
                                     {--admin_password= : Admin user password}
                                     {--locale=de-DE : Language used in the app}';
@@ -102,12 +100,9 @@ class Install extends Command
         // config(['database.connections.mysql.host' => $this->data['db_host'][0]]);
 
         // execute migrations
-        $this->info('Migrating...');
-        Artisan::call('migrate');
-        $this->info('Migration was successful!');
-
-        $this->info('Creating the basic set of roles...');
-        Artisan::call('create-basic-role-set');
+        $this->info('Migrating and seeding...');
+        Artisan::call('migrate --seed');
+        $this->info('Migration and seeding was successful!');
 
         // Admin-User is created
         $this->info('Create admin account ['.$this->data['admin_email'][0]."]");

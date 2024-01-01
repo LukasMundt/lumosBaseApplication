@@ -12,6 +12,16 @@ class Team extends Model
     use HasFactory;
     use SoftDeletes;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'description'
+    ];
+
     public function users(): MorphToMany
     {
         return $this->morphToMany(User::class, 'teamable', 'teamable');
