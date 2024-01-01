@@ -21,6 +21,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
+        abort_if(!config('lumos.registration.allowed'), 403, config('lumos.registration.message'));
+
         return Inertia::render('Auth/Register');
     }
 
@@ -31,13 +33,15 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        abort_if(!config('lumos.registration.allowed'), 403, config('lumos.registration.message'));
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:'.User::class,
+            'email' => 'required|string|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $user = User::factory()->create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
