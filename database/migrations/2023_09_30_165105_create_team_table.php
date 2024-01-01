@@ -34,7 +34,7 @@ return new class extends Migration {
         // modify roles table
         $tableNames = config('permission.table_names');
         Schema::table($tableNames['roles'], function (Blueprint $table) {
-            $table->boolean('deletable')->default(false);
+            $table->boolean('deletable')->default(true);
         });
     }
 

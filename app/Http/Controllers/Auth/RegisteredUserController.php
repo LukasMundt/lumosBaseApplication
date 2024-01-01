@@ -44,6 +44,7 @@ class RegisteredUserController extends Controller
         $user = User::factory()->create([
             'name' => $request->name,
             'email' => $request->email,
+            'email_verified_at' => null,
             'password' => Hash::make($request->password),
         ]);
 
