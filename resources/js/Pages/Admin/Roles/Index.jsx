@@ -52,8 +52,7 @@ export default class Index extends React.Component {
                             <Table>
                                 <Table.Head>
                                     <Table.HeadCell>#</Table.HeadCell>
-                                    <Table.HeadCell>Name</Table.HeadCell>
-                                    {/* <Table.HeadCell>Team</Table.HeadCell> */}
+                                    <Table.HeadCell>Bezeichnung</Table.HeadCell>
                                     <Table.HeadCell>
                                         Berechtigungen
                                     </Table.HeadCell>
@@ -89,6 +88,7 @@ export default class Index extends React.Component {
                                                         // hidden={
                                                         //     role.deleted_at !== null
                                                         // }
+                                                        title="edit"
                                                     >
                                                         <PencilSquareIcon className="w-5" />
                                                     </a>

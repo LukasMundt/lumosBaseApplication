@@ -32,6 +32,11 @@ export default class Index extends React.Component {
                             <Link href={route("admin.roles.index")}>
                                 Roles-Index
                             </Link>
+                            <br />
+                            <br />
+                            <Link href={route("admin.teams.index")}>
+                                Teams-Index
+                            </Link>
                         </div>
                     </div>
                 </div>
