@@ -1,11 +1,14 @@
 import { Head } from "@inertiajs/react";
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import EditForm from "./partials/EditForm";
+import GenericForm from "./partials/Edit/GenericForm";
+import AddUserForm from "./partials/Edit/AddUserForm";
+import ManageUsersForm from "./partials/Edit/ManageUsersForm";
 
 export default class Edit extends React.Component {
     render() {
-        const { auth } = this.props;
+        const { auth, team, users, roles } = this.props;
+        console.log(this.props);
 
         return (
             <AuthenticatedLayout
@@ -20,9 +23,9 @@ export default class Edit extends React.Component {
 
                 <div className="py-12">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                        <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow sm:rounded-lg">
-                            <EditForm />
-                        </div>
+                        <GenericForm team={team} />
+                        <AddUserForm roles={roles} />
+                        <ManageUsersForm team={team} users={users} />
                     </div>
                 </div>
             </AuthenticatedLayout>
