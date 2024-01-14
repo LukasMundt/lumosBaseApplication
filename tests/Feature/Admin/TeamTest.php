@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -116,7 +117,7 @@ class TeamTest extends TestCase
             ->where('role_id', $role->id)
             ->where('team_id', $team->id)
             ->get();
-            
+
         $this->assertNotNull($userAndRoles);
 
         // update Permissions of user
@@ -403,5 +404,13 @@ class TeamTest extends TestCase
     public function test_template_and_team_role_can_be_assigned()
     {
 
+    }
+
+    public function test_team_permissions()
+    {
+        $team = Team::factory()->create();
+        $permission = Permission::findOrCreate('test-permission', 'web');
+        $team->permissions()->attach($permission);
+        $this->assertEquals($permission->id, $team->fresh()->permissions()->first()->id);
     }
 }
