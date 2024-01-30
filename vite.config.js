@@ -1,12 +1,14 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
-// import react from '@vitejs/plugin-react';
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
 import viteCompression from "vite-plugin-compression";
 import manifestSRI from "vite-plugin-manifest-sri";
 
 export default defineConfig({
+    build: {
+        minify: 'terser',
+    },
     plugins: [
         [
             viteCompression({
