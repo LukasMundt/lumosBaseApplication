@@ -84,8 +84,13 @@ const DropdownLink = ({ className = '', children, ...props }) => {
     );
 };
 
+const DropdownDivider = ({}) => {
+    return <hr className="border-gray-600"/>;
+}
+
 Dropdown.Trigger = Trigger;
 Dropdown.Content = Content;
 Dropdown.Link = DropdownLink;
+Dropdown.Divider = DropdownDivider;
 
 export default Dropdown;

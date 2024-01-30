@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Process;
 use Spatie\Permission\Models\Role;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 
 class Install extends Command
 {
@@ -27,14 +28,14 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'lumos:install {--db_host= : Database host}
-                                    {--db_port= : Port of the database host}
-                                    {--db_name= : Name of the database}
-                                    {--db_username= : Username to use to access the database}
-                                    {--db_password= : Password to use to access the database}
-                                    {--admin_email= : Admin user email}
-                                    {--admin_password= : Admin user password}
-                                    {--locale=de-DE : Language used in the app}';
+    protected $signature = 'lumos:install {--db_host=localhost : Database host}
+                                    {--db_port=3306 : Port of the database host}
+                                    {--db_name=lumos : Name of the database}
+                                    {--db_username=root : Username to use to access the database}
+                                    {--db_password : Password to use to access the database}
+                                    {--admin_email=mail@lukas-mundt.de : Admin user email}
+                                    {--admin_password=password : Admin user password}
+                                    {locale=de-DE : Language used in the app}';
 
     /**
      * The console command description.
@@ -94,7 +95,7 @@ class Install extends Command
      */
     public function handle()
     {
-        $this->checkArguments();
+        // $this->checkArguments();
         // fill in the collected data in the .env file
         // putenv('DB_HOST='.$this->data['db_host'][0]);
         // config(['database.connections.mysql.host' => $this->data['db_host'][0]]);
@@ -108,8 +109,8 @@ class Install extends Command
         $this->info('Create admin account ['.$this->data['admin_email'][0]."]");
         $user = \App\Models\User::factory()->create([
             'name' => 'Admin',
-            'email' => $this->data['admin_email'][0],
-            'password' => $this->data['admin_password'][0],
+            'email' => 'admin@example.local',
+            'password' => 'changeme',
             'status' => 'active',
         ]);
         $user->assignRole(Role::all());

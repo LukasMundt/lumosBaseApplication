@@ -14,7 +14,7 @@ export default function NavDropdownItem({
         <Dropdown.Item
             {...props}
             inline="true"
-            href={route(href)}
+            href={href}
             {...props}
             className={
                 "inline-flex items-center border-l-2 text-sm font-medium leading-5 transition duration-150 ease-in-out focus:outline-none " +

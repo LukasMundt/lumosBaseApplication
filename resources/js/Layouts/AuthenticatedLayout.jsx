@@ -3,17 +3,24 @@ import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/Navigation/NavLink";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
-import { Link } from "@inertiajs/react";
-import { Button } from "flowbite-react";
+import { Link, usePage } from "@inertiajs/react";
+import { Button, Select } from "flowbite-react";
 import { Cog6ToothIcon, MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import NavDropdown from "@/Components/Navigation/NavDropdown";
 import NavDropdownItem from "@/Components/Navigation/NavDropdownItem";
 import NavDropdownDivider from "@/Components/Navigation/NavDropdownDivider";
-import { MapIcon, MegaphoneIcon, PlusIcon, TableCellsIcon } from "@heroicons/react/24/outline";
+import {
+    MapIcon,
+    MegaphoneIcon,
+    PlusIcon,
+    TableCellsIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+
+    const { domain, nav, teams } = usePage().props;
 
     // console.log(document.getElementsByTagName("html").item(0));
 
@@ -30,8 +37,53 @@ export default function Authenticated({ user, header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink
-                                    href={route("akquise.dashboard")}
+                                {nav===null?"":nav.map((navItem) => {
+                                    if (navItem.childs.length === 0) {
+                                        return (
+                                            <NavLink
+                                                href={route(navItem.route, {
+                                                    domain: domain,
+                                                })}
+                                                key={navItem.id}
+                                            >
+                                                {navItem.label}
+                                            </NavLink>
+                                        );
+                                    } else {
+                                        return (
+                                            <NavDropdown
+                                                label={navItem.label}
+                                                key={navItem.id}
+                                            >
+                                                {navItem.childs.map(
+                                                    (navDropdownItem) => {
+                                                        return (
+                                                            <NavDropdownItem
+                                                                key={
+                                                                    navDropdownItem.id
+                                                                }
+                                                                href={route(
+                                                                    navDropdownItem.route,
+                                                                    {
+                                                                        domain: navDropdownItem.domain,
+                                                                    }
+                                                                )}
+                                                            >
+                                                                {
+                                                                    navDropdownItem.label
+                                                                }
+                                                            </NavDropdownItem>
+                                                        );
+                                                    }
+                                                )}
+                                            </NavDropdown>
+                                        );
+                                    }
+                                })}
+                                {/* <NavLink
+                                    href={route("akquise.dashboard", {
+                                        domain: 12,
+                                    })}
                                     active={route().current("dashboard")}
                                 >
                                     Dashboard
@@ -41,7 +93,7 @@ export default function Authenticated({ user, header, children }) {
                                     label="Verwaltung"
                                     // active={route().current().includes("admin")}
                                 >
-                                    <NavDropdownItem href="admin.index" >
+                                    <NavDropdownItem href="admin.index">
                                         Übersicht
                                     </NavDropdownItem>
                                     <NavDropdownDivider />
@@ -61,35 +113,92 @@ export default function Authenticated({ user, header, children }) {
                                 </NavDropdown>
                                 <NavDropdown label="Akquise">
                                     <NavDropdownItem
-                                        href="akquise.akquise.index"
+                                        href={route("akquise.akquise.index", {
+                                            domain: 12,
+                                        })}
                                         icon={TableCellsIcon}
                                     >
                                         Übersicht
                                     </NavDropdownItem>
                                     <NavDropdownItem
-                                        href="akquise.akquise.map"
+                                        href={route("akquise.akquise.map", {
+                                            domain: 12,
+                                        })}
                                         icon={MapIcon}
                                     >
                                         Karte
                                     </NavDropdownItem>
                                     <NavDropdownDivider />
                                     <NavDropdownItem
-                                        href="akquise.akquise.create.1"
+                                        href={route(
+                                            "akquise.akquise.create.1",
+                                            { domain: 12 }
+                                        )}
                                         icon={PlusIcon}
                                     >
                                         Projekt erstellen
                                     </NavDropdownItem>
                                 </NavDropdown>
                                 <NavLink
-                                    href={route("akquise.dashboard")}
+                                    href={route("akquise.dashboard", {
+                                        domain: 12,
+                                    })}
                                     active={route().current("dashboard")}
                                 >
-                                    <MegaphoneIcon className="w-5 mr-2"/>Kampagnen
-                                </NavLink>
+                                    <MegaphoneIcon className="w-5 mr-2" />
+                                    Kampagnen
+                                </NavLink> */}
                             </div>
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ml-6">
+                            <Dropdown>
+                                <Dropdown.Trigger>
+                                    <span className="inline-flex rounded-md">
+                                        <button
+                                            type="button"
+                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
+                                        >
+                                            Bereich wählen
+                                            <svg
+                                                className="ml-2 -mr-0.5 h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </Dropdown.Trigger>
+
+                                <Dropdown.Content>
+                                    <Dropdown.Link
+                                        href={route("domain.dashboard", {
+                                            domain: "personal",
+                                        })}
+                                    >
+                                        Persönlich
+                                    </Dropdown.Link>
+                                    <Dropdown.Divider />
+                                    {teams.map((team) => {
+                                        return (
+                                            <Dropdown.Link
+                                                href={route(
+                                                    "domain.dashboard",
+                                                    { domain: team.id }
+                                                )}
+                                            >
+                                                {team.name}
+                                            </Dropdown.Link>
+                                        );
+                                    })}
+                                </Dropdown.Content>
+                            </Dropdown>
                             <div className="ml-3 relative flex">
                                 <Button
                                     color="gray"
