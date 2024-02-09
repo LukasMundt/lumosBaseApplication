@@ -88,9 +88,16 @@ const DropdownDivider = ({}) => {
     return <hr className="border-gray-600"/>;
 }
 
+const DropdownItem = ({children}) => {
+    return <div className="px-4 py-2">
+        {children}
+    </div>;
+}
+
 Dropdown.Trigger = Trigger;
 Dropdown.Content = Content;
 Dropdown.Link = DropdownLink;
 Dropdown.Divider = DropdownDivider;
+Dropdown.Item = DropdownItem;
 
 export default Dropdown;
