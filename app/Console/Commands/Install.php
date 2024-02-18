@@ -106,7 +106,7 @@ class Install extends Command
         $this->info('Migration and seeding was successful!');
 
         // Admin-User is created
-        $this->info('Create admin account ['.$this->data['admin_email'][0]."]");
+        $this->info('Create admin account...');
         $user = \App\Models\User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@example.local',

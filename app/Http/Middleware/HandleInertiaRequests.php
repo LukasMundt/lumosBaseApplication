@@ -7,6 +7,7 @@ use App\Models\Team;
 use App\Rules\DomainIsValid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Inertia\Middleware;
@@ -36,12 +37,6 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $domain = null;
-        $domain = Validator::make(["domain" => $request->route('domain')], [
-            'domain' => ['nullable', 'string', new DomainIsValid],
-        ])->validated()['domain'];
-
-
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
@@ -51,10 +46,10 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
-            'nav' => function () use ($domain) {
+            'nav' => function () {
                 if (Auth::check()) {
-
-                    if ($domain == 'personal') {
+                    $domain = session()->get("team");
+                    if ($domain == 'personal' || $domain == null) {
                         $domain = 0;
                     }
 
@@ -69,17 +64,18 @@ class HandleInertiaRequests extends Middleware
                         if (
                             $this->permissionsAllowNavItemVisible($navItem->permissions) &&
                             $this->rolesAllowNavItemVisible($navItem->roles) &&
-                            $this->teamPermissionsAllowNavItemVisible($navItem->team_permissions)
+                            $this->teamPermissionsAllowNavItemVisible($navItem->team_permissions, $domain)
                         ) {
                             $result[] = $navItem;
                         }
                     }
+                    return $result;
                 }
-                return $result;
+                
 
 
             },
-            'domain' => $domain,
+            'domain' => session()->get("team"),
             'teams' => Team::all(['id', 'name']),
         ]);
     }
@@ -105,11 +101,18 @@ class HandleInertiaRequests extends Middleware
         return false;
     }
 
-    private function teamPermissionsAllowNavItemVisible(array|null $roles): bool
+    private function teamPermissionsAllowNavItemVisible(array|null $roles, int|null $team): bool
     {
+        Log::debug($team);
         if ($roles == null || empty($roles)) {
             return true;
         }
-        return false;
+        else if(Team::all()->count() > 0 && Team::where('id', $team)->first()->permissions()->where('name', 'lumos-akquise-basic')->count() > 0)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

@@ -127,141 +127,148 @@ export default function Authenticated({ user, header, children }) {
 
             {/* Main */}
             <div className="w-screen sm:pl-64">
-                {/* NavLeiste */}
-                <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                    <div className=" mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between h-16">
-                            <div className="-mr-2 flex items-center sm:invisible">
-                                <button
-                                    data-drawer-target="default-sidebar"
-                                    data-drawer-toggle="default-sidebar"
-                                    aria-controls="default-sidebar"
-                                    type="button"
-                                    className="inline-flex items-center p-2   text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                                >
-                                    <span className="sr-only">Open sidebar</span>
-                                    <Bars3BottomLeftIcon className="w-7"/>
-                                </button>
-                            </div>
-
-                            <div className="flex items-center ml-6">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
-                                            >
-                                                Bereich wählen
-                                                <svg
-                                                    className="ml-2 -mr-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
+                <div className="w-full relative">
+                    {/* NavLeiste */}
+                    <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 absolute fixed w-full top-0 z-[200]">
+                        <div className=" mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex justify-between h-16">
+                                <div className="-mr-2 flex items-center sm:invisible">
+                                    <button
+                                        data-drawer-target="default-sidebar"
+                                        data-drawer-toggle="default-sidebar"
+                                        aria-controls="default-sidebar"
+                                        type="button"
+                                        className="inline-flex items-center p-2   text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                    >
+                                        <span className="sr-only">
+                                            Open sidebar
                                         </span>
-                                    </Dropdown.Trigger>
+                                        <Bars3BottomLeftIcon className="w-7" />
+                                    </button>
+                                </div>
 
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route("domain.dashboard", {
-                                                domain: "personal",
+                                <div className="flex items-center ml-6">
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                            <span className="inline-flex rounded-md">
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
+                                                >
+                                                    Bereich wählen
+                                                    <svg
+                                                        className="ml-2 -mr-0.5 h-4 w-4"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </Dropdown.Trigger>
+
+                                        <Dropdown.Content>
+                                            <Dropdown.Link
+                                                href={route(
+                                                    "domain.dashboard",
+                                                    {
+                                                        domain: "personal",
+                                                    }
+                                                )}
+                                            >
+                                                Persönlich
+                                            </Dropdown.Link>
+                                            <Dropdown.Divider />
+                                            {teams.map((team) => {
+                                                return (
+                                                    <Dropdown.Link
+                                                        href={route(
+                                                            "domain.dashboard",
+                                                            { domain: team.id }
+                                                        )}
+                                                    >
+                                                        {team.name}
+                                                    </Dropdown.Link>
+                                                );
                                             })}
-                                        >
-                                            Persönlich
-                                        </Dropdown.Link>
-                                        <Dropdown.Divider />
-                                        {teams.map((team) => {
-                                            return (
-                                                <Dropdown.Link
-                                                    href={route(
-                                                        "domain.dashboard",
-                                                        { domain: team.id }
-                                                    )}
-                                                >
-                                                    {team.name}
-                                                </Dropdown.Link>
-                                            );
-                                        })}
-                                    </Dropdown.Content>
-                                </Dropdown>
+                                        </Dropdown.Content>
+                                    </Dropdown>
 
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="ml-2 -mr-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                            <span className="inline-flex rounded-md">
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                                                 >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
+                                                    {user.name}
+
+                                                    <svg
+                                                        className="ml-2 -mr-0.5 h-4 w-4"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </Dropdown.Trigger>
+
+                                        <Dropdown.Content>
+                                            <Dropdown.Item>
+                                                <Button
+                                                    color="gray"
+                                                    className={
+                                                        "text-gray-800 dark:text-gray-200 p-0 w-full"
+                                                    }
+                                                    onClick={() =>
+                                                        document.documentElement.classList.toggle(
+                                                            "dark"
+                                                        )
+                                                    }
+                                                >
+                                                    <SunIcon
+                                                        className={
+                                                            "w-5 hidden dark:flex"
+                                                        }
                                                     />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Item>
-                                            <Button
-                                                color="gray"
-                                                className={
-                                                    "text-gray-800 dark:text-gray-200 p-0 w-full"
-                                                }
-                                                onClick={() =>
-                                                    document.documentElement.classList.toggle(
-                                                        "dark"
-                                                    )
-                                                }
+                                                    <MoonIcon
+                                                        className={
+                                                            "w-5 dark:hidden flex"
+                                                        }
+                                                    />
+                                                </Button>
+                                            </Dropdown.Item>
+                                            <Dropdown.Divider />
+                                            <Dropdown.Link
+                                                href={route("profile.edit")}
                                             >
-                                                <SunIcon
-                                                    className={
-                                                        "w-5 hidden dark:flex"
-                                                    }
-                                                />
-                                                <MoonIcon
-                                                    className={
-                                                        "w-5 dark:hidden flex"
-                                                    }
-                                                />
-                                            </Button>
-                                        </Dropdown.Item>
-                                        <Dropdown.Divider />
-                                        <Dropdown.Link
-                                            href={route("profile.edit")}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route("logout")}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
+                                                Profile
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route("logout")}
+                                                method="post"
+                                                as="button"
+                                            >
+                                                Log Out
+                                            </Dropdown.Link>
+                                        </Dropdown.Content>
+                                    </Dropdown>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </nav>
+                    </nav>
+                </div>
                 {/* Header unter Nav Leiste */}
                 {header && (
                     <header className="bg-white dark:bg-gray-800 shadow">
@@ -272,7 +279,9 @@ export default function Authenticated({ user, header, children }) {
                     </header>
                 )}
                 {/* tatsächlicher Content der Seite */}
-                <main>{children}</main>
+                <div className="h-screen pt-16">
+                    <main className="h-full relative">{children}</main>
+                </div>
             </div>
         </div>
     );
