@@ -102,7 +102,7 @@ class Install extends Command
 
         // execute migrations
         $this->info('Migrating and seeding...');
-        Artisan::call('migrate --seed');
+        Artisan::call('migrate --seed --force');
         $this->info('Migration and seeding was successful!');
 
         // Admin-User is created
