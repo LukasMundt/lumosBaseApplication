@@ -49,9 +49,11 @@ return [
         'cloudron' => [
             'transport' => 'smtp',
             'host' => getenv('CLOUDRON_MAIL_SMTP_SERVER'),
+            'port' => getenv('CLOUDRON_MAIL_SMTPS_PORT'),
+            'encryption' => 'tls',
             'username' => getenv('CLOUDRON_MAIL_SMTP_USERNAME'),
             'password' => getenv('CLOUDRON_MAIL_SMTP_PASSWORD'),
-            'port' => getenv('CLOUDRON_MAIL_SMTP_PORT'),
+            'timeout' => null,
         ],
 
         'ses' => [

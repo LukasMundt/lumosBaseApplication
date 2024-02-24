@@ -269,18 +269,21 @@ export default function Authenticated({ user, header, children }) {
                         </div>
                     </nav>
                 </div>
-                {/* Header unter Nav Leiste */}
-                {header && (
-                    <header className="bg-white dark:bg-gray-800 shadow">
-                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            Breadcrumbs
-                            {header}
-                        </div>
-                    </header>
-                )}
+
                 {/* tatsächlicher Content der Seite */}
                 <div className="h-screen pt-16">
-                    <main className="h-full relative">{children}</main>
+                    <div className="h-full flex flex-col">
+                        {/* Header unter Nav Leiste */}
+                        {header && (
+                            <header className="bg-white dark:bg-gray-800 shadow">
+                                <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                                    Breadcrumbs
+                                    {header}
+                                </div>
+                            </header>
+                        )}
+                        <main className="flex-grow relative">{children}</main>
+                    </div>
                 </div>
             </div>
         </div>
