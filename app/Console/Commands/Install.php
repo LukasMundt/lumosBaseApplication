@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 
@@ -111,6 +112,8 @@ class Install extends Command
             'name' => 'Admin',
             'email' => 'admin@example.local',
             'password' => 'changeme',
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(10),
             'status' => 'active',
         ]);
         $user->assignRole(Role::all());
