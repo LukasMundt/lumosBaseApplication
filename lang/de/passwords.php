@@ -13,11 +13,11 @@ return [
     |
     */
 
-    'reset' => 'Your password has been reset.',
+    'reset' => 'Das Passwort wurde erfolgreich gespeichert.',
     'sent' => 'We have emailed your password reset link.',
-    'throttled' => 'Please wait before retrying.',
+    'throttled' => 'Bitte warte kurz bevor du es erneut versuchst.',
     'token' => 'This password reset token is invalid.',
     'user' => "We can't find a user with that email address.",
-    'mainText' => "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
+    'mainText' => "Passwort vergessen? Kein Problem. Gib hier einfach deine E-Mail-Adresse ein und wir schicken dir einen Link, mit dem du ein neues Passwort festlegen kannst.",
 
 ];

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'Die Anmeldedaten sind nicht korrekt.',
+    'failed' => 'Die Anmeldedaten sind nicht korrekt oder der Account existiert nicht.',
     'password' => 'Das angegebene Passwort ist inkorrekt.',
     'throttle' => 'Zu viele Anmeldeversuche. Bitte versuche es in :seconds Sekunden nochmal.',
 
