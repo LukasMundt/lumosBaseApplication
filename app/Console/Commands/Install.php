@@ -107,7 +107,7 @@ class Install extends Command
 
         // Admin-User is created
         $this->info('Create admin account...');
-        $user = \App\Models\User::factory()->create([
+        $user = \App\Models\User::create([
             'name' => 'Admin',
             'email' => 'admin@example.local',
             'password' => 'changeme',
