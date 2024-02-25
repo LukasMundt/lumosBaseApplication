@@ -17,6 +17,9 @@
     <link rel="manifest" href="/build/manifest.webmanifest" />
     <script src="/build/registerSW.js"></script>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32">
+
     <!-- Scripts -->
     @routes
     @viteReactRefresh
