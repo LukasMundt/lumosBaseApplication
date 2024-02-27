@@ -7,7 +7,7 @@ import manifestSRI from "vite-plugin-manifest-sri";
 
 export default defineConfig({
     build: {
-        minify: 'terser',
+        minify: "terser",
     },
     plugins: [
         [
@@ -24,6 +24,33 @@ export default defineConfig({
                 short_name: "Lumos",
                 theme_color: "#ffffff",
                 lang: "de",
+                orientation: "portrait",
+                scope: "/",
+                start_url: "/",
+                icons: [
+                    {
+                        src: "/logo-400x400.png",
+                        sizes: "400x400",
+                        type: "image/png",
+                        // purpose: "maskable",
+                    },
+                ],
+                screenshots: [
+                    {
+                        src: "/screenshot1.png",
+                        sizes: "1918x937",
+                        type: "image/png",
+                        form_factor: "wide",
+                        label: "The Login Page",
+                    },
+                    {
+                        src: "/screenshot2.jpg",
+                        sizes: "1080x2031",
+                        type: "image/jpeg",
+                        form_factor: "narrow",
+                        label: "The login page on mobile screens",
+                    },
+                ],
             },
         }),
         laravel({
