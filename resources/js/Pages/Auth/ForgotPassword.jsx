@@ -2,9 +2,9 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/Inputs/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/Inputs/TextInput';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function ForgotPassword({ status }) {
+export default function ForgotPassword({ status, strings}) {
     const { data, setData, post, processing, errors } = useForm({
         email: '',
     });
@@ -17,11 +17,10 @@ export default function ForgotPassword({ status }) {
 
     return (
         <GuestLayout>
-            <Head title="Forgot Password" />
+            <Head title="Passwort vergessen" />
 
             <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password
-                reset link that will allow you to choose a new one.
+                {strings.mainText}
             </div>
 
             {status && <div className="mb-4 font-medium text-sm text-green-600 dark:text-green-400">{status}</div>}
@@ -41,10 +40,14 @@ export default function ForgotPassword({ status }) {
 
                 <div className="flex items-center justify-end mt-4">
                     <PrimaryButton className="ml-4" disabled={processing}>
-                        Email Password Reset Link
+                        {strings.resetPasswordLinkButton}
                     </PrimaryButton>
                 </div>
             </form>
+            <hr className='h-px my-6 bg-gray-200 border-0 dark:bg-gray-700'/>
+            <div className='text-gray-600 dark:text-gray-400 flex justify-center'>
+                <Link href={route('login')} className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">{strings.backToLoginButton}</Link>
+            </div>
         </GuestLayout>
     );
 }
