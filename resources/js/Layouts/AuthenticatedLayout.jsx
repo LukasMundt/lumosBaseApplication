@@ -14,19 +14,18 @@ import {
 import NavDropdown from "@/Components/Navigation/NavDropdown";
 import NavDropdownItem from "@/Components/Navigation/NavDropdownItem";
 import NavDropdownDivider from "@/Components/Navigation/NavDropdownDivider";
-import {
-    Bars3BottomLeftIcon,
-    MapIcon,
-    MegaphoneIcon,
-    PlusIcon,
-    TableCellsIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3BottomLeftIcon } from "@heroicons/react/24/outline";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
-    const { domain, nav, teams } = usePage().props;
+    const { nav, teams } = usePage().props;
+    var { domain } = usePage().props;
+
+    if (domain === null) {
+        domain = 0; // global/default team
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -272,10 +271,10 @@ export default function Authenticated({ user, header, children }) {
 
                 {/* tatsächlicher Content der Seite */}
                 <div className="h-screen pt-16">
-                    <div className="h-full flex flex-col">
+                    <div className="h-full flex flex-col overflow-auto">
                         {/* Header unter Nav Leiste */}
                         {header && (
-                            <header className="bg-white dark:bg-gray-800 shadow">
+                            <header className="bg-white dark:bg-gray-800 shadow flex-shrink">
                                 <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                                     Breadcrumbs
                                     {header}
