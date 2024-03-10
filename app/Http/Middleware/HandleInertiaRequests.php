@@ -4,12 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Models\NavItem;
 use App\Models\Team;
-use App\Rules\DomainIsValid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -101,13 +97,12 @@ class HandleInertiaRequests extends Middleware
         return false;
     }
 
-    private function teamPermissionsAllowNavItemVisible(array|null $roles, int|null $team): bool
+    private function teamPermissionsAllowNavItemVisible(array|null $roles, int|null|string $team): bool
     {
-        Log::debug($team);
         if ($roles == null || empty($roles)) {
             return true;
         }
-        else if(Team::all()->count() > 0 && Team::where('id', $team)->first()->permissions()->where('name', 'lumos-akquise-basic')->count() > 0)
+        else if(Team::all()->count() > 0 && Team::where('id', $team)->first()->permissions()->where('name', 'tp-lumos-akquise-basic')->count() > 0)
         {
             return true;
         }

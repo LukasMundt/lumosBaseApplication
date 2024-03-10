@@ -41,7 +41,8 @@
             "Database\\Seeders\\": "database/seeders/",
             "Lukasmundt\\Akquise\\": "vendor/lukasmundt/akquise/src/",
             "Lukasmundt\\ProjectCI\\": "vendor/lukasmundt/projectci/src/",
-            "Lukasmundt\\Finances\\": "vendor/lukasmundt/finances/src/"
+            "Lukasmundt\\Finances\\": "vendor/lukasmundt/finances/src/",
+            "Lukasmundt\\LaravelOwnership\\" : "vendor/lukasmundt/laravel-ownership/src/"
         }
     },
     "autoload-dev": {

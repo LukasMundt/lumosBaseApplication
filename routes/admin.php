@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->prefix("admin")->group(function () {
     Route::get('/teams', [TeamController::class, 'index'])->name('admin.teams.index');
     Route::get('/teams/create', [TeamController::class, 'create'])->name('admin.teams.create');
     Route::post('/teams', [TeamController::class, 'store'])->name('admin.teams.store');
+    Route::post('/teams/{team}/permissions', [TeamController::class, 'updateTeamPermissions'])->name('admin.teams.updateTeamPermissions');
     Route::post('/teams/{team}/users', [TeamController::class, 'addMember'])->name('admin.teams.addMember');
     Route::post('/teams/{team}/users/{user}/remove_from_team', [TeamController::class, 'removeMember'])->name('admin.teams.removeMember');
     Route::post('/teams/{team}/users/{user}/update_permission', [TeamController::class, 'updatePermissionsOfMember'])->name('admin.teams.updatePermissionsOfMember');

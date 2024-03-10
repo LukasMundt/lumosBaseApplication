@@ -36,6 +36,7 @@ class PermissionAndRoleSeeder extends Seeder
         Permission::findOrCreate('manage-all-teams', 'web');
         Permission::findOrCreate('manage-own-team', 'web');
         Permission::findOrCreate('manage-users-of-own-team', 'web');
+        Permission::findOrCreate('manage-team-permissions', 'web');
 
 
         $role = Role::findOrCreate('admin', 'web');

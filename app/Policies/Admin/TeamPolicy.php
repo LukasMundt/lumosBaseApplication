@@ -4,8 +4,6 @@ namespace App\Policies\Admin;
 
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Log;
 
 class TeamPolicy
 {
@@ -81,6 +79,19 @@ class TeamPolicy
         $user->unsetRelation('permissions');
 
         return $global || $user->hasPermissionTo('manage-own-team');
+    }
+
+    /**
+     * Determine whether the user can update the permissions of a team.
+     */
+    public function update_team_permissions(User $user, Team $team):bool
+    {
+        // global
+        setPermissionsTeamId(0);
+        $user->unsetRelation('roles');
+        $user->unsetRelation('permissions');
+
+        return ($user->hasRole('super-admin') || $user->hasPermissionTo('manage-team-permissions'));
     }
 
     /**

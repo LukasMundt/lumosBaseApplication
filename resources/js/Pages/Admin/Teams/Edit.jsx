@@ -4,10 +4,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import GenericForm from "./partials/Edit/GenericForm";
 import AddUserForm from "./partials/Edit/AddUserForm";
 import ManageUsersForm from "./partials/Edit/ManageUsersForm";
+import ManageTeamPermissionsForm from "./partials/Edit/ManageTeamPermissionsForm";
 
 export default class Edit extends React.Component {
     render() {
-        const { auth, team, users, roles } = this.props;
+        const { auth, team, users, roles, teamPermissions, teamPermissionsCurrent} = this.props;
         console.log(this.props);
 
         return (
@@ -26,6 +27,11 @@ export default class Edit extends React.Component {
                         <GenericForm team={team} />
                         <AddUserForm roles={roles} />
                         <ManageUsersForm team={team} users={users} />
+                        <ManageTeamPermissionsForm
+                            team={team}
+                            teamPermissions={teamPermissions}
+                            teamPermissionsCurrent={teamPermissionsCurrent}
+                        />
                     </div>
                 </div>
             </AuthenticatedLayout>

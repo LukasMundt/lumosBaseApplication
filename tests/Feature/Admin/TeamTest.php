@@ -413,4 +413,49 @@ class TeamTest extends TestCase
         $team->permissions()->attach($permission);
         $this->assertEquals($permission->id, $team->fresh()->permissions()->first()->id);
     }
+
+    public function test_team_permissions_can_be_updated()
+    {
+        $this->seed();
+        $user = User::factory()->create();
+        $user->givePermissionTo('manage-team-permissions');
+        $team = Team::factory()->create();
+        // creating team permission
+        $perm = Permission::findOrCreate('tp-test-team-permission', 'web');
+
+        // can be added
+        $response = $this
+            ->actingAs($user)
+            ->post(route('admin.teams.updateTeamPermissions', ['team' => $team]), [
+                'teamPermissions' => [$perm->id]
+            ]);
+        $response->assertStatus(200);
+        $this->assertEquals([$perm->id], $team->permissions()->allRelatedIds()->toArray());
+
+        // can be removed
+        $response = $this
+            ->actingAs($user)
+            ->post(route('admin.teams.updateTeamPermissions', ['team' => $team]), [
+                'teamPermissions' => []
+            ]);
+        $response->assertStatus(200);
+        $this->assertEmpty($team->permissions()->allRelatedIds()->toArray());
+    }
+
+    public function test_team_permissions_cant_be_updated_without_permissions()
+    {
+        $this->seed();
+        $user = User::factory()->create();
+        $team = Team::factory()->create();
+        // creating team permission
+        $perm = Permission::findOrCreate('tp-test-team-permission', 'web');
+
+        $response = $this
+            ->actingAs($user)
+            ->post(route('admin.teams.updateTeamPermissions', ['team' => $team]), [
+                'teamPermissions' => [$perm->id]
+            ]);
+        $response->assertStatus(403);
+
+    }
 }

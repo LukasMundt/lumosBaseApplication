@@ -4,19 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddMemberToTeamRequest;
-use App\Http\Requests\RemoveMemberFromTeamRequest;
 use App\Http\Requests\UpdatePermissionsOfTeamMemberRequest;
+use App\Http\Requests\UpdateTeamPermissionsRequest;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\Team;
 use App\Http\Requests\StoreTeamRequest;
 use App\Http\Requests\UpdateTeamRequest;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class TeamController extends Controller
@@ -102,6 +101,8 @@ class TeamController extends Controller
         }
         // ende der filterung der rollen nach teams
 
+        $teamPermissions = Permission::where('name', "LIKE", "tp-%")->get(['id',"name"]);
+
         // uncomment to sort the roles alphabetical
         // $roles = array_values(Arr::sort($roles->toArray(), function (array $value) {
         //     return $value['name'];
@@ -111,6 +112,8 @@ class TeamController extends Controller
             'team' => $team,
             'users' => User::all(),
             'roles' => $roles,
+            'teamPermissions' => $teamPermissions,
+            'teamPermissionsCurrent' => $team->permissions()->allRelatedIds(),
         ]);
     }
 
@@ -119,7 +122,6 @@ class TeamController extends Controller
      */
     public function update(UpdateTeamRequest $request, Team $team)
     {
-
         $team->name = $request->validated('name');
         $team->description = $request->validated('description');
         $team->save();
@@ -167,6 +169,15 @@ class TeamController extends Controller
         // input wird in request überprüft
         // sync roles für nutzer mit der neuen rolle
         return $user->syncRoles($request->validated('roles'));
+    }
+
+    public function updateTeamPermissions(UpdateTeamPermissionsRequest $request, Team $team)
+    {
+        // Log::debug("before");
+        $this->authorize('update_team_permissions', $team);
+        Log::debug($request->teamPermissions);
+
+        $team->permissions()->sync($request->teamPermissions,true);
     }
 
     /**
