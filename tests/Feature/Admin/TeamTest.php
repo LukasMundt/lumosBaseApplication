@@ -401,12 +401,45 @@ class TeamTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_template_and_team_role_can_be_assigned()
+    public function test_template_role_can_be_assigned()
     {
+        // seeding
+        $this->seed();
 
+        // superadmin created
+        $user = User::factory()->create();
+        $user->assignRole("super-admin");
+        
+        // template role created
+        setPermissionsTeamId(0);
+        $secondUser = User::factory()->create();
+        $role = Role::findByName('team-owner', 'web');
+
+        // other team created
+        $team = Team::factory()->create();
+        $team->id = 2;
+        $team->save();
+        $team = $team->refresh();
+
+        $response = $this
+            ->actingAs($user)
+            ->post(route('admin.teams.addMember', ['team' => $team->id]), [
+                'user' => $secondUser->id,
+                'role' => $role->id,
+            ]);
+
+        $response->assertStatus(200);
+        $userAndRoles = DB::table('model_has_roles')
+            ->where('model_type', User::class)
+            ->where('model_id', $secondUser->id)
+            ->whereNot('role_id', $role->id)
+            ->where('team_id', $team->id)
+            ->get();
+
+        $this->assertNotEmpty($userAndRoles);
     }
 
-    public function test_team_permissions()
+    public function test_team_permissions_can_be_assigned_via_relationship()
     {
         $team = Team::factory()->create();
         $permission = Permission::findOrCreate('test-permission', 'web');

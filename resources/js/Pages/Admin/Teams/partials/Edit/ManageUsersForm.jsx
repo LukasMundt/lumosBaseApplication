@@ -12,8 +12,12 @@ import Card from "@/Components/Card";
 import AdvancedRadio from "@/Components/Inputs/AdvancedRadio";
 import AdvancedRadioItem from "@/Components/Inputs/AdvancedRadioItem";
 
-export default function ManageUsersForm({ status, className = "", team}) {
-
+export default function ManageUsersForm({
+    status,
+    className = "",
+    team,
+    currentUsers,
+}) {
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
             user: "",
@@ -42,8 +46,14 @@ export default function ManageUsersForm({ status, className = "", team}) {
                     Alle Mitglieder des Teams.
                 </p>
                 <form onSubmit={submit} className="mt-6 space-y-6">
-                    {/* Benutzerliste mit Filter */}
-                    
+                    {currentUsers.map((user, index) => {
+                        return (
+                            <div className="flex space-x-2">
+                                <span>{user.name}</span>
+                                <span className="text-gray-600 dark:text-gray-400">{user.email}</span>
+                            </div>
+                        );
+                    })}
 
                     {/* <div className="flex items-center gap-4">
                         <PrimaryButton disabled={processing}>

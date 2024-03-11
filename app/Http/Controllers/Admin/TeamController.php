@@ -101,7 +101,7 @@ class TeamController extends Controller
         }
         // ende der filterung der rollen nach teams
 
-        $teamPermissions = Permission::where('name', "LIKE", "tp-%")->get(['id',"name"]);
+        $teamPermissions = Permission::where('name', "LIKE", "tp-%")->get(['id', "name"]);
 
         // uncomment to sort the roles alphabetical
         // $roles = array_values(Arr::sort($roles->toArray(), function (array $value) {
@@ -110,7 +110,10 @@ class TeamController extends Controller
 
         return Inertia::render('Admin/Teams/Edit', [
             'team' => $team,
-            'users' => User::all(),
+            'allUsers' => User::all(),
+            'currentUsers' => User::with('roles')->get(['email','id','name','status'])->filter(
+                fn($user) => $user->roles->where('team_id', $team->id)->toArray()
+            ),
             'roles' => $roles,
             'teamPermissions' => $teamPermissions,
             'teamPermissionsCurrent' => $team->permissions()->allRelatedIds(),
@@ -147,7 +150,7 @@ class TeamController extends Controller
         }
 
         // rolle dem nutzer zuweisen
-        $user->assignRole($role);
+        $user->assignRole($finalRole);
     }
 
     public function removeMember(Request $request, Team $team, User $user)
@@ -177,7 +180,7 @@ class TeamController extends Controller
         $this->authorize('update_team_permissions', $team);
         Log::debug($request->teamPermissions);
 
-        $team->permissions()->sync($request->teamPermissions,true);
+        $team->permissions()->sync($request->teamPermissions, true);
     }
 
     /**

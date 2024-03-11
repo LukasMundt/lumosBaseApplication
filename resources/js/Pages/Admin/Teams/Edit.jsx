@@ -8,7 +8,7 @@ import ManageTeamPermissionsForm from "./partials/Edit/ManageTeamPermissionsForm
 
 export default class Edit extends React.Component {
     render() {
-        const { auth, team, users, roles, teamPermissions, teamPermissionsCurrent} = this.props;
+        const { auth, team, allUsers, currentUsers, roles, teamPermissions, teamPermissionsCurrent} = this.props;
         console.log(this.props);
 
         return (
@@ -25,8 +25,8 @@ export default class Edit extends React.Component {
                 <div className="py-12">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                         <GenericForm team={team} />
-                        <AddUserForm roles={roles} />
-                        <ManageUsersForm team={team} users={users} />
+                        <AddUserForm roles={roles} users={allUsers}/>
+                        <ManageUsersForm team={team} users={allUsers} currentUsers={currentUsers}/>
                         <ManageTeamPermissionsForm
                             team={team}
                             teamPermissions={teamPermissions}

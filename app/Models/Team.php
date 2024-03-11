@@ -24,10 +24,10 @@ class Team extends Model
         'description'
     ];
 
-    public function users(): MorphToMany
-    {
-        return $this->morphToMany(User::class, 'teamable', 'teamable');
-    }
+    // public function users(): MorphToMany
+    // {
+    //     return $this->morphToMany(User::class, 'teamable', 'teamable');
+    // }
 
     public function permissions() : BelongsToMany
     {

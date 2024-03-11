@@ -1,20 +1,15 @@
 import InputError from "@/Components/Inputs/InputError";
 import InputLabel from "@/Components/Inputs/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/Inputs/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
-import { Select as NormalSelect } from "flowbite-react";
 import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
-import TextareaInput from "@/Components/Inputs/TextareaInput";
 import Card from "@/Components/Card";
 import AdvancedRadio from "@/Components/Inputs/AdvancedRadio";
 import AdvancedRadioItem from "@/Components/Inputs/AdvancedRadioItem";
-import PrimaryLinkButton from "@/Components/PrimaryLinkButton";
 
-export default function AddUserForm({ status, className = "", roles }) {
-    const { team, users } = usePage().props;
+export default function AddUserForm({ status, className = "", roles, users}) {
+    const { team } = usePage().props;
 
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({

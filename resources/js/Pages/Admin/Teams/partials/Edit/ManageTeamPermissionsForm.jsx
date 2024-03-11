@@ -39,38 +39,21 @@ export default function ManageTeamPermissionsForm({
     return (
         <section className={className}>
             <Card>
-                <h2>Benutzer hinzufügen</h2>
+                <h2>Berechtigungen des Teams anpassen</h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Füge einen Benutzer dem Team hinzu, wähle aus, welche Rolle
-                    der Benutzer im Team haben soll.
+                    Wähle aus, welche Berechtigungen ein Team besitzt.
                 </p>
                 <form onSubmit={submit} className="mt-6 space-y-6">
-                    {/* Benutzer */}
-                    <div>
-                        <InputLabel htmlFor="user" value="Benutzer" />
+                    
 
-                        {/* <Select
-                            id="user"
-                            options={usersOptions}
-                            className="text-gray-500"
-                            // isMulti
-                            required
-                            isSearchable
-                            isClearable
-                            onChange={(choice) => setData("user", choice.value)}
-                        /> */}
-
-                        <InputError className="mt-2" message={errors.user} />
-                    </div>
-
-                    {/* Rolle */}
+                    {/* Berechtigungen */}
                     <div>
                         <InputLabel
                             htmlFor="role"
-                            value="Rolle auswählen"
+                            value="Berechtigungen auswählen"
                             className="mb-2"
                         />
-                        {teamPermissions.map((permission) => {
+                        {teamPermissions.length == 0?<p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Keine Berechtigungen gefunden.</p>:teamPermissions.map((permission) => {
                             return (
                                 <div className="flex">
                                     <Checkbox
