@@ -7,6 +7,7 @@ use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
+use Spatie\Permission\Models\Role;
 use Tightenco\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
@@ -67,12 +68,14 @@ class HandleInertiaRequests extends Middleware
                     }
                     return $result;
                 }
-                
+
 
 
             },
             'domain' => session()->get("team"),
-            'teams' => Team::all(['id', 'name']),
+            'teams' => Team::whereKey(Role::with('users')->get(['id', 'team_id'])->filter(function ($role) use ($request) {
+                return $role->users->where('id', $request->user()->id)->count() > 0;
+            })->groupBy('team_id')->keys())->get(['id', 'name']),
         ]);
     }
 
@@ -91,7 +94,7 @@ class HandleInertiaRequests extends Middleware
     {
         if ($roles == null || empty($roles)) {
             return true;
-        } else if (isset($roles['team-specific']) && Auth::user()->hasAnyRole($roles['team-specific'])) {
+        } else if (isset($roles['team_specific']) && Auth::user()->hasAnyRole($roles['team_specific'])) {
             return true;
         }
         return false;
@@ -101,12 +104,9 @@ class HandleInertiaRequests extends Middleware
     {
         if ($roles == null || empty($roles)) {
             return true;
-        }
-        else if(Team::all()->count() > 0 && Team::where('id', $team)->first()->permissions()->where('name', 'tp-lumos-akquise-basic')->count() > 0)
-        {
+        } else if (Team::all()->count() > 0 && Team::where('id', $team)->first()->permissions()->where('name', 'tp-lumos-akquise-basic')->count() > 0) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
