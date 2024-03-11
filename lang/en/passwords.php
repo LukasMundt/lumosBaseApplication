@@ -19,5 +19,6 @@ return [
     'token' => 'This password reset token is invalid.',
     'user' => "We can't find a user with that email address.",
     'mainText' => "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
-
+    'backToLoginButton' => "Return to the login page",
+    'resetPasswordLinkButton' => "Email Password Reset Link"
 ];
