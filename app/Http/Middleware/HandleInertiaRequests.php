@@ -73,9 +73,9 @@ class HandleInertiaRequests extends Middleware
 
             },
             'domain' => session()->get("team"),
-            'teams' => Team::whereKey(Role::with('users')->get(['id', 'team_id'])->filter(function ($role) use ($request) {
+            'teams' => Auth::check()?Team::whereKey(Role::with('users')->get(['id', 'team_id'])->filter(function ($role) use ($request) {
                 return $role->users->where('id', $request->user()->id)->count() > 0;
-            })->groupBy('team_id')->keys())->get(['id', 'name']),
+            })->groupBy('team_id')->keys())->get(['id', 'name']):[],
         ]);
     }
 
