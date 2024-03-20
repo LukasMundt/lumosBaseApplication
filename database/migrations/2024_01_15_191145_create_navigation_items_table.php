@@ -37,10 +37,10 @@ return new class extends Migration {
         $verwaltungRoles = ['team_specific' => ['super-admin', 'admin']];
 
 
-        // $admin = NavItem::factory()->create(['label' => 'Verwaltung', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.index']);
-        // NavItem::factory()->create(['label' => 'Benutzer', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.users.index', 'top_item' => $admin->fresh()->id]);
-        // NavItem::factory()->create(['label' => 'Rollen', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.roles.index', 'top_item' => $admin->fresh()->id]);
-        // NavItem::factory()->create(['label' => 'Teams', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.teams.index', 'top_item' => $admin->fresh()->id]);
+        $admin = NavItem::factory()->create(['label' => 'Verwaltung', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.index']);
+        NavItem::factory()->create(['label' => 'Benutzer', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.users.index', 'top_item' => $admin->fresh()->id]);
+        NavItem::factory()->create(['label' => 'Rollen', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.roles.index', 'top_item' => $admin->fresh()->id]);
+        NavItem::factory()->create(['label' => 'Teams', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.teams.index', 'top_item' => $admin->fresh()->id]);
     }
 
     /**

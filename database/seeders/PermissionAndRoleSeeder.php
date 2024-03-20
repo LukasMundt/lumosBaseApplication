@@ -40,17 +40,17 @@ class PermissionAndRoleSeeder extends Seeder
 
 
         $role = Role::findOrCreate('admin', 'web');
-        $role->syncPermissions(['create-global-role', 'edit-global-role', 'delete-global-role', 'create-user', 'view-global-roles', 'edit-user', 'delete-user', 'manage-all-teams', 'view-all-users']);
+        $role->givePermissionTo(['create-global-role', 'edit-global-role', 'delete-global-role', 'create-user', 'view-global-roles', 'edit-user', 'delete-user', 'manage-all-teams', 'view-all-users']);
 
         $role = Role::findOrCreate('super-admin', 'web');
 
         $role = Role::findOrCreate('team-owner', 'web'); // and who pays for the team ressources
-        $role->syncPermissions(['manage-own-team', 'manage-users-of-own-team', 'create-user', 'edit-user-in-own-team', 'view-team-members']);
+        $role->givePermissionTo(['manage-own-team', 'manage-users-of-own-team', 'create-user', 'edit-user-in-own-team', 'view-team-members']);
 
         $role = Role::findOrCreate('team-admin', 'web');
-        $role->syncPermissions(['manage-own-team', 'manage-users-of-own-team', 'create-user', 'edit-user-in-own-team', 'view-team-members']);
+        $role->givePermissionTo(['manage-own-team', 'manage-users-of-own-team', 'create-user', 'edit-user-in-own-team', 'view-team-members']);
 
         $role = Role::findOrCreate('team-contributor', 'web');
-        $role->syncPermissions(['view-team-members']);
+        $role->givePermissionTo(['view-team-members']);
     }
 }
