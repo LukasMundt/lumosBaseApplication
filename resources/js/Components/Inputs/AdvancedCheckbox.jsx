@@ -19,7 +19,7 @@ export default function AdvancedCheckbox({
     required = true,
     children,
     name = "",
-    onChange
+    onChange,
 }) {
     return (
         <ul

@@ -14,12 +14,19 @@
     <!-- <link rel="preconnect" href="https://fonts.bunny.net"> -->
     <!-- <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> -->
 
-    <!-- PWA -->
-    <link rel="manifest" href="/build/manifest.webmanifest" />
-    <script src="/build/registerSW.js"></script>
+    <link rel="preload" href="/logo.svg" as="image">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" sizes="32x32">
+
+    <!-- PWA -->
+    <link rel="manifest" href="/build/manifest.webmanifest" />
+    <script src="/build/registerSW.js"></script>
+    
+
+    
+    
+    
 
     <!-- Scripts -->
     @routes

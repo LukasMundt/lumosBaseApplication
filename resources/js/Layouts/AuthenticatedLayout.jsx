@@ -1,19 +1,10 @@
 import { useState } from "react";
+import React from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
-import NavLink from "@/Components/Navigation/NavLink";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link, usePage } from "@inertiajs/react";
-import { Badge, Button, Select, Sidebar } from "flowbite-react";
-import {
-    ChartPieIcon,
-    Cog6ToothIcon,
-    MoonIcon,
-    SunIcon,
-} from "@heroicons/react/24/solid";
-import NavDropdown from "@/Components/Navigation/NavDropdown";
-import NavDropdownItem from "@/Components/Navigation/NavDropdownItem";
-import NavDropdownDivider from "@/Components/Navigation/NavDropdownDivider";
+import { Button, Sidebar } from "flowbite-react";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
 import { Bars3BottomLeftIcon } from "@heroicons/react/24/outline";
 
 export default function Authenticated({ user, header, children }) {
@@ -30,12 +21,17 @@ export default function Authenticated({ user, header, children }) {
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
             {/* Sidebar */}
+
             <aside
                 id="default-sidebar"
                 className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-                aria-label="Sidebar"
+                aria-labelledby="default-sidebar-label"
+                tabIndex="40"
             >
-                <div className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+                <div
+                    id="default-sidebar-label"
+                    className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700"
+                >
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex h-16">
                             <div className="shrink-0 flex items-center">
@@ -135,9 +131,10 @@ export default function Authenticated({ user, header, children }) {
                                     <button
                                         data-drawer-target="default-sidebar"
                                         data-drawer-toggle="default-sidebar"
+                                        // data-drawer-show="default-sidebar"
                                         aria-controls="default-sidebar"
                                         type="button"
-                                        className="inline-flex items-center p-2   text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                        className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                                     >
                                         <span className="sr-only">
                                             Open sidebar
