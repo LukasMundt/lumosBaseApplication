@@ -25,6 +25,10 @@
         "spatie/laravel-navigation": "^1.2",
         "spatie/laravel-permission": "^5.10",
         "spatie/simple-excel": "^3.2",
+        "symfony/css-selector": "v6.4.3",
+        "symfony/event-dispatcher": "v6.4.3",
+        "symfony/string": "v6.4.4",
+        "symfony/yaml": "v6.4.3",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
