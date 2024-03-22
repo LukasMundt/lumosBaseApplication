@@ -123,6 +123,10 @@ return [
             'handler' => NullHandler::class,
         ],
 
+        'flare' => [
+            'driver' => 'flare',
+        ],
+
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
