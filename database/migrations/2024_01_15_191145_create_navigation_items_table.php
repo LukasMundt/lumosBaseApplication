@@ -12,25 +12,29 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('navigation_items', function (Blueprint $table) {
-            $table->ulid("id")->primary();
-            $table->ulid('top_item')->nullable();
-            // $table->string('scope')->comment('teams;all');
-            // $table->unsignedBigInteger('domain')->nullable()
+        $tableName = 'navigation_items';
+        if (!Schema::hasTable($tableName)) {
+            Schema::create($tableName, function (Blueprint $table) {
+                $table->ulid("id")->primary();
+                $table->ulid('top_item')->nullable();
+                // $table->string('scope')->comment('teams;all');
+                // $table->unsignedBigInteger('domain')->nullable()
                 // (Team::class, 'domain')
                 //     ->constrained('teams', 'id', 'team')
                 //     ->cascadeOnUpdate()
                 //     ->cascadeOnDelete()
                 // ->comment("Team ist Domain, wenn null dann domain=personal");
-            $table->json("permissions")->nullable();
-            $table->json("team_permissions")->nullable();
-            $table->json("roles")->nullable();
-            $table->string("label", 255);
-            $table->string("route", 255);
-            $table->json("params");
+                $table->json("permissions")->nullable();
+                $table->json("team_permissions")->nullable();
+                $table->json("roles")->nullable();
+                $table->string("label", 255);
+                $table->string("route", 255);
+                $table->json("params");
 
-            $table->timestamps();
-        });
+                $table->timestamps();
+            });
+        }
+
 
         // NavItem::factory()->create(['label' => 'Dashboard', 'permissions' => [], 'roles' => [], 'route' => 'dashboard']);
 
