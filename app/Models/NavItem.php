@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Database\Factories\NavItemFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -33,6 +35,14 @@ class NavItem extends Model
         'team_permissions' => 'array',
         'params' => 'array'
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return NavItemFactory::new();
+    }
 
     // public function domain(): HasOne
     // {
