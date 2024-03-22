@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Log;
  */
 class NavItemFactory extends Factory
 {
+    protected $model = NavItem::class;
+    
     /**
      * Define the model's default state.
      *

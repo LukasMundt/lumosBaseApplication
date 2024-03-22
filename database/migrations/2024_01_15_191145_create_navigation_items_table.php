@@ -29,7 +29,7 @@ return new class extends Migration {
                 $table->json("roles")->nullable();
                 $table->string("label", 255);
                 $table->string("route", 255);
-                $table->json("params");
+                $table->json("params")->nullable();
 
                 $table->timestamps();
             });
@@ -41,10 +41,10 @@ return new class extends Migration {
         $verwaltungRoles = ['team_specific' => ['super-admin', 'admin']];
 
 
-        $admin = NavItem::factory()->create(['label' => 'Verwaltung', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.index']);
-        NavItem::factory()->create(['label' => 'Benutzer', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.users.index', 'top_item' => $admin->fresh()->id]);
-        NavItem::factory()->create(['label' => 'Rollen', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.roles.index', 'top_item' => $admin->fresh()->id]);
-        NavItem::factory()->create(['label' => 'Teams', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.teams.index', 'top_item' => $admin->fresh()->id]);
+        $admin = NavItem::create(['label' => 'Verwaltung', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.index']);
+        NavItem::create(['label' => 'Benutzer', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.users.index', 'top_item' => $admin->fresh()->id]);
+        NavItem::create(['label' => 'Rollen', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.roles.index', 'top_item' => $admin->fresh()->id]);
+        NavItem::create(['label' => 'Teams', 'permissions' => [], 'roles' => $verwaltungRoles, 'route' => 'admin.teams.index', 'top_item' => $admin->fresh()->id]);
     }
 
     /**
