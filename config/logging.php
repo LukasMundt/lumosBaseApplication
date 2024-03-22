@@ -54,7 +54,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single',env("FLARE_KEY",null)==null?"":"flare"],
+            'channels' => env("FLARE_KEY",null)==null?["single"]:["single", "flare"],
             'ignore_exceptions' => false,
         ],
 
