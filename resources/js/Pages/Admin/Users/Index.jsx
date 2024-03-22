@@ -74,7 +74,7 @@ export default class Index extends React.Component {
                                 <Table.Head>
                                     <Table.HeadCell>#</Table.HeadCell>
                                     <Table.HeadCell>Name</Table.HeadCell>
-                                    <Table.HeadCell>Rollen</Table.HeadCell>
+                                    <Table.HeadCell>Teams</Table.HeadCell>
                                     <Table.HeadCell>
                                         Mail-Adresse
                                     </Table.HeadCell>
@@ -153,13 +153,13 @@ export default class Index extends React.Component {
                                             <Table.Cell>{user.name}</Table.Cell>
                                             <Table.Cell>
                                                 <div className="flex flex-wrap gap-2">
-                                                    {user.roles.map((role) => (
+                                                    {user.reduced_teams.map((team) => (
                                                         <Badge
                                                             color="gray"
                                                             className=""
-                                                            key={role.id}
+                                                            key={team.id}
                                                         >
-                                                            {role.name}
+                                                            {team.name}
                                                         </Badge>
                                                     ))}
                                                 </div>

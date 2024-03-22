@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\WelcomePasswordSetting;
 use App\Models\Team;
 use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
@@ -10,6 +11,7 @@ use App\Http\Requests\UpdateUserRequest;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -23,9 +25,9 @@ class UserController extends Controller
     {
         setPermissionsTeamId(0);
         if ($request->deletedUsers) {
-            return Inertia::render('Admin/Users/Index', ['users' => User::withTrashed()->with('roles')->get()->load('teams')]);
+            return Inertia::render('Admin/Users/Index', ['users' => User::withTrashed()->with('roles')->get(), dd($request->user->getTeams())]);
         }
-        return Inertia::render('Admin/Users/Index', ['users' => User::with('roles')->get()->load('teams')]);
+        return Inertia::render('Admin/Users/Index', ['users' => User::all()->append('reduced_teams')]);
     }
 
     /**
@@ -55,17 +57,20 @@ class UserController extends Controller
             'email' => $request->validated('email'),
             'status' => $request->validated('status'),
         ]);
-        
+
 
         // roles
         $roles = [];
-        foreach (empty($request->validated('roles'))?[]:$request->validated('roles') as $role) {
+        foreach (empty ($request->validated('roles')) ? [] : $request->validated('roles') as $role) {
             $roles[] = $role['value'];
         }
         $user->syncRoles($roles);
 
+        // send welcome message
+        Mail::to($user)->send(new WelcomePasswordSetting($user, $request->user()));
+
         // teams
-        $this->syncTeamsOfUser($user, $request->validated('teams'));
+        // $this->syncTeamsOfUser($user, $request->validated('teams'));
 
         return redirect(route("admin.users.index"));
     }
@@ -96,7 +101,7 @@ class UserController extends Controller
             }
         }
 
-        
+
 
 
         return Inertia::render(
@@ -127,7 +132,7 @@ class UserController extends Controller
         $user->syncRoles($roles);
 
         // teams
-        $this->syncTeamsOfUser($user, $request->validated('teams'));
+        // $this->syncTeamsOfUser($user, $request->validated('teams'));
 
         return redirect(route("admin.users.index"));
     }
@@ -162,10 +167,10 @@ class UserController extends Controller
 
     private function syncTeamsOfUser(User $user, array|null $teams)
     {
-        $teamsForSync = [];
-        foreach (empty($teams)?[]:$teams as $team) {
-            $teamsForSync[] = $team['value'];
-        }
-        $user->teams()->sync($teamsForSync);
+        // $teamsForSync = [];
+        // foreach (empty ($teams) ? [] : $teams as $team) {
+        //     $teamsForSync[] = $team['value'];
+        // }
+        // $user->teams()->sync($teamsForSync);
     }
 }

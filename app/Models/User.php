@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use Lukasmundt\LaravelOwnership\Contracts\CanBeOwner;
 use Lukasmundt\LaravelOwnership\Traits\HasOwnables;
@@ -31,6 +33,20 @@ class User extends Authenticatable implements MustVerifyEmail
         'status'
     ];
 
+    protected function teams(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getTeams(),
+        );
+    }
+
+    protected function reducedTeams(): Attribute // must be loaded like this User::all()->append('reduced_teams')
+    {
+        return Attribute::make(
+            get: fn () => $this->getTeams(['id', 'name', 'description']),
+        );
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -51,8 +67,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
-    public function teams(): MorphToMany
+    public function getTeams(array $cols = ["*"]): Collection
     {
-        return $this->morphToMany(Team::class, 'teamable', 'teamable');
+        return Team::findMany(DB::table("model_has_roles")->where('model_type', User::class)->where('model_id', $this->id)->get(['team_id'])->pluck('team_id')->unique()->toArray(), $cols);
     }
 }
