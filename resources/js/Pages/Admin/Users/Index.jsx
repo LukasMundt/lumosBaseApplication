@@ -1,7 +1,7 @@
 import { Head, Link } from "@inertiajs/react";
 import React, { useMemo, useState, useEffect } from "react";
 // import Table from "./partials/Table";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";s
 import {
     Badge,
     Breadcrumb,
@@ -63,7 +63,9 @@ export default class Index extends React.Component {
                             >
                                 Nach gelöschten filtern
                             </Link>
-                            <PrimaryLinkButton href={route("admin.users.create")}>
+                            <PrimaryLinkButton
+                                href={route("admin.users.create")}
+                            >
                                 Nutzer erstellen
                             </PrimaryLinkButton>
                         </div>
@@ -153,15 +155,17 @@ export default class Index extends React.Component {
                                             <Table.Cell>{user.name}</Table.Cell>
                                             <Table.Cell>
                                                 <div className="flex flex-wrap gap-2">
-                                                    {user.reduced_teams.map((team) => (
-                                                        <Badge
-                                                            color="gray"
-                                                            className=""
-                                                            key={team.id}
-                                                        >
-                                                            {team.name}
-                                                        </Badge>
-                                                    ))}
+                                                    {user.reduced_teams.map(
+                                                        (team) => (
+                                                            <Badge
+                                                                color="gray"
+                                                                className=""
+                                                                key={team.id}
+                                                            >
+                                                                {team.name}
+                                                            </Badge>
+                                                        )
+                                                    )}
                                                 </div>
                                             </Table.Cell>
                                             <Table.Cell>

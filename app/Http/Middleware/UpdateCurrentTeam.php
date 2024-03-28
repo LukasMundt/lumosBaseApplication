@@ -23,6 +23,11 @@ class UpdateCurrentTeam
             'domain' => ['nullable', 'string', new DomainIsValid],
         ])->validated()['domain'];
 
+        if($domain == "personal")
+        {
+            $domain = "0";
+        }
+
         session()->put("team", $domain);
 
         return $next($request);
