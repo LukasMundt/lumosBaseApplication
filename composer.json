@@ -15,7 +15,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "league/csv": "9.0",
-        "lukasmundt/akquise": "^0.1.5",
+        "lukasmundt/akquise": "^0.1.6",
         "lukasmundt/laravel-ownership": "^0.0.4",
         "lukasmundt/projectci": "0.1.7",
         "monicahq/laravel-sabre": "^1.7",
