@@ -2,20 +2,14 @@ import { Head, Link } from "@inertiajs/react";
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Table } from "flowbite-react";
-import {
-    ArrowPathIcon,
-    EyeIcon,
-    HomeIcon,
-    PencilIcon,
-    PencilSquareIcon,
-    TrashIcon,
-} from "@heroicons/react/24/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import PrimaryLinkButton from "@/Components/PrimaryLinkButton";
+import { Button } from "@/Components/ui/button";
 
 export default class Index extends React.Component {
     render() {
         const { auth, teams } = this.props;
-        console.log(teams);
+        // console.log(teams);
 
         return (
             <AuthenticatedLayout
@@ -31,25 +25,22 @@ export default class Index extends React.Component {
                 <div className="py-12">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 text-gray-800 dark:text-gray-200">
                         <div className="w-full flex justify-end">
-                            <PrimaryLinkButton href={route("admin.teams.create")}>
-                                Team erstellen
-                            </PrimaryLinkButton>
+                            <Link href={route("admin.teams.create")}>
+                                <Button>Team erstellen</Button>
+                            </Link>
                         </div>
 
-                        <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                            <Table>
-                                <Table.Head>
-                                    <Table.HeadCell>#</Table.HeadCell>
-                                    <Table.HeadCell>Name</Table.HeadCell>
-                                    <Table.HeadCell>
-                                        Beschreibung
-                                    </Table.HeadCell>
-                                </Table.Head>
-                                <Table.Body>
-                                    {teams.map((team) => (
-                                        <Table.Row key={team.id}>
-                                            <Table.Cell className="flex gap-2">
-                                                {/* <a
+                        <Table>
+                            <Table.Head>
+                                <Table.HeadCell>#</Table.HeadCell>
+                                <Table.HeadCell>Name</Table.HeadCell>
+                                <Table.HeadCell>Beschreibung</Table.HeadCell>
+                            </Table.Head>
+                            <Table.Body>
+                                {teams.map((team) => (
+                                    <Table.Row key={team.id}>
+                                        <Table.Cell className="flex gap-2">
+                                            {/* <a
                                                     href={route(
                                                         "admin.roles.show",
                                                         {
@@ -62,36 +53,38 @@ export default class Index extends React.Component {
                                                 >
                                                     <EyeIcon className="w-5" />
                                                 </a> */}
-                                                <a
-                                                    href={route(
-                                                        "admin.teams.edit",
-                                                        {
-                                                            team: team.id,
-                                                        }
-                                                    )}
-                                                    // hidden={
-                                                    //     role.deleted_at !== null
-                                                    // }
-                                                >
-                                                    <PencilSquareIcon className="w-5" />
-                                                </a>
-                                                <Link
-                                                    href={route(
-                                                        "admin.teams.delete",
-                                                        { team: team.id }
-                                                    )}
-                                                    method="delete"
-                                                    as="button"
-                                                    type="button"
-                                                    title="delete"
-                                                    hidden={team.id === 0}
-                                                >
-                                                    <TrashIcon className="w-5 text-red-500" />
-                                                </Link>
-                                            </Table.Cell>
-                                            <Table.Cell>{team.name}</Table.Cell>
-                                            <Table.Cell>{team.description}</Table.Cell>
-                                            {/* <Table.Cell>
+                                            <a
+                                                href={route(
+                                                    "admin.teams.edit",
+                                                    {
+                                                        team: team.id,
+                                                    }
+                                                )}
+                                                // hidden={
+                                                //     role.deleted_at !== null
+                                                // }
+                                            >
+                                                <PencilSquareIcon className="w-5" />
+                                            </a>
+                                            <Link
+                                                href={route(
+                                                    "admin.teams.delete",
+                                                    { team: team.id }
+                                                )}
+                                                method="delete"
+                                                as="button"
+                                                type="button"
+                                                title="delete"
+                                                hidden={team.id === 0}
+                                            >
+                                                <TrashIcon className="w-5 text-red-500" />
+                                            </Link>
+                                        </Table.Cell>
+                                        <Table.Cell>{team.name}</Table.Cell>
+                                        <Table.Cell>
+                                            {team.description}
+                                        </Table.Cell>
+                                        {/* <Table.Cell>
                                                 <ul>
                                                     {role.permissions.length >
                                                     0 ? (
@@ -114,11 +107,10 @@ export default class Index extends React.Component {
                                                     )}
                                                 </ul>
                                             </Table.Cell> */}
-                                        </Table.Row>
-                                    ))}
-                                </Table.Body>
-                            </Table>
-                        </div>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table>
                     </div>
                 </div>
             </AuthenticatedLayout>

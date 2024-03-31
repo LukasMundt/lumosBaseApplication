@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         setPermissionsTeamId(0);
         if ($request->deletedUsers) {
-            return Inertia::render('Admin/Users/Index', ['users' => User::withTrashed()->with('roles')->get(), dd($request->user->getTeams())]);
+            return Inertia::render('Admin/Users/Index', ['users' => User::withTrashed()->get()->append('reduced_teams')]);
         }
         return Inertia::render('Admin/Users/Index', ['users' => User::all()->append('reduced_teams')]);
     }

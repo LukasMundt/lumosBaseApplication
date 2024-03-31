@@ -2,30 +2,18 @@ import { Head, Link } from "@inertiajs/react";
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
-    Badge,
-    Breadcrumb,
-    Button,
-    Checkbox,
-    Label,
     Table,
 } from "flowbite-react";
+import { Badge } from "@/Components/ui/badge";
 import {
-    ArrowPathIcon,
-    EyeIcon,
-    HomeIcon,
-    PencilIcon,
     PencilSquareIcon,
     TrashIcon,
 } from "@heroicons/react/24/solid";
-import PrimaryButton from "@/Components/PrimaryButton";
-import CreatableSelect from "react-select/creatable";
 import PrimaryLinkButton from "@/Components/PrimaryLinkButton";
 
 export default class Index extends React.Component {
     render() {
         const { auth, roles } = this.props;
-
-        console.log(roles);
 
         return (
             <AuthenticatedLayout
@@ -48,7 +36,6 @@ export default class Index extends React.Component {
                             </PrimaryLinkButton>
                         </div>
 
-                        <div className="overflow-x-auto">
                             <Table>
                                 <Table.Head>
                                     <Table.HeadCell>#</Table.HeadCell>
@@ -114,7 +101,7 @@ export default class Index extends React.Component {
                                                         "team-"
                                                     ) === 0 &&
                                                     role.team_id === 0 ? (
-                                                        <Badge color="gray">
+                                                        <Badge variant="secondary">
                                                             Team-Vorlage
                                                         </Badge>
                                                     ) : (
@@ -150,7 +137,6 @@ export default class Index extends React.Component {
                                     ))}
                                 </Table.Body>
                             </Table>
-                        </div>
                     </div>
                 </div>
             </AuthenticatedLayout>
