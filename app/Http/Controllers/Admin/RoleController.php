@@ -24,7 +24,7 @@ class RoleController extends Controller
             'team' => ['integer', 'nullable'],
         ]);
 
-        $team = isset($validated['team']) ? $validated['team'] : null;
+        $team = isset($validated['team']) ? $validated['team'] : 0;
 
         if (isset($team)) {
             $roles = Role::where('team_id', $team)->with('permissions')->get();
@@ -32,9 +32,11 @@ class RoleController extends Controller
             $roles = Role::with('permissions')->get();
         }
 
+        $teams = [];
+
         abort_if(isset($team) && Team::find($team) === null, 404);
 
-        return Inertia::render('Admin/Roles/Index', ['roles' => $roles]);
+        return Inertia::render('Admin/Roles/Index', ['roles' => $roles, 'currentTeam' => $team]);
     }
 
     public function create(Request $request)
