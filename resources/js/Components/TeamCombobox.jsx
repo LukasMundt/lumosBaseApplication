@@ -30,9 +30,9 @@ export function TeamCombobox({ teams = [], className = "", currentTeam }) {
         (team) => team.id + "" === currentTeam
     );
 
-    useEffect(() => {
-        console.log(selectedStatus);
-    }, [selectedStatus]);
+    // useEffect(() => {
+    //     console.log(selectedStatus);
+    // }, [selectedStatus]);
 
     if (isDesktop) {
         return (
@@ -100,7 +100,9 @@ function TeamList({ setOpen, setSelectedTeam, teams = [] }) {
                         <CommandLinkItem
                             key={team.id}
                             value={team.id}
-                            href={route("domain.dashboard", { domain: team.id })}
+                            href={route("domain.dashboard", {
+                                domain: team.id,
+                            })}
                             // onSelect={(value) => {
                             //     // router.get(
                             //     //     route("domain.dashboard", { domain: value })
@@ -114,7 +116,6 @@ function TeamList({ setOpen, setSelectedTeam, teams = [] }) {
                     ))}
                 </CommandGroup>
             </CommandList>
-            
         </Command>
     );
 }

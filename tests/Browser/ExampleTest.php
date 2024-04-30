@@ -11,11 +11,21 @@ class ExampleTest extends DuskTestCase
     /**
      * A basic browser test example.
      */
-    public function testBasicExample(): void
+    public function testRedirectFromHomepageToLogin(): void
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                    ->assertSee('Laravel');
+                    ->assertRouteIs('login');
+        });
+    }
+
+    public function testLoginDefaultCredentials(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit(route('login'))
+                    ->type('email', 'admin@example.local')
+                    ->type('password', 'changeme')
+                    ->press('login-button');
         });
     }
 }

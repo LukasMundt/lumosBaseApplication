@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
-use Spatie\Navigation\NavigationServiceProvider;
 
 return [
 
@@ -163,7 +162,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Spatie\Navigation\NavigationServiceProvider::class,
         Elibyy\TCPDF\ServiceProvider::class,
-        // Lukasmundt\ProjectCI\Providers\DAVServiceProvider::class,
+        Lukasmundt\LaravelPrintable\LaravelPrintableServiceProvider::class,
 
         /*
          * Application Service Providers...

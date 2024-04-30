@@ -36,6 +36,31 @@ use Inertia\Inertia;
 //     ]);
 // });
 Route::redirect("/","/personal");
+// Route::redirect("/dashboard","/personal");
+
+Route::get('/planner', function () {
+    $data = Storage::get('resources.json');
+    $data = json_decode($data, 1);
+    $data = $data['taskList'];
+    // [$keys, $values] = Arr::divide($data);
+    foreach ($data as $key => $item) {
+        unset($item['instances'], $item['taskSource'], $item['deleted'], $item['eventCategory'], $item['eventSubType'], $item['notes'], $item['id'], $item['status'], $item['alwaysPrivate'], $item['priority'], $item['onDeck'], $item['readOnlyFields'], $item['type'], $item['timeSchemeId']);
+        $due = Illuminate\Support\Carbon::createFromFormat("Y-m-d\\TH:i:sO", $item['due'], "Europe/Berlin");
+        $item['prioritaetInListe'] = $item['timeChunksRemaining'] * Illuminate\Support\Carbon::now()->diffInMinutes($due);
+        // $item['due'] = str_replace("T"," ", $item['due']);
+        // $tz = new CarbonTimeZone('Europe/Zurich');
+        // var_dump($due->toRfc822String());
+        $item['start'] = $due->toDateTimeLocalString();
+        $item['color'] = "#123456";
+        $data[$key] = $item;
+    }
+
+    // $calendar = Http::withBasicAuth('lukas.mundt','kSrtq-pmibn-3xQ2i-tbBrf-dSNTf')->send('PROPFIND', 'https://cloud.lukas-mundt.de/remote.php/dav/principals/users/lukas.mundt/')->body();
+
+    return Inertia::render('Planner', ['events' => $data, 'cal' => Inertia::lazy(function () {
+        return Http::withBasicAuth('lukas.mundt', 'kSrtq-pmibn-3xQ2i-tbBrf-dSNTf')->send('PROPFIND', 'https://cloud.lukas-mundt.de/remote.php/dav/principals/users/lukas.mundt/')->body(); })]);
+    // return view('planner', ['items' => $data]);
+});
 //
 
 // Route::get("/", [RootController::class, 'root'])->name('root');
@@ -54,12 +79,11 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
-
-
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
+require __DIR__ . '/webPci.php';
+require __DIR__ . '/webPciA.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/{domain}', [RootController::class, 'domainDashboard'])->name('domain.dashboard');
+    Route::get('/{domain}/{path?}', [RootController::class, 'domainDashboard'])->name('domain.dashboard');
 });

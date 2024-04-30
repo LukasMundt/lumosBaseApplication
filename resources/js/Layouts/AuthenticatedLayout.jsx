@@ -4,20 +4,9 @@ import {
     CircleUser,
     Home,
     Menu,
-    ShoppingCart,
-    Sun,
-    Users,
 } from "lucide-react";
 
-import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/Components/ui/card";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,15 +21,19 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/Components/ui/collapsible";
-import { Input } from "@/Components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet";
 import { Link, usePage } from "@inertiajs/react";
 import { ThemeProvider } from "../Components/theme-provider";
 import { useTheme } from "../Components/theme-provider";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { TeamCombobox } from "../Components/TeamCombobox";
+import { Toaster } from "@/Components/ui/sonner";
 
-export default function Authenticated({ user, header, children }) {
+export default function Authenticated({
+    user,
+    header,
+    children,
+}) {
     const { nav, teams } = usePage().props;
     var { domain } = usePage().props;
 
@@ -162,8 +155,8 @@ export default function Authenticated({ user, header, children }) {
                         </div> */}
                     </div>
                 </div>
-                <div className="flex flex-col w-full">
-                    <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+                <div className="flex flex-col w-full h-full">
+                    <header className="flex-none flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
                         <Sheet>
                             <SheetTrigger asChild>
                                 <Button
@@ -337,14 +330,14 @@ export default function Authenticated({ user, header, children }) {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </header>
-                    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-                        <div className="flex items-center">
-                            {/* <h1 className="text-lg font-semibold md:text-2xl">
+                        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 ">
+                            <div className="flex items-center">
+                                {/* <h1 className="text-lg font-semibold md:text-2xl">
                                 Inventory
                             </h1> */}
-                            {header}
-                        </div>
-                        {/* <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
+                                {header}
+                            </div>
+                            {/* <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
                             <div className="flex flex-col items-center gap-1 text-center">
                                 <h3 className="text-2xl font-bold tracking-tight">
                                     You have no products
@@ -356,8 +349,9 @@ export default function Authenticated({ user, header, children }) {
                                 <Button className="mt-4">Add Product</Button>
                             </div>
                         </div> */}
-                        {children}
-                    </main>
+                            {children}
+                        </main>
+                    <Toaster />
                 </div>
             </div>
         </ThemeProvider>

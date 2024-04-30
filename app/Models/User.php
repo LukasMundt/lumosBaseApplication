@@ -12,14 +12,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
-use Lukasmundt\LaravelOwnership\Contracts\CanBeOwner;
-use Lukasmundt\LaravelOwnership\Traits\HasOwnables;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasUlids, HasRoles;
-    use HasOwnables;
 
     /**
      * The attributes that are mass assignable.
@@ -36,14 +33,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function teams(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->getTeams(),
+            get: fn() => $this->getTeams(),
         );
     }
 
     protected function reducedTeams(): Attribute // must be loaded like this User::all()->append('reduced_teams')
     {
         return Attribute::make(
-            get: fn () => $this->getTeams(['id', 'name', 'description']),
+            get: fn() => $this->getTeams(['id', 'name', 'description']),
         );
     }
 
