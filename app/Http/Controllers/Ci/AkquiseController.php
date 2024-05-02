@@ -76,6 +76,9 @@ class AkquiseController extends Controller
         // $projekte = $projekte->toQue
 // == []?"true":"false"
         // $projekteEmpty = json_decode(json_encode($projekte), 1) == [];
+        // dd(Projekt::search("")->whereNotIn("address_id", [""])->get()->toArray());
+        $addresses = Address::search($request->input("search", ""))->where("owned_by_type", Team::class)->where("owned_by_id", session()->get('team'))->get()->toArray();
+        $addresses = data_get($addresses, "*.id");
 
         return Inertia::render('Ci/Akquise/Index', [
             // 'strasse' => $this->getClause()->select(DB::raw('count(strasse) as strasse_count,strasse'))
@@ -85,9 +88,9 @@ class AkquiseController extends Controller
             // 'projekte' => $this->getClause($request->search)->select('projectci_projekt.*', 'akquise_akquise.*')->paginate(15, null, 'page', $page),
             // 'projekte' => $projekteEmpty ? [] : $projekte->toQuery()->paginate(),
 
-            'projekte' => Projekt::has('address')->get()->toQuery()->with('address')->paginate(15),
+            'projekte' => Projekt::with("address")->whereIn('address_id', $addresses)->paginate(15),
 
-            // 'search' => $search,
+            'search' => $request->input("search", ""),
             // 'filter' => $filterVals,
             // 'filterCols' => [
             //     'Stadtteil' => $projekteEmpty ? [] : Projekt::all()->toQuery()->select(DB::raw('count(stadtteil) as count,stadtteil as value'))->groupBy('stadtteil')->get(),

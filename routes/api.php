@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/address')-
 
 Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/contacts')->name('api.v1.contacts.')->group(function () {
     Route::post("/connect", [ContactController::class, 'connect'])->name("connect");
+    Route::get("", [ContactController::class, 'index'])->name('index');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/contacts/persons')->name('api.v1.contacts.persons.')->group(function () {

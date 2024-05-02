@@ -17,10 +17,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Laravel\Scout\Searchable;
 
 class Person extends Model implements Ownable
 {
-    use SoftDeletes, HasUlids, HasFactory, HasMorphOwner;
+    use SoftDeletes, HasUlids, HasFactory, HasMorphOwner, Searchable;
     use Addressable;
 
     protected $table = "persons";
@@ -86,5 +87,18 @@ class Person extends Model implements Ownable
         );
     }
 
-    
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray()
+    {
+        return array_merge(
+            $this->toArray()
+            // , [
+            //     'created_at' => $this->created_at->timestamp,
+            // ]
+        );
+    }
 }

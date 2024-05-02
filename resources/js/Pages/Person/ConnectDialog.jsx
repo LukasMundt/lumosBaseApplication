@@ -26,6 +26,9 @@ import { Input } from "@/Components/ui/input";
 import { toast } from "sonner";
 import { Button } from "@/Components/ui/button";
 import { useEffect } from "react";
+import { ArrowRight, LoaderCircleIcon, Plus, Search, User } from "lucide-react";
+import axios from "axios";
+import { Card, CardContent } from "@/Components/ui/card";
 
 export default function ConnectDialog({
     domain,
@@ -35,7 +38,7 @@ export default function ConnectDialog({
     toggleReload = null,
 }) {
     const [open, setOpen] = React.useState(false);
-    const [step, setStep] = React.useState(1);
+    const [step, setStep] = React.useState(0);
     const [contact, setContact] = React.useState(null);
 
     const nextStep = () => {
@@ -44,7 +47,7 @@ export default function ConnectDialog({
 
     const handleSavedForm = (data) => {
         setContact(data);
-        // console.log(data);
+        console.log(data);
     };
 
     const handleSavedConnection = () => {
@@ -55,8 +58,13 @@ export default function ConnectDialog({
         }
     };
 
+    const setOpenAndReset = (value) => {
+        setOpen(value);
+        setStep(0);
+    };
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={setOpenAndReset}>
             <DialogTrigger asChild>
                 {button === null ? <Button>Kontakt verknüpfen</Button> : button}
             </DialogTrigger>
@@ -68,7 +76,21 @@ export default function ConnectDialog({
                                 Organisation .
                             </DialogDescription> */}
                 </DialogHeader>
-                {step === 1 ? (
+                {step === 0 ? (
+                    <SelectContact
+                        domain={domain}
+                        setStep={setStep}
+                        getContactData={handleSavedForm}
+                    />
+                ) : step === 2 ? (
+                    <RelationForm
+                        thisModel={thisModel}
+                        contactModel={contact}
+                        setOpen={setOpen}
+                        domain={domain}
+                        handleSavedConnection={handleSavedConnection}
+                    />
+                ) : (
                     <Tabs defaultValue="person" className="w-full">
                         <TabsList className="grid w-full grid-cols-1 mb-6">
                             <TabsTrigger value="person">Person</TabsTrigger>
@@ -99,14 +121,6 @@ export default function ConnectDialog({
                             </ScrollArea>
                         </TabsContent>
                     </Tabs>
-                ) : (
-                    <RelationForm
-                        thisModel={thisModel}
-                        contactModel={contact}
-                        setOpen={setOpen}
-                        domain={domain}
-                        handleSavedConnection={handleSavedConnection}
-                    />
                 )}
             </DialogContent>
         </Dialog>
@@ -225,5 +239,114 @@ function RelationForm({
                 <Button type="submit">Verbinden</Button>
             </form>
         </Form>
+    );
+}
+
+function SelectContact({ setStep, getContactData = null, domain }) {
+    const [loading, setLoading] = React.useState(false);
+    const [search, setSearch] = React.useState("");
+    const [contacts, setContacts] = React.useState([]);
+
+    const handleSelection = (index, type) => {
+        if (getContactData === null) {
+            console.error(
+                "Function to send the contact data to parent component not provided."
+            );
+        }
+        if (type === "person") {
+            getContactData(contacts.persons[index]);
+            setStep(2);
+        }
+    };
+
+    const handleClick = () => {
+        setLoading(true);
+        axios
+            .get(
+                route("api.v1.contacts.index", {
+                    domain: domain,
+                    search: search,
+                })
+            )
+            .catch((error) => console.log(error))
+            .then((response) => {
+                setContacts(response.data);
+                setLoading(false);
+            });
+        console.log("request");
+        // console.log(e.target.value);
+    };
+
+    const createNew = () => {
+        setStep(1);
+    };
+
+    return (
+        <>
+            <div className="flex gap-3">
+                <Input
+                    title="Kontakt suchen"
+                    onChange={(e) => setSearch(e.target.value)}
+                    name="search"
+                    onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                            handleClick();
+                        }
+                    }}
+                />
+                <Button onClick={handleClick} size="icon">
+                    <Search className="w-6 h-6 mx-2" />
+                </Button>
+            </div>
+            <ScrollArea className="h-32">
+                {loading ? (
+                    <div className="flex justify-center h-32 items-center">
+                        <LoaderCircleIcon className="animate-spin" />
+                    </div>
+                ) : (
+                    <ul className="grid gap-3">
+                        {contacts.persons
+                            ? contacts.persons.map((person, index) => (
+                                  <li key={person.id}>
+                                      <Card
+                                          className="hover:dark:border-white hover:border-black rounded-md cursor-pointer group"
+                                          type="button"
+                                          id={index}
+                                          onClick={() =>
+                                              handleSelection(index, "person")
+                                          }
+                                      >
+                                          <CardContent className="p-3 flex justify-between gap-3">
+                                              <User />
+                                              <span className="grow">
+                                                  {person.name}
+                                              </span>
+                                              <ArrowRight className="invisible group-hover:visible ease-in"/>
+                                          </CardContent>
+                                      </Card>
+                                  </li>
+                              ))
+                            : ""}
+                    </ul>
+                )}
+                {loading ? (
+                    ""
+                ) : (
+                    <div className="mt-3">
+                        <Card
+                            className="hover:dark:border-white hover:border-black rounded-md cursor-pointer"
+                            type="button"
+                            onClick={createNew}
+                        >
+                            <CardContent className="p-3 flex justify-between gap-3">
+                                <User />
+                                <span className="grow">Neu erstellen</span>
+                                <Plus />
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
+            </ScrollArea>
+        </>
     );
 }

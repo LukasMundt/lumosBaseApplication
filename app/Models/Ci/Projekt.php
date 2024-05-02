@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Scout\Searchable;
 
 class Projekt extends Model implements Ownable
 {
-    use SoftDeletes, HasUlids, HasMorphOwner, Addressable;
+    use SoftDeletes, HasUlids, HasMorphOwner, Addressable, Searchable;
 
     protected $table = "ci_projekt";
 
@@ -48,5 +49,20 @@ class Projekt extends Model implements Ownable
     public function akquise(): HasOne
     {
         return $this->hasOne(Akquise::class, 'id');
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray()
+    {
+        return array_merge(
+            $this->toArray()
+            // , [
+            //     'created_at' => $this->created_at->timestamp,
+            // ]
+        );
     }
 }

@@ -4,13 +4,13 @@ import {
     CircleUser,
     Home,
     Menu,
+    WifiOffIcon,
 } from "lucide-react";
 
 import { Button } from "@/Components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuItem,
     DropdownMenuLinkItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -24,18 +24,15 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet";
 import { Link, usePage } from "@inertiajs/react";
 import { ThemeProvider } from "../Components/theme-provider";
-import { useTheme } from "../Components/theme-provider";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { TeamCombobox } from "../Components/TeamCombobox";
 import { Toaster } from "@/Components/ui/sonner";
+import { useNetworkState } from "@uidotdev/usehooks";
 
-export default function Authenticated({
-    user,
-    header,
-    children,
-}) {
+export default function Authenticated({ user, header, children }) {
     const { nav, teams } = usePage().props;
     var { domain } = usePage().props;
+    const network = useNetworkState();
 
     if (domain === null) {
         domain = 0; // global/default team
@@ -330,6 +327,7 @@ export default function Authenticated({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </header>
+                    {network.online ? (
                         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 ">
                             <div className="flex items-center">
                                 {/* <h1 className="text-lg font-semibold md:text-2xl">
@@ -351,6 +349,18 @@ export default function Authenticated({
                         </div> */}
                             {children}
                         </main>
+                    ) : (
+                        <main className="flex justify-center items-center h-full">
+                            <div className="grid justify-center">
+                                <div className="flex justify-center mb-3">
+                                    <WifiOffIcon className="h-32 w-32" />
+                                </div>
+
+                                <span className="text-center text-2xl">You are offline</span>
+                            </div>
+                        </main>
+                    )}
+
                     <Toaster />
                 </div>
             </div>

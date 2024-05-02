@@ -16,6 +16,7 @@
         "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
+        "laravel/scout": "^10.8",
         "laravel/tinker": "^2.8",
         "league/csv": "9.0",
         "lukasmundt/laravel-ownership": "^0.0.4",
@@ -32,7 +33,8 @@
         "symfony/event-dispatcher": "v6.4.3",
         "symfony/string": "v6.4.4",
         "symfony/yaml": "v6.4.3",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
         "laravel/breeze": "^1.21",

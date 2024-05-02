@@ -6,11 +6,11 @@ use Cog\Contracts\Ownership\Ownable;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 
 class Address extends Model implements Ownable
 {
-    use HasUlids, SoftDeletes;
-    use HasMorphOwner;
+    use HasUlids, SoftDeletes, HasMorphOwner, Searchable;
 
     protected $table = "addresses";
 
@@ -30,4 +30,14 @@ class Address extends Model implements Ownable
         'lat',
         'lon'
     ];
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray()
+    {
+        return $this->toArray();
+    }
 }
