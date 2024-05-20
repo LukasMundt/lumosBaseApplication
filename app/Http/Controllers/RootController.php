@@ -3,25 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Print\Invoice;
-use App\Services\SimpleModelService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Lukasmundt\LaravelPrintable\Facades\Printable;
-use Lukasmundt\LaravelPrintable\LaravelPrintableFacade;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class RootController extends Controller
 {
-    // public function root(Request $request)
-    // {
-    //     return redirect(route('domain.dashboard', ['domain' => 'personal']));
-    // }
-
-    public function domainDashboard(Request $request, string $domain)
-    {
-        // Log::debug(Printable::blob(new Invoice())."");
-        // $printable->
-        // Mail
-        return Inertia::render('Dashboard');
+  // public function root(Request $request)
+  // {
+  //     return redirect(route('team.dashboard', ['domain' => 'personal']));
+  // }
+  public function logo($domain, string $size = null)
+  {
+    // TODO: validate size
+    $logoPath = "/teams//" . session('team') . "/";
+    $files = Storage::allFiles("/teams//" . session('team') . "/");
+    $logoPath = null;
+    foreach ($files as $file) {
+      if (Str::of($file)->contains($logoPath . "logo.")) {
+        $logoPath = $file;
+      }
     }
+
+    // TODO: what to do if no logo saved
+    // TODO: respond with different sizes of logos
+
+    return response()->file(Storage::path($logoPath));
+  }
+
+  public function domainDashboard(Request $request, string $domain)
+  {
+    return Inertia::render('Dashboard');
+  }
 }

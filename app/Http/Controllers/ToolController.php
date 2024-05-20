@@ -17,16 +17,16 @@ class ToolController extends Controller
     public function fixBauantrag2Link(Request $request)
     {
         $validated = $request->validate([
-            'rawLink' => ['required', 'min:2', 'url:http,https'],
+            'rawLink' => ['required', 'min:2'],
         ]);
         $input = $validated['rawLink'];
         $posOfQm = Str::of($input)->position("?");
-        $link = Str::of($input)->substr(0, $posOfQm + 1)->remove("-");
+        $link = Str::of($input)->substr(0, $posOfQm + 1)->remove(["-"," "]);
         $rawParams = Str::of($input)->substr($posOfQm + 1)->explode("&");
 
         foreach ($rawParams as $param) {
             $exploded = Str::of($param)->explode("=");
-            $key = Str::of($exploded[0])->remove("-");
+            $key = Str::of($exploded[0])->remove(["-"," "]);
 
             if ($key == "uuid") {
                 if (Str::isUuid($exploded[1])) {

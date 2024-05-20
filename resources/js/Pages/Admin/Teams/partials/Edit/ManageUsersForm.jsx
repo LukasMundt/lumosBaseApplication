@@ -26,7 +26,7 @@ export default function ManageUsersForm({
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
+        // console.log(data);
 
         // post(route("admin.teams.update", { team: team.id }));
     };
@@ -36,7 +36,7 @@ export default function ManageUsersForm({
     //     usersOptions.push({ value: user.id, label: user.name });
     // });
 
-    console.log(usersOptions);
+    // console.log(usersOptions);
 
     return (
         <section className={className}>

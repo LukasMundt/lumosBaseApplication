@@ -44,7 +44,7 @@ class NotizController extends Controller
             $notiz->save();
         }
         // Log::debug();
-        Log::debug($request->validated());
+        // Log::debug($request->validated());
 
         return $notiz->refresh()->id;
         // return Inertia::lazy(fn() => 'hallo');

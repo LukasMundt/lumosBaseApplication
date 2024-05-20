@@ -31,7 +31,7 @@ export default function EditForm({ className = "" }) {
 
   const submit = (e) => {
     e.preventDefault();
-    console.log(data);
+    // console.log(data);
 
     post(route("akquise.akquise.update", { projekt: projekt.id }));
   };

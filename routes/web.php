@@ -3,7 +3,11 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Campaigns\CampaignController;
+use App\Http\Controllers\Campaigns\CampaignsController;
+use App\Http\Controllers\Campaigns\ListController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\RootController;
@@ -35,7 +39,7 @@ use Inertia\Inertia;
 //         'phpVersion' => PHP_VERSION,
 //     ]);
 // });
-Route::redirect("/","/personal");
+Route::redirect("/", "/personal");
 // Route::redirect("/dashboard","/personal");
 
 Route::get('/planner', function () {
@@ -44,7 +48,7 @@ Route::get('/planner', function () {
     $data = $data['taskList'];
     // [$keys, $values] = Arr::divide($data);
     foreach ($data as $key => $item) {
-        unset($item['instances'], $item['taskSource'], $item['deleted'], $item['eventCategory'], $item['eventSubType'], $item['notes'], $item['id'], $item['status'], $item['alwaysPrivate'], $item['priority'], $item['onDeck'], $item['readOnlyFields'], $item['type'], $item['timeSchemeId']);
+        unset ($item['instances'], $item['taskSource'], $item['deleted'], $item['eventCategory'], $item['eventSubType'], $item['notes'], $item['id'], $item['status'], $item['alwaysPrivate'], $item['priority'], $item['onDeck'], $item['readOnlyFields'], $item['type'], $item['timeSchemeId']);
         $due = Illuminate\Support\Carbon::createFromFormat("Y-m-d\\TH:i:sO", $item['due'], "Europe/Berlin");
         $item['prioritaetInListe'] = $item['timeChunksRemaining'] * Illuminate\Support\Carbon::now()->diffInMinutes($due);
         // $item['due'] = str_replace("T"," ", $item['due']);
@@ -57,8 +61,12 @@ Route::get('/planner', function () {
 
     // $calendar = Http::withBasicAuth('lukas.mundt','kSrtq-pmibn-3xQ2i-tbBrf-dSNTf')->send('PROPFIND', 'https://cloud.lukas-mundt.de/remote.php/dav/principals/users/lukas.mundt/')->body();
 
-    return Inertia::render('Planner', ['events' => $data, 'cal' => Inertia::lazy(function () {
-        return Http::withBasicAuth('lukas.mundt', 'kSrtq-pmibn-3xQ2i-tbBrf-dSNTf')->send('PROPFIND', 'https://cloud.lukas-mundt.de/remote.php/dav/principals/users/lukas.mundt/')->body(); })]);
+    return Inertia::render('Planner', [
+        'events' => $data,
+        'cal' => Inertia::lazy(function () {
+            return Http::withBasicAuth('lukas.mundt', 'kSrtq-pmibn-3xQ2i-tbBrf-dSNTf')->send('PROPFIND', 'https://cloud.lukas-mundt.de/remote.php/dav/principals/users/lukas.mundt/')->body();
+        })
+    ]);
     // return view('planner', ['items' => $data]);
 });
 //
@@ -85,5 +93,20 @@ require __DIR__ . '/webPci.php';
 require __DIR__ . '/webPciA.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/{domain}/{path?}', [RootController::class, 'domainDashboard'])->name('domain.dashboard');
+    // Route::get('/{domain}/contacts/persons', [PersonController::class, 'index']);
+});
+
+Route::middleware(['auth', 'verified'])->prefix('/{domain}/campaigns')->name('campaigns.')->group(function () {
+    Route::get('/', [CampaignsController::class, 'index'])->name('index');
+    Route::get('/campaigns', [CampaignController::class, 'index'])->name('campaigns.index');
+    Route::get('/campaigns/settings', [CampaignsController::class, 'settings'])->name('campaigns.settings');
+    Route::get('/campaigns/{campaign}/edit', [CampaignController::class, 'edit'])->name('campaigns.edit');
+    Route::get('/campaigns/{campaign}/preview', [CampaignController::class, 'preview'])->name('campaigns.preview');
+    Route::get('/lists', [ListController::class, 'index'])->name('lists.index');
+    Route::get('/lists/{list}/edit', [ListController::class, 'edit'])->name('lists.edit');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/{domain}/logo', [RootController::class, 'logo'])->name('team.logo');
+    Route::get('/{domain}/{path?}', [RootController::class, 'domainDashboard'])->name('team.dashboard');
 });

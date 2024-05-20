@@ -24,7 +24,7 @@ import { toast } from "sonner";
 export default class Show extends React.Component {
     render() {
         const { auth, projekt, notiz, domain, this_type } = this.props;
-        console.log(this.props);
+        // console.log(this.props);
 
         const contactDialog = ({ button = null }) => {
             return (
@@ -147,7 +147,8 @@ export default class Show extends React.Component {
                                                 <BooleanShow
                                                     dataKey="nicht_gewuenscht"
                                                     expression={
-                                                        projekt.akquise.nicht_gewuenscht
+                                                        projekt.akquise
+                                                            .nicht_gewuenscht
                                                     }
                                                     ifTrue={
                                                         <ExclamationCircleIcon className="w-6 text-red-500" />
@@ -159,7 +160,6 @@ export default class Show extends React.Component {
                                                     id={projekt.id}
                                                     toggleReload={toggleReload}
                                                 />
-                                                
                                             </div>
                                             <div className="content-center">
                                                 Teilung
@@ -260,7 +260,7 @@ function BooleanShow({
     const handleClick = () => {
         var data = {};
         data[dataKey] = !expression;
-        console.log(data);
+        // console.log(data);
         toast.promise(
             axios.post(
                 route("api.v1.projects.akquise", {
@@ -278,7 +278,7 @@ function BooleanShow({
                     return "Änderung gespeichert";
                 },
                 error: (error) => {
-                    console.log(error);
+                    // console.log(error);
                     return "Fehler";
                 },
             }

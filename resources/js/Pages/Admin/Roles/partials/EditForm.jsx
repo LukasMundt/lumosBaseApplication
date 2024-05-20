@@ -12,7 +12,7 @@ import ReactSelect from "@/Components/Inputs/ReactSelect";
 
 export default function EditForm({ status, className = "" }) {
     const { user, permissions, role } = usePage().props;
-    console.log(permissions);
+    // console.log(permissions);
     // mögliche Berechtigungen
     const permissionsSelect = [];
     permissions.map((permission) => {
@@ -23,7 +23,7 @@ export default function EditForm({ status, className = "" }) {
     });
 
     // der Rolle zugewiesene Berechtigungen
-    console.log(role);
+    // console.log(role);
     const permissionsRole = [];
     role.permissions.map((permission) => {
         permissionsRole.push({
@@ -31,7 +31,7 @@ export default function EditForm({ status, className = "" }) {
             label: permission.name + " (" + permission.guard_name + ")",
         });
     });
-    console.log(permissionsRole);
+    // console.log(permissionsRole);
 
     const { data, setData, post, errors, processing, recentlySuccessful } =
         useForm({
@@ -41,7 +41,7 @@ export default function EditForm({ status, className = "" }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(e);
+        // console.log(e);
 
         post(route("admin.roles.update", { role: role.id }));
     };

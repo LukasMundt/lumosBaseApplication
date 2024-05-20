@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PdfVorlage extends Model
 {
+
+    // TODO: Dieses Model entfernen, wenn nicht mehr benötigt
     use HasUlids;
     use SoftDeletes;
 

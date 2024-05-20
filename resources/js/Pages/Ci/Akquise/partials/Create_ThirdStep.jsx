@@ -40,7 +40,7 @@ export default function ThirdStep({
         e.preventDefault();
 
         post(route("akquise.akquise.store", { domain: domain }), {
-            onError: (error) => console.log(error),
+            onError: (error) => console.error(error),
             onSuccess: (response) => console.log(response),
         });
         if (akquiseSaved != null) {
@@ -51,7 +51,7 @@ export default function ThirdStep({
         }
     };
 
-    console.log(data);
+    // console.log(data);
 
     return (
         <section className={className}>

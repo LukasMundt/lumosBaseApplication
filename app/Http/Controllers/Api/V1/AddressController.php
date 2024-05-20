@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddressFindOrCreateRequest;
 use App\Models\Address;
+use App\Models\SimpleAddressForAutocomplete;
 use App\Models\Team;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class AddressController extends Controller
@@ -28,5 +30,10 @@ class AddressController extends Controller
         } else {
             return $address;
         }
+    }
+
+    public function autocomplete(Request $request)
+    {
+        return SimpleAddressForAutocomplete::search($request->input("search"))->get()->take(20);
     }
 }

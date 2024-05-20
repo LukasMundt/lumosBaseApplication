@@ -28,7 +28,7 @@ export default function CreateForm({ status, className = "" }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(e);
+        // console.log(e);
 
         post(route("admin.teams.store"));
     };

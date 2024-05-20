@@ -13,6 +13,8 @@ class Kampagne extends Model
     use HasUlids;
     use SoftDeletes;
 
+    // TODO: Dieses Model entfernen, wenn nicht mehr benötigt
+
     protected $table = 'projectci_kampagne';
 
     protected $fillable = [

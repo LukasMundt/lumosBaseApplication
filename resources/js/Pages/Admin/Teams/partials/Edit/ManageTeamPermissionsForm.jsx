@@ -29,12 +29,12 @@ export default function ManageTeamPermissionsForm({
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
+        // console.log(data);
 
         post(route("admin.teams.updateTeamPermissions", { team: team.id }));
     };
 
-    console.log(teamPermissionsCurrent);
+    // console.log(teamPermissionsCurrent);
 
     return (
         <section className={className}>

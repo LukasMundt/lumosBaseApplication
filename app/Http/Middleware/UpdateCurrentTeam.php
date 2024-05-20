@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Rawilk\Settings\Facades\Settings;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateCurrentTeam
@@ -29,6 +30,7 @@ class UpdateCurrentTeam
         }
 
         session()->put("team", $domain);
+        Settings::setTeamId($domain);
 
         return $next($request);
     }

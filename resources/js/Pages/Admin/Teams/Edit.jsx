@@ -9,7 +9,7 @@ import ManageTeamPermissionsForm from "./partials/Edit/ManageTeamPermissionsForm
 export default class Edit extends React.Component {
     render() {
         const { auth, team, allUsers, currentUsers, roles, teamPermissions, teamPermissionsCurrent} = this.props;
-        console.log(this.props);
+        // console.log(this.props);
 
         return (
             <AuthenticatedLayout

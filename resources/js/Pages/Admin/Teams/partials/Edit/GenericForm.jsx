@@ -16,7 +16,7 @@ export default function GenericForm({ status, className = "", team }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(e);
+        // console.log(e);
 
         post(route("admin.teams.update", { team: team.id }));
     };

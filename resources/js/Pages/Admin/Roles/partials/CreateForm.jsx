@@ -9,7 +9,7 @@ import ReactSelect from "@/Components/Inputs/ReactSelect";
 
 export default function CreateForm({ status, className = "" }) {
     const { user, permissions } = usePage().props;
-    console.log(permissions);
+    // console.log(permissions);
     const permissionsSelect = [];
     permissions.map((permission) => {
         permissionsSelect.push({
@@ -27,7 +27,7 @@ export default function CreateForm({ status, className = "" }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(e);
+        // console.log(e);
 
         post(route("admin.roles.store"));
     };

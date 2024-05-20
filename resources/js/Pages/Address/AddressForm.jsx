@@ -128,14 +128,14 @@ export default function AddressForm({
             var tempArr = creatables[key].composed;
             tempArr.lat = creatables[key].lat;
             tempArr.lon = creatables[key].lon;
-            console.log(tempArr);
+            // console.log(tempArr);
             axios
                 .post(
                     route("api.v1.addresses.findOrCreate", { domain: domain }),
                     tempArr
                 )
                 .then((response) => {
-                    console.log(response);
+                    // console.log(response);
                     if (getAddressData != null) {
                         getAddressData(response.data);
                         resetFrom();

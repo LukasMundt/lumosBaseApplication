@@ -54,7 +54,12 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => env("FLARE_KEY",null)==null?["single"]:["single", "flare"],
+            'channels' => array_merge(
+                ["single"],
+                env("FLARE_KEY", null) == null ? [] : ["flare"],
+                env("SENTRY_LARAVEL_DSN", null) == null ? [] : ["sentry"]
+            ),
+            env("FLARE_KEY", null) == null ? ["single"] : ["single", "flare"],
             'ignore_exceptions' => false,
         ],
 
@@ -89,7 +94,7 @@ return [
             'handler_with' => [
                 'host' => env('PAPERTRAIL_URL'),
                 'port' => env('PAPERTRAIL_PORT'),
-                'connectionString' => 'tls://'.env('PAPERTRAIL_URL').':'.env('PAPERTRAIL_PORT'),
+                'connectionString' => 'tls://' . env('PAPERTRAIL_URL') . ':' . env('PAPERTRAIL_PORT'),
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],
@@ -125,6 +130,14 @@ return [
 
         'flare' => [
             'driver' => 'flare',
+        ],
+
+        'sentry' => [
+            'driver' => 'sentry',
+            // The minimum logging level at which this handler will be triggered
+            // Available levels: debug, info, notice, warning, error, critical, alert, emergency
+            'level' => env('LOG_LEVEL', 'error'),
+            'bubble' => true, // Whether the messages that are handled can bubble up the stack or not
         ],
 
         'emergency' => [

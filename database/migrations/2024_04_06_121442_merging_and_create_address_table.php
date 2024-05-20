@@ -126,6 +126,37 @@ return new class extends Migration {
             $table->ulidMorphs("model");
             $table->ulidMorphs("contact");
             $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create("simple_addresses_for_autocomplete", function (Blueprint $table) {
+            $table->string("street_and_number", 255)->unique("street_and_number");
+        });
+
+        Schema::create('campaigns_campaigns', function(Blueprint $table){
+            $table->ulid('id')->primary();
+            $table->boolean('send');
+            $table->string('content_type');
+            $table->string('date_for_print');
+            $table->longText('content')->nullable();
+            $table->string('name');
+            $table->nullableUlidMorphs('list');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('campaigns_lists_address', function(Blueprint $table){
+            $table->ulid('id')->primary();
+            $table->string('name');
+            $table->json('filters');
+            $table->timestamps();
+            $table->nullableMorphs('owned_by');
+        });
+
+        Schema::create('campaigns_campaignable', function(Blueprint $table){
+            $table->ulidMorphs('campaignable');
+            $table->ulidMorphs('campaign');
+            $table->timestamps();
         });
     }
 

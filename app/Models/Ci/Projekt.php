@@ -25,17 +25,10 @@ class Projekt extends Model implements Ownable
      *
      * @var array<int, string>
      */
-    // protected $fillable = [
-    //     'strasse',
-    //     'hausnummer',
-    //     'hausnummer_nummer',
-    //     'hausnummer_buchstabe',
-    //     'plz',
-    //     'stadt',
-    //     'stadtteil',
-    //     'coordinates_lat',
-    //     'coordinates_lon'
-    // ];
+    protected $fillable = [
+        'created_by',
+        'updated_by'
+    ];
     protected $hidden = [
         'owned_by_id',
         'owned_by_type'

@@ -19,3 +19,6 @@ yarn-error.log
 /.idea
 /.vscode
 composer.lock
+
+# Sentry Config File
+.env.sentry-build-plugin

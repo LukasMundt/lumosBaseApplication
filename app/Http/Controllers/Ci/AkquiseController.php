@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Benchmark;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -36,47 +37,7 @@ class AkquiseController extends Controller
     {
         $this->authorize('viewAny', Akquise::class);
 
-        // (int) $page = !empty($request->page) ? (int) $request->page : 1;
-        // (String) $search = $request->search;
-        // (string) $filter = $request->filter;
 
-        // $filterVals = [];
-        // if ($filter != "") {
-        //     $expl = explode(";", urldecode($filter));
-        //     $filterVals = array();
-        //     foreach ($expl as $value) {
-        //         $filterVals[explode(':', $value)[0]] = explode(',', explode(':', $value)[1]);
-        //     }
-        // }
-
-        // $projekte = Projekt::where(function (Builder $query) use ($filterVals) {
-        //     $query->whereIn('street', $filterVals['strasse'] ?? [], 'and', !isset ($filterVals['strasse']) || count($filterVals['strasse']) == 0)
-        //         ->whereIn('housenumber', $filterVals['hausnummer'] ?? [], 'and', !isset ($filterVals['hausnummer']) || count($filterVals['hausnummer']) == 0)
-        //         ->whereIn('stadtteil', $filterVals['stadtteil'] ?? [], 'and', !isset ($filterVals['stadtteil']) || count($filterVals['stadtteil']) == 0)
-        //         ->whereIn('zip_code', $filterVals['plz'] ?? [], 'and', !isset ($filterVals['plz']) || count($filterVals['plz']) == 0);
-        // })->where(function (Builder $query) use ($search) {
-        //     $query->where('street', 'LIKE', '%' . $search . '%')
-        //         ->orWhere('housenumber', 'LIKE', '%' . $search . '%')
-        //         ->orWhere('zip_code', 'LIKE', '%' . $search . '%')
-        //         ->orWhere('city', 'LIKE', '%' . $search . '%');
-        //     // ->orWhere('akquise_akquise.status', 'LIKE', '%' . $search . '%')
-
-        // })
-        //     // ->orderBy('strasse')
-        //     // ->orderBy('hausnummer_nummer')
-        //     ->get('*')
-        //     ->load('akquise');
-
-
-        // ->orWhere('projectci_projekt.plz', 'LIKE', '%' . $search . '%')
-        // ->orWhere('projectci_projekt.stadt', 'LIKE', '%' . $search . '%')
-        // ->orWhere('akquise_akquise.status', 'LIKE', '%' . $search . '%')
-
-
-        // $projekte = $projekte->toQue
-// == []?"true":"false"
-        // $projekteEmpty = json_decode(json_encode($projekte), 1) == [];
-        // dd(Projekt::search("")->whereNotIn("address_id", [""])->get()->toArray());
         $addresses = Address::search($request->input("search", ""))->where("owned_by_type", Team::class)->where("owned_by_id", session()->get('team'))->get()->toArray();
         $addresses = data_get($addresses, "*.id");
 
@@ -98,7 +59,6 @@ class AkquiseController extends Controller
             //     'Strasse' => $projekteEmpty ? [] : Projekt::all()->toQuery()->select(DB::raw('count(strasse) as count,strasse as value'))->groupBy('strasse')->get(),
             //     // 'Retoure' => $projekte->toQuery()->select(DB::raw('count(akquise.retour) as count,akquise.retour'))->groupBy('akquise.retour')->get(),
             // ],
-            // 'test' => $projekte->toQuery()->paginate(),
         ]);
     }
 
@@ -107,7 +67,7 @@ class AkquiseController extends Controller
         $this->authorize('viewAny', Akquise::class);
 
         // $projekte = $this->getClause($request->search)->select('projectci_projekt.coordinates_lat', 'projectci_projekt.coordinates_lon', 'projectci_projekt.strasse', 'projectci_projekt.hausnummer', 'akquise_akquise.id', 'akquise_akquise.retour', 'akquise_akquise.nicht_gewuenscht')->get();
-        $projekte = Projekt::all()->load(['address', 'akquise']);
+        $projekte = Projekt::where("owned_by_type", Team::class)->where("owned_by_id", session()->get('team'))->get()->load(['address', 'akquise']);
 
         $normalMarkers = [];
         $retourMarkers = [];
@@ -161,22 +121,22 @@ class AkquiseController extends Controller
         ]);
     }
 
-    private function getClause($search = "")
-    {
-        return DB::table('projectci_projekt')
-            // Suche
-            ->where('projectci_projekt.strasse', 'LIKE', '%' . $search . '%')
-            ->orWhere('projectci_projekt.hausnummer', 'LIKE', '%' . $search . '%')
-            ->orWhere('projectci_projekt.plz', 'LIKE', '%' . $search . '%')
-            ->orWhere('projectci_projekt.stadt', 'LIKE', '%' . $search . '%')
-            ->orWhere('akquise_akquise.status', 'LIKE', '%' . $search . '%')
-            // other
+    // private function getClause($search = "")
+    // {
+    //     return DB::table('projectci_projekt')
+    //         // Suche
+    //         ->where('projectci_projekt.strasse', 'LIKE', '%' . $search . '%')
+    //         ->orWhere('projectci_projekt.hausnummer', 'LIKE', '%' . $search . '%')
+    //         ->orWhere('projectci_projekt.plz', 'LIKE', '%' . $search . '%')
+    //         ->orWhere('projectci_projekt.stadt', 'LIKE', '%' . $search . '%')
+    //         ->orWhere('akquise_akquise.status', 'LIKE', '%' . $search . '%')
+    //         // other
 
-            ->join('akquise_akquise', 'projectci_projekt.id', '=', 'akquise_akquise.id', 'inner');
-        //->join('projectci_gruppeverknuepfung', 'akquise_akquise.id', '=', 'projectci_gruppeverknuepfung.gruppeverknuepfung_id')
-        // ->orderBy('projectci_projekt.strasse')
-        // ->orderBy('projectci_projekt.hausnummer_nummer');
-    }
+    //         ->join('akquise_akquise', 'projectci_projekt.id', '=', 'akquise_akquise.id', 'inner');
+    //     //->join('projectci_gruppeverknuepfung', 'akquise_akquise.id', '=', 'projectci_gruppeverknuepfung.gruppeverknuepfung_id')
+    //     // ->orderBy('projectci_projekt.strasse')
+    //     // ->orderBy('projectci_projekt.hausnummer_nummer');
+    // }
 
     public function create(Request $request): Response
     {
@@ -213,7 +173,7 @@ class AkquiseController extends Controller
 
         $team = Team::find(session('team'));
 
-        $projekt = Projekt::create([]);
+        $projekt = Projekt::create(['created_by' => Auth::user()->id, 'updated_by' => Auth::user()->id]);
         // $projekt->save();
         // dd($request->safe()->only(['teilung', 'abriss', 'retour', 'status', 'nicht_gewuenscht']));
         $akquise = new Akquise($request->safe()->only(['teilung', 'abriss', 'retour', 'status', 'nicht_gewuenscht']));

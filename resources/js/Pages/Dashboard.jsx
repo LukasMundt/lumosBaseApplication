@@ -1,10 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { OrganisationForm } from "./Person/partials/OrganisationForm";
 import React from "react";
-import ConnectDialog from "./Person/ConnectDialog";
 
 export default function Dashboard({ auth }) {
     // console.log(usePage().props);
@@ -36,7 +33,6 @@ export default function Dashboard({ auth }) {
                     <Route path="/personal/123" element={<div>routed Element</div>} />
                 </Routes>
             </BrowserRouter> */}
-            <ConnectDialog domain={domain} />
         </AuthenticatedLayout>
     );
 }

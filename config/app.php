@@ -162,7 +162,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
         Spatie\Navigation\NavigationServiceProvider::class,
         Elibyy\TCPDF\ServiceProvider::class,
-        Lukasmundt\LaravelPrintable\LaravelPrintableServiceProvider::class,
+        // Lukasmundt\LaravelPrintable\LaravelPrintableServiceProvider::class,
 
         /*
          * Application Service Providers...

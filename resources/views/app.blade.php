@@ -7,12 +7,8 @@
     <meta name="theme-color" content="#141826"/>
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script> -->
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <!-- Fonts -->
     <!-- Fonts now are loaded in the app.css-file from the public folder -->
-    <!-- <link rel="preconnect" href="https://fonts.bunny.net"> -->
-    <!-- <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> -->
 
     <link rel="preload" href="/logo.svg" as="image">
 

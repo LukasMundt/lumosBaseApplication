@@ -34,32 +34,32 @@ export function TeamCombobox({ teams = [], className = "", currentTeam }) {
     //     console.log(selectedStatus);
     // }, [selectedStatus]);
 
-    if (isDesktop) {
-        return (
-            <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="secondary"
-                        className={"w-full justify-start " + className}
-                    >
-                        <Building2 className="h-5 w-5 mr-3" />
-                        {currentTeam && currentTeamElement ? (
-                            <>Team: {currentTeamElement.name}</>
-                        ) : (
-                            <>Team festlegen</>
-                        )}
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0" align="start">
-                    <TeamList
-                        setOpen={setOpen}
-                        setSelectedStatus={setSelectedStatus}
-                        teams={teams}
-                    />
-                </PopoverContent>
-            </Popover>
-        );
-    }
+    // if (isDesktop) {
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="secondary"
+                    className={"w-full justify-start " + className}
+                >
+                    <Building2 className="h-5 w-5 mr-3" />
+                    {currentTeam && currentTeamElement ? (
+                        <>Team: {currentTeamElement.name}</>
+                    ) : (
+                        <>Team festlegen</>
+                    )}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0" align="start">
+                <TeamList
+                    setOpen={setOpen}
+                    setSelectedStatus={setSelectedStatus}
+                    teams={teams}
+                />
+            </PopoverContent>
+        </Popover>
+    );
+    // }
 
     return (
         <Drawer open={open} onOpenChange={setOpen}>
@@ -100,12 +100,12 @@ function TeamList({ setOpen, setSelectedTeam, teams = [] }) {
                         <CommandLinkItem
                             key={team.id}
                             value={team.id}
-                            href={route("domain.dashboard", {
+                            href={route("team.dashboard", {
                                 domain: team.id,
                             })}
                             // onSelect={(value) => {
                             //     // router.get(
-                            //     //     route("domain.dashboard", { domain: value })
+                            //     //     route("team.dashboard", { domain: value })
                             //     // );
                             //     setSelectedTeam(value);
                             //     setOpen(false);

@@ -85,6 +85,8 @@ class Akquise extends Model implements Ownable
     //     return $this->morphToMany(Kampagne::class, 'bewerbbar');
     // }
 
+    // TODO: Kampagne verbinden können
+
     // public function getRouteKeyName(): string
     // {
     //     return 'id';

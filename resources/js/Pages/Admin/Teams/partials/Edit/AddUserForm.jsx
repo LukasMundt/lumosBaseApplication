@@ -19,7 +19,7 @@ export default function AddUserForm({ status, className = "", roles, users}) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
+        // console.log(data);
 
         post(route("admin.teams.addMember", { team: team.id }));
     };
@@ -29,7 +29,7 @@ export default function AddUserForm({ status, className = "", roles, users}) {
         usersOptions.push({ value: user.id, label: user.name });
     });
 
-    console.log(roles);
+    // console.log(roles);
 
     return (
         <section className={className}>
