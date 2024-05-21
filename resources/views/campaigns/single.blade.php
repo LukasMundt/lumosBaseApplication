@@ -5,7 +5,8 @@
 <head>
     <title>{{ $title }}</title>
     {{-- @vite(['resources/css/app.css']) --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite('resources/css/app.css')
+    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
     <meta charset="utf-8">
     {{-- @inertia --}}
 </head>

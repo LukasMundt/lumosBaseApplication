@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Rawilk\Settings\Facades\Settings;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class CampaignController extends Controller
@@ -48,13 +49,15 @@ class CampaignController extends Controller
         // TODO: what to do if no logo saved
 
         // return $campaign->content;
-        return Pdf::view('campaigns.single', [
-            'content' => $campaign->content,
-            'title' => 'Dies ist der Titel',
-            'date_for_print' => $campaign->date_for_print,
-            'sender' => Settings::get('sender', ""),
-            'logo' => "data:image/png;base64," . base64_encode(Storage::get($logoPath)),
-        ])
+        return Pdf::withBrowsershot(function (Browsershot $browsershot) {
+            $browsershot->noSandbox();
+        })->view('campaigns.single', [
+                    'content' => $campaign->content,
+                    'title' => 'Dies ist der Titel',
+                    'date_for_print' => $campaign->date_for_print,
+                    'sender' => Settings::get('sender', ""),
+                    'logo' => "data:image/png;base64," . base64_encode(Storage::get($logoPath)),
+                ])
             ->footerView('campaigns.footer.default', [
                 'content' => Settings::get('footer', ""),
                 'margins' => '20mm'
