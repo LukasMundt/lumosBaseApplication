@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import {
     Form,
     FormControl,
@@ -10,15 +10,15 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
+} from "@/Components/ui/form";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+} from "@/Components/ui/select";
+import { Input } from "@/Components/ui/input";
 import { Plus } from "lucide-react";
 import { Card, CardContent } from "@/Components/ui/card";
 import PersonSelectOrCreate from "./PersonSelectOrCreate";

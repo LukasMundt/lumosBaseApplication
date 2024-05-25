@@ -12,10 +12,10 @@ import {
     FormLabel,
     FormMessage,
 } from "@/Components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/Components/ui/input";
 import axios from "axios";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { useState } from "react";
 import { useEffect } from "react";
 import { ArrowBigRight, UploadCloud } from "lucide-react";
