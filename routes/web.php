@@ -102,6 +102,7 @@ Route::middleware(['auth', 'verified'])->prefix('/{domain}/campaigns')->name('ca
     Route::get('/campaigns/settings', [CampaignsController::class, 'settings'])->name('campaigns.settings');
     Route::get('/campaigns/{campaign}/edit', [CampaignController::class, 'edit'])->name('campaigns.edit');
     Route::get('/campaigns/{campaign}/preview', [CampaignController::class, 'preview'])->name('campaigns.preview');
+    Route::get('/campaigns/{campaign}/download', [CampaignController::class, 'download'])->name('campaigns.download');
     Route::get('/lists', [ListController::class, 'index'])->name('lists.index');
     Route::get('/lists/{list}/edit', [ListController::class, 'edit'])->name('lists.edit');
 });

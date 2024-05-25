@@ -18,6 +18,8 @@ use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
+// TODO: delete asap
+
 class KampagneController extends Controller
 {
     public function index(Request $request)

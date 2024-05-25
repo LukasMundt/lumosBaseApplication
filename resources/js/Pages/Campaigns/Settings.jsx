@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { ArrowBigRight, UploadCloud } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader } from "@/Components/ui/card";
 
 const formSchema = z.object({
     logo: z
@@ -281,6 +282,87 @@ export default function Settings({ auth, domain, settings }) {
                                 </FormItem>
                             )}
                         />
+                        <Card>
+                            <CardHeader>
+                                Anrede
+                                <CardDescription>
+                                    Diese Anrede wird in der Pdf angezeigt. ({" "}
+                                    <span>//anrede//</span> wird ersetzt)
+                                </CardDescription>
+                            </CardHeader>
+                            {/* TODO: Error message anzeigen */}
+
+                            <CardContent className="grid gap-3 md:grid-cols-2">
+                                <FormField
+                                    control={form.control}
+                                    name="salutation_not_specified"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Keine Angabe</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Sehr geehrte Damen und Herren"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="salutation_female"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Weiblich</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Sehr geehrte Frau //nachname//"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="salutation_male"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Männlich</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Sehr geehrter Herr //nachname//"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="salutation_diverse"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Divers</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Sehr geehrt* //nachname//"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </CardContent>
+                        </Card>
                     </form>
                 </Form>
             </main>

@@ -92,7 +92,7 @@ class CoordinatesService
         // $result['lon'] = $lon;
         // $result['lat'] = $lat;
 
-        Log::debug($secondResponse->json());
+        // Log::debug($secondResponse->json());
 
         return self::composeDetails($secondResponse->json());
     }

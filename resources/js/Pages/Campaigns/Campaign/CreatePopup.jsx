@@ -13,7 +13,6 @@ import { useForm } from "react-hook-form";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -80,6 +79,7 @@ export default function CreatePopup({ domain }) {
                             campaign: response.data.id,
                         })
                     );
+                    return "Kampagne erstellt."
                 },
                 error: (error) => {
                     // console.log(error);

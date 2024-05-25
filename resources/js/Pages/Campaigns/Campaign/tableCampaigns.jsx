@@ -12,7 +12,6 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -24,7 +23,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
     Table,
     TableBody,
@@ -39,7 +37,7 @@ import "moment/locale/de";
 import { Pencil, Send } from "lucide-react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 
-export function CampaignsTable({ data, buttons, domain }) {
+export default function CampaignsTable({ data, buttons, domain }) {
     const [sorting, setSorting] = React.useState([]);
     const [columnFilters, setColumnFilters] = React.useState([]);
     const [columnVisibility, setColumnVisibility] = React.useState({});

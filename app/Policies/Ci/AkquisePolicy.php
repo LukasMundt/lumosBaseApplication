@@ -5,6 +5,7 @@ namespace App\Policies\Ci;
 use App\Models\Ci\Akquise;
 use App\Models\Team;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class AkquisePolicy
 {
@@ -20,12 +21,12 @@ class AkquisePolicy
         setPermissionsTeamId(session()->get("team"));
         $user->unsetRelation('roles');
         $user->unsetRelation('permissions');
+        
         return null;
     }
 
     public function viewAny(User $user): bool
     {
-
         return $user->hasAnyPermission([
             'lumos-akquise-view-own-projects',
             'lumos-akquise-view-all-projects'

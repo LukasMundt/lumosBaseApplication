@@ -45,40 +45,43 @@ return new class extends Migration {
             });
 
             // this migration of the ownership is very risky, only meant for my staging environment SHOULD NOT be made in production
+            if (Schema::hasTable('model_has_owner')) {
 
-            $teamId = json_decode(json_encode(DB::table('model_has_roles')->whereNot('team_id', 0)->limit(1)->get()->toArray()), 1)[0]['team_id'] ?? 0;
-            $projects = json_decode(json_encode(DB::table('model_has_owner')->where('ownable_type', "Lukasmundt\Akquise\Models\Projekt")->get()->toArray()), 1);
-            foreach ($projects as $key => $project) {
-                DB::table('ci_projekt')
-                    ->where('id', $project['ownable_id'])
-                    ->update(['owned_by_type' => Team::class, 'owned_by_id' => $teamId]);
-                DB::table('ci_akquise')
-                    ->where('id', $project['ownable_id'])
-                    ->update(['owned_by_type' => Team::class, 'owned_by_id' => $teamId]);
-            }
 
-            // moving of the addresses from projectci-projekt table to address table
-            $projects = json_decode(json_encode(DB::table('ci_projekt')->get()->toArray()), 1);
-            // dd($projects);
-            foreach ($projects as $key => $project) {
-                $data = [
-                    'id' => Str::ulid()->__toString(),
-                    'street' => $project['strasse'],
-                    'housenumber' => $project['hausnummer'],
-                    'housenumber_number' => $project['hausnummer_nummer'],
-                    'zip_code' => $project['plz'],
-                    'district' => $project['stadtteil'],
-                    'city' => $project['stadt'],
-                    'lat' => $project['coordinates_lat'],
-                    'lon' => $project['coordinates_lon'],
-                    'owned_by_type' => Team::class,
-                    'owned_by_id' => $teamId,
-                ];
-                // dd($data);
-                DB::table('addresses')->insert($data);
-                DB::table('ci_projekt')->where('id', $project['id'])->update([
-                    'address_id' => $data['id'],
-                ]);
+                $teamId = json_decode(json_encode(DB::table('model_has_roles')->whereNot('team_id', 0)->limit(1)->get()->toArray()), 1)[0]['team_id'] ?? 0;
+                $projects = json_decode(json_encode(DB::table('model_has_owner')->where('ownable_type', "Lukasmundt\Akquise\Models\Projekt")->get()->toArray()), 1);
+                foreach ($projects as $key => $project) {
+                    DB::table('ci_projekt')
+                        ->where('id', $project['ownable_id'])
+                        ->update(['owned_by_type' => Team::class, 'owned_by_id' => $teamId]);
+                    DB::table('ci_akquise')
+                        ->where('id', $project['ownable_id'])
+                        ->update(['owned_by_type' => Team::class, 'owned_by_id' => $teamId]);
+                }
+
+                // moving of the addresses from projectci-projekt table to address table
+                $projects = json_decode(json_encode(DB::table('ci_projekt')->get()->toArray()), 1);
+                // dd($projects);
+                foreach ($projects as $key => $project) {
+                    $data = [
+                        'id' => Str::ulid()->__toString(),
+                        'street' => $project['strasse'],
+                        'housenumber' => $project['hausnummer'],
+                        'housenumber_number' => $project['hausnummer_nummer'],
+                        'zip_code' => $project['plz'],
+                        'district' => $project['stadtteil'],
+                        'city' => $project['stadt'],
+                        'lat' => $project['coordinates_lat'],
+                        'lon' => $project['coordinates_lon'],
+                        'owned_by_type' => Team::class,
+                        'owned_by_id' => $teamId,
+                    ];
+                    // dd($data);
+                    DB::table('addresses')->insert($data);
+                    DB::table('ci_projekt')->where('id', $project['id'])->update([
+                        'address_id' => $data['id'],
+                    ]);
+                }
             }
 
             // delete cols
@@ -133,27 +136,31 @@ return new class extends Migration {
             $table->string("street_and_number", 255)->unique("street_and_number");
         });
 
-        Schema::create('campaigns_campaigns', function(Blueprint $table){
+        Schema::create('campaigns_campaigns', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->boolean('send');
             $table->string('content_type');
             $table->string('date_for_print');
             $table->longText('content')->nullable();
             $table->string('name');
+            $table->json('salutations')->nullable()->default(null);
+            $table->string('line1_no_owner')->nullable()->default(null);
+            $table->string('salutation_no_owner')->nullable()->default(null);
             $table->nullableUlidMorphs('list');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('campaigns_lists_address', function(Blueprint $table){
+        Schema::create('campaigns_lists_address', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
             $table->json('filters');
             $table->timestamps();
             $table->nullableMorphs('owned_by');
+            $table->softDeletes();
         });
 
-        Schema::create('campaigns_campaignable', function(Blueprint $table){
+        Schema::create('campaigns_campaignable', function (Blueprint $table) {
             $table->ulidMorphs('campaignable');
             $table->ulidMorphs('campaign');
             $table->timestamps();

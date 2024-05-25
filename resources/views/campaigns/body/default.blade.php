@@ -1,13 +1,13 @@
-@props(['content', 'date_for_print', 'sender', 'logo'])
+@props(['content', 'date_for_print', 'sender', 'logo', 'line1', 'line2','line3'])
 
 <body>
     <div class="flex justify-between" style="height: 80mm;">
         <div style="padding-top:30mm;" class="flex flex-col">
             <span style="font-size: 11px; margin-bottom: 5mm;">{{ $sender }}</span>
             <span class="hidden">An</span>
-            <span>Empfänger</span>
-            <span>Straße Nummer</span>
-            <span>Postleitzahl Stadt</span>
+            <span>{{$line1}}</span>
+            <span>{{$line2}}</span>
+            <span>{{$line3}}</span>
         </div>
         <div class="flex flex-col justify-between">
             <div class="self-end">
@@ -21,3 +21,4 @@
         {!! $content !!}
     </main>
 </body>
+@pageBreak

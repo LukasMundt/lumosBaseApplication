@@ -1,13 +1,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router, usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import CreatePopup from "./CreatePopup";
-import { CampaignsTable } from "./tableCampaigns";
+import CampaignsTable from "./tableCampaigns";
 
 export default function Index({ auth, domain, campaigns }) {
     // const toggleReload = () => {
     //     router.reload({ only: ["campaigns"] });
     // };
-console.log(campaigns)
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -20,20 +19,13 @@ console.log(campaigns)
             <Head title="Übersicht" />
 
             <div className="">
-                {/* <ListsTable
-                    data={lists}
-                    buttons={
-                        <CreatePopup
-                            domain={domain}
-                            toggleReload={toggleReload}
-                        />
-                    }
-                    domain={domain}
-                /> */}
-                {/* <CreatePopup domain={domain} /> */}
                 <CampaignsTable
                     data={campaigns}
-                    buttons={<CreatePopup domain={domain} />}
+                    buttons={
+                        <>
+                            <CreatePopup domain={domain} />
+                        </>
+                    }
                     domain={domain}
                 />
             </div>

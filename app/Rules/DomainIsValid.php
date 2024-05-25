@@ -20,7 +20,7 @@ class DomainIsValid implements ValidationRule
         if ($value != 'personal') {
             $value = Str::of($value)->match("/[0-9]+/")->toInteger();
             if (Team::where('id', $value)->get() == null) {
-                Log::debug(Team::where('id', intval($value))->get());
+                // Log::debug(Team::where('id', intval($value))->get());
                 $fail('Keine valide Domain.');
             }
         }

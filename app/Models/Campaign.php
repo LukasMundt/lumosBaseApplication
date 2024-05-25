@@ -9,10 +9,9 @@ use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 
@@ -29,11 +28,9 @@ class Campaign extends Model implements Ownable
         'content',
         'type',
         'date_for_print',
+        'line1_no_owner',
+        'salutation_no_owner'
     ];
-
-    // protected $appends = [
-    //     'contentfile',
-    // ];
 
     protected function content(): Attribute
     {
@@ -56,5 +53,8 @@ class Campaign extends Model implements Ownable
 
     // TODO: Akquise verknüpfen können, wenn Kampagne versendet
 
-    // TODO: Liste verbinden können
+    public function addressList(): MorphTo
+    {
+        return $this->morphTo('list');
+    }
 }

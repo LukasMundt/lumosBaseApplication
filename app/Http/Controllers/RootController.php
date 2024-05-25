@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Print\Invoice;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Spatie\LaravelPdf\Facades\Pdf;
 
 class RootController extends Controller
 {

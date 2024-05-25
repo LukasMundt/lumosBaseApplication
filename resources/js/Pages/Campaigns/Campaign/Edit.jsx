@@ -4,12 +4,11 @@ import GjsEditor, { useEditor } from "@grapesjs/react";
 import {
     ArrowBigRight,
     CheckIcon,
+    CircleHelp,
     Eye,
     Monitor,
     RefreshCw,
-    Search,
     Smartphone,
-    TextCursor,
 } from "lucide-react";
 import { Head, router } from "@inertiajs/react";
 import { z } from "zod";
@@ -19,6 +18,7 @@ import {
     Form,
     FormControl,
     FormDescription,
+    FormDescriptionPopover,
     FormField,
     FormItem,
     FormLabel,
@@ -51,12 +51,35 @@ import {
 import LoadingIcon from "@/Components/LoadingIcon";
 import "../../../../../node_modules/grapesjs/dist/css/grapes.min.css";
 import "../../../../css/grapes.css";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+} from "@/Components/ui/card";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/Components/ui/alert-dialog";
 
 const formSchema = z.object({
     name: z.string().min(2).max(255),
     content: z.string(),
     date_for_print: z.string().min(1),
     list_id: z.string().max(26),
+    salutation_not_specified: z.string().max(255).optional(),
+    salutation_male: z.string().max(255).optional(),
+    salutation_female: z.string().max(255).optional(),
+    salutation_diverse: z.string().max(255).optional(),
+    line1_no_owner: z.string().max(40).optional(),
+    salutation_no_owner: z.string().max(255).optional(),
 });
 
 export default function Edit({ auth, domain, campaign }) {
@@ -82,6 +105,8 @@ export default function Edit({ auth, domain, campaign }) {
             content: campaign.content,
             date_for_print: campaign.date_for_print,
             list_id: campaign.list_id ?? "",
+            line1_no_owner: campaign.line1_no_owner ?? "",
+            salutation_no_owner: campaign.salutation_no_owner ?? "",
         },
     });
 
@@ -106,7 +131,7 @@ export default function Edit({ auth, domain, campaign }) {
      */
     function howManyErrors(fields) {
         var count = 0;
-        Array.from(fields).every((field) => {
+        Array.from(fields).forEach((field) => {
             count += form.getFieldState(field).error ? 1 : 0;
         });
         return count;
@@ -124,6 +149,25 @@ export default function Edit({ auth, domain, campaign }) {
                     toast.error("Fehler beim Laden der Listen aufgetreten.")
                 );
         }
+    }
+
+    function sendCampaign() {
+        axios
+            .patch(
+                route("api.v1.campaigns.campaigns.send", {
+                    campaign: campaign.id,
+                    domain: domain,
+                })
+            )
+            .then((response) => {
+                // console.log(response);
+                triggerReload();
+                form.clearErrors();
+            })
+            .catch((error) => {
+                handleServerError(error);
+                // console.log(error);
+            });
     }
 
     // 2. Define a submit handler.
@@ -150,7 +194,7 @@ export default function Edit({ auth, domain, campaign }) {
                     return "Änderungen gespeichert.";
                 },
                 error: (error) => {
-                    // console.log(error);
+                    console.log(error);
                     handleServerError(error);
                     if (error.response.status === 500) {
                         return "Interner Serverfehler";
@@ -170,25 +214,120 @@ export default function Edit({ auth, domain, campaign }) {
                         {"Kampagne: " + form.watch("name")}
                     </h2>
                     <div className="flex gap-3">
-                        <a
-                            target="_blank"
-                            href={route("campaigns.campaigns.preview", {
-                                domain: domain,
-                                campaign: campaign.id,
-                            })}
-                        >
-                            <Button title="Vorschau" size="icon">
-                                <Eye size={20} />
-                            </Button>
-                        </a>
+                        {!campaign.send && (
+                            <a
+                                target="_blank"
+                                href={route("campaigns.campaigns.preview", {
+                                    domain: domain,
+                                    campaign: campaign.id,
+                                })}
+                            >
+                                <Button title="Vorschau" size="icon">
+                                    <Eye size={20} />
+                                </Button>
+                            </a>
+                        )}
+                        {!campaign.send && (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button>Abschließen</Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Sind Sie sicher?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Nachdem Sie die Kampagne
+                                            abgeschlossen haben können sie keine
+                                            Änderungen mehr vornehmen!
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>
+                                            Abbrechen
+                                        </AlertDialogCancel>
+                                        <AlertDialogAction asChild>
+                                            <Button
+                                                type="button"
+                                                onClick={sendCampaign}
+                                            >
+                                                Abschließen
+                                            </Button>
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
 
-                        <Button
-                            type="submit"
-                            form="campaign-form"
-                            disabled={!form.formState.isDirty}
-                        >
-                            Alle Änderung speichern
-                        </Button>
+                        {campaign.send ? (
+                            <a
+                                href={route("campaigns.campaigns.download", {
+                                    domain: domain,
+                                    campaign: campaign.id,
+                                })}
+                            >
+                                <Button>Download</Button>
+                            </a>
+                        ) : (
+                            ""
+                        )}
+
+                        {!campaign.send && (
+                            <Button
+                                type="submit"
+                                form="campaign-form"
+                                disabled={!form.formState.isDirty}
+                            >
+                                Alle Änderung speichern
+                            </Button>
+                        )}
+                        {!campaign.send && (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button size="icon">
+                                        <CircleHelp size={20} />
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            An wen wird diese Kampagne gesendet?
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Diese Kampagne wird an folgende
+                                            Parteien gesendet:
+                                            <ul className="list-disc list-outside mt-5 ms-9">
+                                                <li>
+                                                    zugeordnete Eigentümer
+                                                    (entweder an die Adresse des
+                                                    Projektes oder wenn
+                                                    vorhanden die Wohnadresse)
+                                                </li>
+                                                <li>
+                                                    Nachbarn (nur, wenn eine
+                                                    Wohnadresse und ein Nachname
+                                                    angegeben ist)
+                                                </li>
+                                                <li>
+                                                    generell die Eigentümer,
+                                                    wenn keine Person verknüpft
+                                                    ist
+                                                </li>
+                                            </ul>
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        {/* <AlertDialogCancel>
+                                            Abbrechen
+                                        </AlertDialogCancel> */}
+                                        <AlertDialogAction>
+                                            Schließen
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
                     </div>
                 </div>
             }
@@ -208,13 +347,24 @@ export default function Edit({ auth, domain, campaign }) {
                             variant="destructive"
                             className={
                                 "ml-3 animate-pulse " +
-                                (howManyErrors(["date_for_print", "list_id"]) ==
-                                0
+                                (howManyErrors([
+                                    "date_for_print",
+                                    "salutations",
+                                    "list_id",
+                                    "line1_no_owner",
+                                    "salutation_no_owner",
+                                ]) == 0
                                     ? "hidden"
                                     : "")
                             }
                         >
-                            {howManyErrors(["date_for_print"])}
+                            {howManyErrors([
+                                "date_for_print",
+                                "salutations",
+                                "list_id",
+                                "line1_no_owner",
+                                "salutation_no_owner",
+                            ])}
                         </Badge>
                     </TabsTrigger>
                 </TabsList>
@@ -339,14 +489,18 @@ export default function Edit({ auth, domain, campaign }) {
                                                             onClick={() =>
                                                                 loadLists()
                                                             }
-                                                            disabled
                                                         >
-                                                            {field.value
-                                                                ? lists.data?.find(
+                                                            {/* TODO: load list that is currently related in the lists table */}
+                                                            {field.value &&
+                                                            lists
+                                                                ? lists?.data?.find(
                                                                       (list) =>
                                                                           list.id ===
                                                                           field.value
                                                                   )?.name
+                                                                : field.value
+                                                                ? campaign.list
+                                                                      .name
                                                                 : "Liste"}
                                                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                         </Button>
@@ -430,6 +584,172 @@ export default function Edit({ auth, domain, campaign }) {
                                             This is the language that will be
                                             used in the dashboard.
                                         </FormDescription> */}
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {/* TODO: anzeigen, ob es einstellungen für das gesamte team gibt, und sagen, dass die hier für diesen serienbrief überschrieben werden können -> auch änderungen in settings (voreinstellung für die ganze app auch vorhanden) */}
+                            <Card>
+                                <CardHeader>
+                                    Anrede
+                                    <CardDescription>
+                                        Diese Anrede wird in der PDF angezeigt.
+                                        Achtung: Diese Anrede wird ggf. auch für
+                                        Nachbarn benutzt. ({" "}
+                                        <span>//anrede//</span> wird ersetzt)
+                                    </CardDescription>
+                                </CardHeader>
+
+                                <CardContent className="grid gap-3 md:grid-cols-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="salutation_not_specified"
+                                        on
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Keine Angabe
+                                                </FormLabel>
+                                                <FormDescription>
+                                                    //nachname// wird durch den
+                                                    tatsächlichen Nachnamen
+                                                    ersetzt.
+                                                </FormDescription>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Sehr geehrte Damen und Herren"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="salutation_female"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Weiblich</FormLabel>
+                                                <FormDescription>
+                                                    //nachname// wird durch den
+                                                    tatsächlichen Nachnamen
+                                                    ersetzt.
+                                                </FormDescription>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Sehr geehrte Frau //nachname//"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="salutation_male"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Männlich</FormLabel>
+                                                <FormDescription>
+                                                    //nachname// wird durch den
+                                                    tatsächlichen Nachnamen
+                                                    ersetzt.
+                                                </FormDescription>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Sehr geehrter Herr //nachname//"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="salutation_diverse"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Divers</FormLabel>
+                                                <FormDescription>
+                                                    //nachname// wird durch den
+                                                    tatsächlichen Nachnamen
+                                                    ersetzt.
+                                                </FormDescription>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Sehr geehrt* //nachname//"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+
+                            <FormField
+                                control={form.control}
+                                name="line1_no_owner"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            1. Addresszeile (kein Eigentümer)
+                                            <FormDescriptionPopover>
+                                                Diese Zeile wird im Addressblock
+                                                angezeigt, wenn der Eigentümer
+                                                nicht verknüpft ist oder für
+                                                diesen kein Nachname angegeben
+                                                ist.
+                                            </FormDescriptionPopover>
+                                        </FormLabel>
+
+                                        <FormControl>
+                                            <Input
+                                                placeholder="An die Eigentümer"
+                                                {...field}
+                                            />
+                                        </FormControl>
+
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="salutation_no_owner"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>
+                                            Anrede (kein Eigentümer)
+                                            <FormDescriptionPopover>
+                                                Diese Anrede wird verwendet,
+                                                wenn kein Eigentümer mit dem
+                                                Projekt verknüpft ist. Der
+                                                Eigentümer wird auch mit dieser
+                                                Anrede angesprochen, wenn für
+                                                ihn kein Nachname hinterlegt
+                                                ist. Da meistens für eine
+                                                Mehrzahl der Projekte keine
+                                                Eigentümer gespeichert sind wird
+                                                diese Anrede in der Regel häufig
+                                                verwendet.
+                                            </FormDescriptionPopover>
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="An die Eigentümer"
+                                                {...field}
+                                            />
+                                        </FormControl>
+
                                         <FormMessage />
                                     </FormItem>
                                 )}

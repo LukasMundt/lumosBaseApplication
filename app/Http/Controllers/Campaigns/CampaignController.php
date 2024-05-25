@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Campaigns;
 
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
-use App\Models\Team;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -31,12 +29,13 @@ class CampaignController extends Controller
         // TODO: Policy and Validation
         return Inertia::render(
             'Campaigns/Campaign/Edit',
-            ['campaign' => $campaign]
+            ['campaign' => $campaign->load('addressList')]
         );
     }
 
     public function preview(Request $request, $domain, Campaign $campaign)
     {
+        // TODO: Ersetzung von Anrede usw. in preview genau so machen, wie in eigentlichem serienbrief
         $logoPath = "/teams//" . session('team') . "/";
         $files = Storage::allFiles("/teams//" . session('team') . "/");
         $logoPath = null;
@@ -51,12 +50,20 @@ class CampaignController extends Controller
         // return $campaign->content;
         return Pdf::withBrowsershot(function (Browsershot $browsershot) {
             $browsershot->noSandbox();
-        })->view('campaigns.single', [
+        })->view('campaigns.multi', [
                     'content' => $campaign->content,
                     'title' => 'Dies ist der Titel',
                     'date_for_print' => $campaign->date_for_print,
                     'sender' => Settings::get('sender', ""),
                     'logo' => "data:image/png;base64," . base64_encode(Storage::get($logoPath)),
+                    'recipients' => [
+                        [
+                            "line1" => "Max Mustermann",
+                            "line2" => "Musterstraße 2",
+                            "line3" => "54321 Musterstädtchen",
+                            "anrede" => "Sehr geehrter Herr Mustermann"
+                        ]
+                    ]
                 ])
             ->footerView('campaigns.footer.default', [
                 'content' => Settings::get('footer', ""),
@@ -64,5 +71,17 @@ class CampaignController extends Controller
             ])
             ->margins(20, 20, 20, 20)
             ->name('preview_' . $campaign->name . ".pdf");
+    }
+
+    public function download($domain, Campaign $campaign)
+    {
+        // TODO: validate (also if campaign is send)
+        $team = session('team');
+        $path = "/teams//" . $team . '/campaigns//' . $campaign->id . ".pdf";
+        if (Storage::exists($path)) {
+            return Storage::download($path, $campaign->name . ".pdf");
+        } else {
+            abort(404, "Download fehlgeschlagen.");
+        }
     }
 }
