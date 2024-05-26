@@ -6,7 +6,6 @@ import {
     Menu,
     WifiOffIcon,
 } from "lucide-react";
-
 import { Button } from "@/Components/ui/button";
 import {
     DropdownMenu,
@@ -27,16 +26,19 @@ import { ThemeProvider } from "../Components/theme-provider";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { TeamCombobox } from "../Components/TeamCombobox";
 import { Toaster } from "@/Components/ui/sonner";
-import { useNetworkState } from "@uidotdev/usehooks";
+import { useLocalStorage, useNetworkState } from "@uidotdev/usehooks";
+import { useEffect } from "react";
 
 export default function Authenticated({ user, header, children }) {
     const { nav, teams } = usePage().props;
     var { domain } = usePage().props;
     const network = useNetworkState();
+    const [opened, setOpened] = useLocalStorage("navItems", {});
 
     if (domain === null) {
         domain = 0; // global/default team
     }
+
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -93,7 +95,37 @@ export default function Authenticated({ user, header, children }) {
                                               );
                                           } else {
                                               return (
-                                                  <Collapsible key={navItem.id}>
+                                                  <Collapsible
+                                                      key={navItem.id}
+                                                      open={
+                                                          opened &&
+                                                          opened[navItem.id] &&
+                                                          opened[navItem.id] ===
+                                                              true
+                                                      }
+                                                      onOpenChange={(value) => {
+                                                          var current =
+                                                              opened &&
+                                                              opened[
+                                                                  navItem.id
+                                                              ] &&
+                                                              opened[
+                                                                  navItem.id
+                                                              ] === true;
+                                                          var newOpened =
+                                                              Object.assign(
+                                                                  opened,
+                                                                  {
+                                                                      [navItem.id]:
+                                                                          !current,
+                                                                  }
+                                                              );
+                                                          setOpened(newOpened);
+                                                          console.log(
+                                                              newOpened
+                                                          );
+                                                      }}
+                                                  >
                                                       <CollapsibleTrigger className="flex items-center gap-3 rounded-lg mt-2 px-4 py-2 text-muted-foreground transition-all hover:text-primary justify-between w-full">
                                                           <div className="flex items-center gap-4">
                                                               <Home className="h-5 w-5" />
@@ -356,7 +388,9 @@ export default function Authenticated({ user, header, children }) {
                                     <WifiOffIcon className="h-32 w-32" />
                                 </div>
 
-                                <span className="text-center text-2xl">You are offline</span>
+                                <span className="text-center text-2xl">
+                                    You are offline
+                                </span>
                             </div>
                         </main>
                     )}
