@@ -22,7 +22,7 @@ class Campaign extends Model implements Ownable
     protected $table = 'campaigns_campaigns';
 
     protected $fillable = [
-        'send',
+        'sent_at',
         'content_type',
         'name',
         'content',

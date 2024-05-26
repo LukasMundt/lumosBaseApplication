@@ -79,7 +79,7 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
         $this->salutations = $salutations;
 
         // get addresses
-        $akquiseObjects = $this->campaign->addressList()->getModel()->getAddresses(["personen.address", "personen", "projekt.address"]);
+        $akquiseObjects = $this->campaign->addressList->getAddresses(["personen.address", "personen", "projekt.address"]);
 
         $recipients = [];
         $persons = [];

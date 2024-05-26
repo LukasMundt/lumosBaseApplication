@@ -73,7 +73,7 @@ class AkquisePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Team $team): bool
+    public function delete(User $user, Akquise $akquise): bool
     {
         if ($user->hasAnyPermission('lumos-akquise-delete-all-projects')) {
             return true;

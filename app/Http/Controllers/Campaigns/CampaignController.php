@@ -16,16 +16,18 @@ class CampaignController extends Controller
 {
     public function index()
     {
+        $this->authorize('viewAny', Campaign::class);
         // $campaigns = Campaign::where('owned_by_type', Team::class)
         //     ->where('owned_by_id', session('team'))
         //     ->get();
-        $campaigns = Campaign::get(['deleted_at', 'id', 'name', 'send', 'created_at', 'updated_at']);
+        $campaigns = Campaign::get(['deleted_at', 'id', 'name', 'sent_at', 'created_at', 'updated_at']);
         // TODO: only show campaigns owned by the team of the sender of the request
         return Inertia::render('Campaigns/Campaign/Index', ['campaigns' => $campaigns]);
     }
 
     public function edit(Request $request, $domain, Campaign $campaign)
     {
+        $this->authorize('update', $campaign);
         // TODO: Policy and Validation
         return Inertia::render(
             'Campaigns/Campaign/Edit',
@@ -35,6 +37,7 @@ class CampaignController extends Controller
 
     public function preview(Request $request, $domain, Campaign $campaign)
     {
+        $this->authorize('view', $campaign);
         // TODO: Ersetzung von Anrede usw. in preview genau so machen, wie in eigentlichem serienbrief
         $logoPath = "/teams//" . session('team') . "/";
         $files = Storage::allFiles("/teams//" . session('team') . "/");
@@ -75,6 +78,7 @@ class CampaignController extends Controller
 
     public function download($domain, Campaign $campaign)
     {
+        $this->authorize('view', $campaign);
         // TODO: validate (also if campaign is send)
         $team = session('team');
         $path = "/teams//" . $team . '/campaigns//' . $campaign->id . ".pdf";

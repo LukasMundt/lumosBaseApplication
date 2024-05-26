@@ -6,22 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Jobs\PrintCampaign;
 use App\Models\AddressList;
 use App\Models\Campaign;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class CampaignController extends Controller
 {
     public function store(Request $request)
     {
-        // TODO: Policy
+        $this->authorize('create', Campaign::class);
         $validated = $request->validate(['name' => ['string', 'max:255', 'required']]);
 
         $campaign = Campaign::create([
             'date_for_print' => now()->format('d.m.Y') . "",
             'content' => '',
             'content_type' => '',
-            'send' => false,
             'name' => $validated['name'],
         ]);
         return ['label' => $validated['name'], 'id' => $campaign->refresh()->id];
@@ -29,8 +28,11 @@ class CampaignController extends Controller
 
     public function update(Request $request, $domain, Campaign $campaign)
     {
-        // TODO: Policy
+        $this->authorize('update', $campaign);
         // TODO: update only can made when campaign is a draft and not already send
+        if ($campaign->sent_at != null) {
+            abort(422, "Kampagne ist bereits abgesendet, daher können keine Änderungen mehr vorgenommen werden.");
+        }
         // TODO: salutation and line1
 
         $validated = $request->validate([
@@ -60,7 +62,11 @@ class CampaignController extends Controller
 
     public function send($domain, Campaign $campaign)
     {
-        // TODO: policy and only executable if not already send
+        $this->authorize('send', $campaign);
+        // only executable if not already send
+        if ($campaign->sent_at != null) {
+            abort(422, "Kampagne ist bereits abgesendet.");
+        }
         // validate
         $validator = validator($campaign->toArray(), [
             'content' => ["string", 'required'],
@@ -75,9 +81,19 @@ class CampaignController extends Controller
 
 
         // In queuealble task:
-        $campaign->send = true;
+        $campaign->sent_at = Carbon::now();
         $campaign->save();
     }
 
     // TODO: Kampagne duplizieren können
+    public function duplicate($domain, Campaign $campaign)
+    {
+        // Nutzer muss das Recht haben, die zu duplizierende Kampagne einzusehen um sie duplizieren zu können
+        $this->authorize('view', $campaign);
+        $this->authorize('create', Campaign::class);
+
+        $newCampaign = $campaign->replicate();
+        $newCampaign->created_at = Carbon::now();
+        $newCampaign->updated_at = Carbon::now();
+    }
 }

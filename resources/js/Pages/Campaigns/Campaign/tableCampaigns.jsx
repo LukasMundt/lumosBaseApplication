@@ -127,7 +127,7 @@ export default function CampaignsTable({ data, buttons, domain }) {
             },
         },
         {
-            accessorKey: "send",
+            accessorKey: "sent_at",
             id: "Status",
             header: ({ column }) => {
                 return (
@@ -144,7 +144,7 @@ export default function CampaignsTable({ data, buttons, domain }) {
             },
             cell: ({ row }) => (
                 <div className="px-4">
-                    {row.original.send ? (
+                    {row.original.sent_at != null ? (
                         <Send size={20} color="green"/>
                     ) : (
                         <Pencil size={20} />

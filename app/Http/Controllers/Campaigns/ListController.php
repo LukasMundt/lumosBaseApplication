@@ -13,7 +13,7 @@ class ListController extends Controller
     public function index()
     {
         // TODO: Policy
-        $lists = AddressList::where('owned_by_type', Team::class)->where('owned_by_id', session('team'))->get();
+        $lists = AddressList::ownedByTeam(session('team'))->get();
         return Inertia::render('Campaigns/List/Index', ['lists' => $lists]);
     }
 

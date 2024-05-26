@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 use Laravel\Scout\Searchable;
 
 class AddressList extends Model implements SendList
@@ -29,7 +30,9 @@ class AddressList extends Model implements SendList
 
     public function getAddresses(string|array $relations = [])
     {
-        $filters = $this->filters;
+        $filters = $this->filters ?? [];
+        Log::debug($this->getKey());
+        Log::debug($filters);
         $team = session("team");
         $addresses = Akquise::where('owned_by_id', $team)
             ->where('owned_by_type', Team::class)
@@ -47,5 +50,10 @@ class AddressList extends Model implements SendList
     public function campaign(): MorphMany
     {
         return $this->morphMany(Campaign::class, 'list');
+    }
+
+    public function scopeOwnedByTeam($query, $teamId)
+    {
+        $query->where('owned_by_type', Team::class)->where('owned_by_id', $teamId);
     }
 }

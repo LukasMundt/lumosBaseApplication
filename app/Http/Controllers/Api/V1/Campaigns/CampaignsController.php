@@ -30,5 +30,7 @@ class CampaignsController extends Controller
             Settings::set("footer", $validated['footer']);
         }
 
+        // TODO: Salutations auch noch für das gesamte Team einstellen können
+
     }
 }

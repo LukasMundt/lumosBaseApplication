@@ -79,6 +79,7 @@
         "react-leaflet": "^4.2.1",
         "react-phone-input-2": "^2.15.1",
         "react-select": "^5.8.0",
+        "recharts": "^2.12.7",
         "sonner": "^1.4.41",
         "tailwind-merge": "^2.3.0",
         "tailwindcss-animate": "^1.0.7",

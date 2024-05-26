@@ -1,11 +1,14 @@
 <?php
 
 use App\Models\Ci\Projekt;
+use App\Models\NavItem;
 use App\Models\Team;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 return new class extends Migration {
     /**
@@ -138,7 +141,7 @@ return new class extends Migration {
 
         Schema::create('campaigns_campaigns', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->boolean('send');
+            $table->timestamp('sent_at')->nullable()->default(null);
             $table->string('content_type');
             $table->string('date_for_print');
             $table->longText('content')->nullable();
@@ -165,6 +168,44 @@ return new class extends Migration {
             $table->ulidMorphs('campaign');
             $table->timestamps();
         });
+
+        $top = NavItem::where('label',"Akquise")->first();
+
+        NavItem::factory()->create([
+            'top_item' => $top,
+            "team_permissions" => ['tp-lumos-akquise-basic'],
+            "label" => "Kampagnen",
+            'route' => "campaigns.index",
+        ]);
+
+        // create team permission
+        Permission::findOrCreate('tp-lumos-campaigns-basic');
+
+        $viewOwn = Permission::findOrCreate('lumos-campaigns-view-own-campaigns','web');
+        $viewAll = Permission::findOrCreate('lumos-campaigns-view-all-campaigns','web');
+
+        $create = Permission::findOrCreate('lumos-campaigns-create-campaign','web');
+
+        $editOwn = Permission::findOrCreate('lumos-campaigns-edit-own-campaigns','web');
+        $editAll = Permission::findOrCreate('lumos-campaigns-edit-all-campaigns','web');
+
+        $deleteOwn = Permission::findOrCreate('lumos-campaigns-delete-own-campaigns','web');
+        $deleteAll = Permission::findOrCreate('lumos-campaigns-delete-all-campaigns','web');
+
+        $sendOwn = Permission::findOrCreate('lumos-campaigns-send-own-campaigns','web');
+        $sendAll = Permission::findOrCreate('lumos-campaigns-send-all-campaigns','web');
+
+        setPermissionsTeamId(0);
+
+        $admin = Role::findOrCreate('team-admin', 'web');
+        $owner = Role::findOrCreate('team-owner', 'web');
+        $editor = Role::findOrCreate('team-akquise-editor', 'web');
+        $contributor = Role::findOrCreate('team-akquise-contributor', 'web');
+
+        $admin->givePermissionTo([$viewAll, $create, $editAll, $deleteAll, $sendAll]);
+        $owner->givePermissionTo([$viewAll, $create, $editAll, $deleteAll, $sendAll]);
+        $editor->givePermissionTo([$viewAll, $create, $editOwn, $deleteOwn, $sendOwn]);
+        $contributor->givePermissionTo([$viewOwn, $create, $editOwn]);
     }
 
     /**

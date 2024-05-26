@@ -214,7 +214,7 @@ export default function Edit({ auth, domain, campaign }) {
                         {"Kampagne: " + form.watch("name")}
                     </h2>
                     <div className="flex gap-3">
-                        {!campaign.send && (
+                        {campaign.sent_at === null && (
                             <a
                                 target="_blank"
                                 href={route("campaigns.campaigns.preview", {
@@ -227,10 +227,12 @@ export default function Edit({ auth, domain, campaign }) {
                                 </Button>
                             </a>
                         )}
-                        {!campaign.send && (
+                        {campaign.sent_at === null && (
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                    <Button>Abschließen</Button>
+                                    <Button type="submit" form="campaign-form">
+                                        Abschließen
+                                    </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
@@ -260,7 +262,7 @@ export default function Edit({ auth, domain, campaign }) {
                             </AlertDialog>
                         )}
 
-                        {campaign.send ? (
+                        {campaign.sent_at != null ? (
                             <a
                                 href={route("campaigns.campaigns.download", {
                                     domain: domain,
@@ -273,7 +275,7 @@ export default function Edit({ auth, domain, campaign }) {
                             ""
                         )}
 
-                        {!campaign.send && (
+                        {campaign.sent_at === null && (
                             <Button
                                 type="submit"
                                 form="campaign-form"
@@ -282,52 +284,57 @@ export default function Edit({ auth, domain, campaign }) {
                                 Alle Änderung speichern
                             </Button>
                         )}
-                        {!campaign.send && (
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button size="icon">
-                                        <CircleHelp size={20} />
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                            An wen wird diese Kampagne gesendet?
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Diese Kampagne wird an folgende
-                                            Parteien gesendet:
-                                            <ul className="list-disc list-outside mt-5 ms-9">
-                                                <li>
-                                                    zugeordnete Eigentümer
-                                                    (entweder an die Adresse des
-                                                    Projektes oder wenn
-                                                    vorhanden die Wohnadresse)
-                                                </li>
-                                                <li>
-                                                    Nachbarn (nur, wenn eine
-                                                    Wohnadresse und ein Nachname
-                                                    angegeben ist)
-                                                </li>
-                                                <li>
-                                                    generell die Eigentümer,
-                                                    wenn keine Person verknüpft
-                                                    ist
-                                                </li>
-                                            </ul>
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        {/* <AlertDialogCancel>
+
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button size="icon">
+                                    <CircleHelp size={20} />
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                        An wen{" "}
+                                        {campaign.sent_at === null
+                                            ? "wird"
+                                            : "wurde"}{" "}
+                                        diese Kampagne gesendet?
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Diese Kampagne{" "}
+                                        {campaign.sent_at === null
+                                            ? "wird"
+                                            : "wurde"}{" "}
+                                        an folgende Parteien gesendet:
+                                        <ul className="list-disc list-outside mt-5 ms-9">
+                                            <li>
+                                                zugeordnete Eigentümer (entweder
+                                                an die Adresse des Projektes
+                                                oder wenn vorhanden die
+                                                Wohnadresse)
+                                            </li>
+                                            <li>
+                                                Nachbarn (nur, wenn eine
+                                                Wohnadresse und ein Nachname
+                                                angegeben ist)
+                                            </li>
+                                            <li>
+                                                generell die Eigentümer, wenn
+                                                keine Person verknüpft ist
+                                            </li>
+                                        </ul>
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    {/* <AlertDialogCancel>
                                             Abbrechen
                                         </AlertDialogCancel> */}
-                                        <AlertDialogAction>
-                                            Schließen
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        )}
+                                    <AlertDialogAction>
+                                        Schließen
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </div>
                 </div>
             }
@@ -340,6 +347,17 @@ export default function Edit({ auth, domain, campaign }) {
                 <TabsList className="w-full">
                     <TabsTrigger value="content" className="w-full">
                         Inhalt
+                        <Badge
+                            variant="destructive"
+                            className={
+                                "ml-3 animate-pulse " +
+                                (howManyErrors(["content", "name"]) == 0
+                                    ? "hidden"
+                                    : "")
+                            }
+                        >
+                            {howManyErrors(["content", "name"])}
+                        </Badge>
                     </TabsTrigger>
                     <TabsTrigger value="settings" className="w-full">
                         Weitere Einstellungen
@@ -402,12 +420,13 @@ export default function Edit({ auth, domain, campaign }) {
                                     name="content"
                                     className="grow"
                                     render={({ field }) => (
-                                        <FormItem className="grow">
+                                        <FormItem className="grow flex flex-col">
                                             {/* <FormLabel>Name</FormLabel> */}
                                             {/* <FormDescription>
                                     Dies ist der Name der Liste. Er wird überall
                                     angezeigt, wo die Liste verwendet wird.
                                 </FormDescription> */}
+                                            <FormMessage />
                                             <FormControl>
                                                 <Editor
                                                     setContent={setContent}
@@ -419,8 +438,6 @@ export default function Edit({ auth, domain, campaign }) {
                                                     // }
                                                 />
                                             </FormControl>
-
-                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -490,7 +507,6 @@ export default function Edit({ auth, domain, campaign }) {
                                                                 loadLists()
                                                             }
                                                         >
-                                                            {/* TODO: load list that is currently related in the lists table */}
                                                             {field.value &&
                                                             lists
                                                                 ? lists?.data?.find(
@@ -515,8 +531,25 @@ export default function Edit({ auth, domain, campaign }) {
                                                         <CommandList>
                                                             {lists ? (
                                                                 <CommandEmpty>
-                                                                    Keine Liste
-                                                                    gefunden.
+                                                                    <div className="w-full grid justify-center items-center">
+                                                                        Keine
+                                                                        Liste
+                                                                        gefunden.
+                                                                        <a
+                                                                            className="mt-3"
+                                                                            href={route(
+                                                                                "campaigns.lists.index",
+                                                                                {
+                                                                                    domain: domain,
+                                                                                }
+                                                                            )}
+                                                                        >
+                                                                            <Button variant="secondary">
+                                                                                Liste
+                                                                                erstellen
+                                                                            </Button>
+                                                                        </a>
+                                                                    </div>
                                                                 </CommandEmpty>
                                                             ) : (
                                                                 <CommandEmpty>
