@@ -1,12 +1,13 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import CreatePopup from "./CreatePopup";
 import CampaignsTable from "./tableCampaigns";
 
 export default function Index({ auth, domain, campaigns }) {
-    // const toggleReload = () => {
-    //     router.reload({ only: ["campaigns"] });
-    // };
+    const triggerReload = () => {
+        router.reload();
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -27,6 +28,7 @@ export default function Index({ auth, domain, campaigns }) {
                         </>
                     }
                     domain={domain}
+                    triggerReload={triggerReload}
                 />
             </div>
         </AuthenticatedLayout>

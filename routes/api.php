@@ -57,6 +57,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/campaigns'
         Route::post('', [CampaignController::class, 'store'])->name('store');
         Route::post('/{campaign}', [CampaignController::class, 'update'])->name('update');
         Route::patch('/{campaign}/send', [CampaignController::class, 'send'])->name('send');
+        Route::post('/{campaign}/replicate', [CampaignController::class, 'replicate'])->name('replicate');
     });
     // lists
     Route::prefix('/lists')->name('lists.')->group(function () {

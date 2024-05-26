@@ -29,11 +29,10 @@ class CampaignController extends Controller
     public function update(Request $request, $domain, Campaign $campaign)
     {
         $this->authorize('update', $campaign);
-        // TODO: update only can made when campaign is a draft and not already send
+        // update only can made when campaign is a draft and not already send
         if ($campaign->sent_at != null) {
             abort(422, "Kampagne ist bereits abgesendet, daher können keine Änderungen mehr vorgenommen werden.");
         }
-        // TODO: salutation and line1
 
         $validated = $request->validate([
             'name' => ['string', 'max:255', 'required'],
@@ -85,15 +84,18 @@ class CampaignController extends Controller
         $campaign->save();
     }
 
-    // TODO: Kampagne duplizieren können
-    public function duplicate($domain, Campaign $campaign)
+    public function replicate($domain, Campaign $campaign)
     {
         // Nutzer muss das Recht haben, die zu duplizierende Kampagne einzusehen um sie duplizieren zu können
         $this->authorize('view', $campaign);
         $this->authorize('create', Campaign::class);
 
         $newCampaign = $campaign->replicate();
-        $newCampaign->created_at = Carbon::now();
-        $newCampaign->updated_at = Carbon::now();
+        $newCampaign->save();
+        $newCampaign->update(['name' => $campaign->name . "_kopie", 'content' => $campaign->content]);
+
+        return $newCampaign->refresh()->only(['id', 'name']);
     }
+
+    // TODO: Kampagne löschen können
 }

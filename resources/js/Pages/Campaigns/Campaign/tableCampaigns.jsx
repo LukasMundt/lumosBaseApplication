@@ -36,8 +36,15 @@ import moment from "moment";
 import "moment/locale/de";
 import { Pencil, Send } from "lucide-react";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import { toast } from "sonner";
+import axios from "axios";
 
-export default function CampaignsTable({ data, buttons, domain }) {
+export default function CampaignsTable({
+    data,
+    buttons,
+    domain,
+    triggerReload,
+}) {
     const [sorting, setSorting] = React.useState([]);
     const [columnFilters, setColumnFilters] = React.useState([]);
     const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -62,6 +69,31 @@ export default function CampaignsTable({ data, buttons, domain }) {
                 });
         }
     }, [isSmallDevice]);
+
+    const duplicateCampaign = (campaignId) => {
+        toast.promise(
+            axios.post(
+                route("api.v1.campaigns.campaigns.replicate", {
+                    domain: domain,
+                    campaign: campaignId,
+                })
+            ),
+            {
+                loading: "Wird dupliziert...",
+                success: () => {
+                    triggerReload();
+                    return "Duplikat erstellt.";
+                },
+                error: (error) => {
+                    console.log(error);
+                    if (error.response.status === 500) {
+                        return "Interner Serverfehler";
+                    }
+                    return "Fehler";
+                },
+            }
+        );
+    };
 
     const columns = [
         {
@@ -116,9 +148,29 @@ export default function CampaignsTable({ data, buttons, domain }) {
                                 className="cursor-pointer"
                             >
                                 <DropdownMenuItem className="cursor-pointer">
-                                    Kampagne bearbeiten
+                                    Bearbeiten
                                 </DropdownMenuItem>
                             </a>
+                            <DropdownMenuItem
+                                className="cursor-pointer"
+                                type="button"
+                                onClick={() =>
+                                    duplicateCampaign(row.original.id)
+                                }
+                            >
+                                Duplizieren
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                className="cursor-pointer"
+                                // type="button"
+                                // onClick={() =>
+                                //     duplicateCampaign(row.original.id)
+                                // }
+                                // TODO: Kampagne löschen können
+                                disabled
+                            >
+                                Löschen
+                            </DropdownMenuItem>
 
                             {/* <DropdownMenuItem>View payment details</DropdownMenuItem> */}
                         </DropdownMenuContent>
@@ -145,7 +197,7 @@ export default function CampaignsTable({ data, buttons, domain }) {
             cell: ({ row }) => (
                 <div className="px-4">
                     {row.original.sent_at != null ? (
-                        <Send size={20} color="green"/>
+                        <Send size={20} color="green" />
                     ) : (
                         <Pencil size={20} />
                     )}
