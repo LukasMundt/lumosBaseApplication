@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Campaigns;
 
+use App\Contracts\SendList;
 use App\Http\Controllers\Controller;
 use App\Models\AddressList;
 use App\Models\Team;
@@ -13,13 +14,15 @@ class ListController extends Controller
 {
     public function index()
     {
-        // TODO: Policy
+        $this->authorize('viewAny', SendList::class);
+        
         return AddressList::where('owned_by_type', Team::class)->where('owned_by_id', session('team'))->get();
     }
 
     public function store(Request $request)
     {
-        // TODO: Policy
+        $this->authorize('create', SendList::class);
+        
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'filtersDistricts' => ['nullable', 'array'],

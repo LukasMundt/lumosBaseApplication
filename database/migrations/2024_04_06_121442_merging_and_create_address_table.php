@@ -150,6 +150,7 @@ return new class extends Migration {
             $table->string('line1_no_owner')->nullable()->default(null);
             $table->string('salutation_no_owner')->nullable()->default(null);
             $table->nullableUlidMorphs('list');
+            $table->nullableMorphs('owned_by');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -169,7 +170,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        $top = NavItem::where('label',"Akquise")->first();
+        $top = NavItem::where('label', "Akquise")->first();
 
         NavItem::factory()->create([
             'top_item' => $top,
@@ -181,19 +182,35 @@ return new class extends Migration {
         // create team permission
         Permission::findOrCreate('tp-lumos-campaigns-basic');
 
-        $viewOwn = Permission::findOrCreate('lumos-campaigns-view-own-campaigns','web');
-        $viewAll = Permission::findOrCreate('lumos-campaigns-view-all-campaigns','web');
+        // campaigns
+        $viewOwn = Permission::findOrCreate('lumos-campaigns-view-own-campaigns', 'web');
+        $viewAll = Permission::findOrCreate('lumos-campaigns-view-all-campaigns', 'web');
 
-        $create = Permission::findOrCreate('lumos-campaigns-create-campaign','web');
+        $create = Permission::findOrCreate('lumos-campaigns-create-campaign', 'web');
 
-        $editOwn = Permission::findOrCreate('lumos-campaigns-edit-own-campaigns','web');
-        $editAll = Permission::findOrCreate('lumos-campaigns-edit-all-campaigns','web');
+        $editOwn = Permission::findOrCreate('lumos-campaigns-edit-own-campaigns', 'web');
+        $editAll = Permission::findOrCreate('lumos-campaigns-edit-all-campaigns', 'web');
 
-        $deleteOwn = Permission::findOrCreate('lumos-campaigns-delete-own-campaigns','web');
-        $deleteAll = Permission::findOrCreate('lumos-campaigns-delete-all-campaigns','web');
+        $deleteOwn = Permission::findOrCreate('lumos-campaigns-delete-own-campaigns', 'web');
+        $deleteAll = Permission::findOrCreate('lumos-campaigns-delete-all-campaigns', 'web');
 
-        $sendOwn = Permission::findOrCreate('lumos-campaigns-send-own-campaigns','web');
-        $sendAll = Permission::findOrCreate('lumos-campaigns-send-all-campaigns','web');
+        $sendOwn = Permission::findOrCreate('lumos-campaigns-send-own-campaigns', 'web');
+        $sendAll = Permission::findOrCreate('lumos-campaigns-send-all-campaigns', 'web');
+
+        // lists
+        $viewOwnLists = Permission::findOrCreate('lumos-campaigns-view-own-lists', 'web');
+        $viewAllLists = Permission::findOrCreate('lumos-campaigns-view-all-lists', 'web');
+
+        $createLists = Permission::findOrCreate('lumos-campaigns-create-list', 'web');
+
+        $editOwnLists = Permission::findOrCreate('lumos-campaigns-edit-own-lists', 'web');
+        $editAllLists = Permission::findOrCreate('lumos-campaigns-edit-all-lists', 'web');
+
+        $deleteOwnLists = Permission::findOrCreate('lumos-campaigns-delete-own-lists', 'web');
+        $deleteAllLists = Permission::findOrCreate('lumos-campaigns-delete-all-lists', 'web');
+
+        // settings
+        $settings = Permission::findOrCreate('lumos-campaigns-change-team-settings', 'web');
 
         setPermissionsTeamId(0);
 
@@ -202,10 +219,10 @@ return new class extends Migration {
         $editor = Role::findOrCreate('team-akquise-editor', 'web');
         $contributor = Role::findOrCreate('team-akquise-contributor', 'web');
 
-        $admin->givePermissionTo([$viewAll, $create, $editAll, $deleteAll, $sendAll]);
-        $owner->givePermissionTo([$viewAll, $create, $editAll, $deleteAll, $sendAll]);
-        $editor->givePermissionTo([$viewAll, $create, $editOwn, $deleteOwn, $sendOwn]);
-        $contributor->givePermissionTo([$viewOwn, $create, $editOwn]);
+        $admin->givePermissionTo([$settings, $viewAll, $create, $editAll, $deleteAll, $sendAll, $viewAllLists, $createLists, $editAllLists, $deleteAllLists]);
+        $owner->givePermissionTo([$settings, $viewAll, $create, $editAll, $deleteAll, $sendAll, $viewAllLists, $createLists, $editAllLists, $deleteAllLists]);
+        $editor->givePermissionTo([$viewAll, $create, $editOwn, $deleteOwn, $sendOwn, $viewAllLists, $createLists, $editOwnLists, $deleteOwnLists]);
+        $contributor->givePermissionTo([$viewOwn, $create, $editOwn, $createLists, $viewOwnLists, $editOwnLists, $deleteOwnLists]);
     }
 
     /**

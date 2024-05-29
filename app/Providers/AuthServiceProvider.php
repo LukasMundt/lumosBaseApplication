@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Contracts\SendList;
 use App\Models\Campaign;
 use App\Models\Ci\Akquise;
 use App\Models\Team;
 use App\Policies\Admin\TeamPolicy;
 use App\Policies\CampaignPolicy;
+use App\Policies\Campaigns\ListPolicy;
 use App\Policies\Ci\AkquisePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -21,7 +23,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Team::class => TeamPolicy::class,
         Akquise::class => AkquisePolicy::class,
-        Campaign::class => CampaignPolicy::class
+        Campaign::class => CampaignPolicy::class,
+        SendList::class => ListPolicy::class,
     ];
 
     /**

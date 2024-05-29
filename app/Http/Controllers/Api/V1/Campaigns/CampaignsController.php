@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Campaigns;
 
 use App\Http\Controllers\Controller;
+use App\Models\Campaign;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\File;
@@ -12,7 +13,8 @@ class CampaignsController extends Controller
 {
     public function storeSettings(Request $request)
     {
-        // TODO: Policy
+        $this->authorize('settings', Campaign::class);
+        
         $validated = $request->validate([
             'logo' => [File::image()->max(1024 * 12), 'nullable'],
             'sender' => ['string', 'max:255', "required"],

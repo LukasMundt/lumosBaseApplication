@@ -238,7 +238,7 @@ export function ListsTable({ data, buttons, domain }) {
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    No results.
+                                    Keine Ergebnisse.
                                 </TableCell>
                             </TableRow>
                         )}

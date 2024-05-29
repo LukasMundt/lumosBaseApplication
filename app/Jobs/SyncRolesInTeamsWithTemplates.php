@@ -27,7 +27,6 @@ class SyncRolesInTeamsWithTemplates implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug("executed");
         // get all template roles
         $templateRoles = Role::where('team_id', 0)->where('name', 'like', 'team-%')->get();
         

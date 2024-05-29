@@ -20,7 +20,7 @@ class CampaignController extends Controller
         // $campaigns = Campaign::where('owned_by_type', Team::class)
         //     ->where('owned_by_id', session('team'))
         //     ->get();
-        $campaigns = Campaign::get(['deleted_at', 'id', 'name', 'sent_at', 'created_at', 'updated_at']);
+        $campaigns = Campaign::ownedByTeam(session('team'))->get(['deleted_at', 'id', 'name', 'sent_at', 'created_at', 'updated_at']);
         // TODO: only show campaigns owned by the team of the sender of the request
         return Inertia::render('Campaigns/Campaign/Index', ['campaigns' => $campaigns]);
     }

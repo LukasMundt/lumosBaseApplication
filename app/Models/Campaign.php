@@ -17,7 +17,7 @@ use Laravel\Scout\Searchable;
 
 class Campaign extends Model implements Ownable
 {
-    use HasFactory, HasUlids, HasTimestamps, SoftDeletes, HasMorphOwner, Searchable;
+    use HasFactory, HasUlids, HasTimestamps, SoftDeletes, Searchable, HasMorphOwner;
 
     protected $table = 'campaigns_campaigns';
 
@@ -56,5 +56,15 @@ class Campaign extends Model implements Ownable
     public function addressList(): MorphTo
     {
         return $this->morphTo('list');
+    }
+
+    public function scopeOwnedByTeam($query, $teamId)
+    {
+        $query->where('owned_by_type', Team::class)->where('owned_by_id', $teamId);
+    }
+
+    public function resolveDefaultOwner()
+    {
+        return Team::find(session('team'));
     }
 }

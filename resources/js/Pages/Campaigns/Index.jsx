@@ -1,17 +1,27 @@
+import { Button } from "@/Components/ui/button";
 import { Card } from "@/Components/ui/card";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { BookUser, Megaphone } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-export default function Index({ auth, domain }) {
+export default function Index({ auth, domain, stats }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Übersicht
-                </h2>
+                <div className="flex justify-between w-full">
+                    <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        Übersicht
+                    </h2>
+                    <a
+                        href={route("campaigns.campaigns.settings", {
+                            domain: domain,
+                        })}
+                    >
+                        <Button variant="outline">Einstellungen</Button>
+                    </a>
+                </div>
             }
         >
             <Head title="Übersicht" />
@@ -115,7 +125,7 @@ export default function Index({ auth, domain }) {
                                     <Megaphone size={40} /> Kampagnen
                                 </div>
                                 <div className="text-3xl font-bold h-full content-center">
-                                    2
+                                    {stats.campaigns.count}
                                 </div>
                             </div>
                         </Card>
@@ -132,7 +142,7 @@ export default function Index({ auth, domain }) {
                                     <BookUser size={40} /> Listen
                                 </div>
                                 <div className="text-3xl font-bold h-full content-center">
-                                    2
+                                    {stats.lists.count}
                                 </div>
                             </div>
                         </Card>

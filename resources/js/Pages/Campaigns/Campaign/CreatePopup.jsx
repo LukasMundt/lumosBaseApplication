@@ -73,13 +73,16 @@ export default function CreatePopup({ domain }) {
                     // console.log(response);
                     setOpen(false);
                     form.reset();
-                    router.get(
-                        route("campaigns.campaigns.edit", {
-                            domain: domain,
-                            campaign: response.data.id,
-                        })
-                    );
-                    return "Kampagne erstellt."
+                    setTimeout(() => {
+                        router.get(
+                            route("campaigns.campaigns.edit", {
+                                domain: domain,
+                                campaign: response.data.id,
+                            })
+                        );
+                    }, 500);
+
+                    return "Kampagne erstellt.";
                 },
                 error: (error) => {
                     // console.log(error);
