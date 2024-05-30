@@ -10,13 +10,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
-import React from "react";
+import React, { useState } from "react";
 import { PersonForm } from "./partials/PersonForm";
 import { GroupForm } from "./partials/GroupForm";
 import { OrganisationForm } from "./partials/OrganisationForm";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -29,6 +30,7 @@ import { useEffect } from "react";
 import { ArrowRight, LoaderCircleIcon, Plus, Search, User } from "lucide-react";
 import axios from "axios";
 import { Card, CardContent } from "@/Components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 
 export default function ConnectDialog({
     domain,
@@ -142,16 +144,14 @@ function RelationForm({
     domain,
     handleSavedConnection,
 }) {
+    const [type, setType] = useState("");
+
     useEffect(() => {
         if (contactModel != null) {
             form.setValue("contact_id", contactModel.id);
             form.setValue("contact_type", contactModel.type);
         }
-
-        // console.log(contactModel);
     }, [contactModel]);
-
-    // console.log(contactModel);
 
     async function handleServerError(error) {
         // console.log(error);
@@ -183,6 +183,12 @@ function RelationForm({
         },
         mode: "onChange",
     });
+
+    useEffect(() => {
+        if (type != "andere") {
+            form.setValue("type", type);
+        }
+    }, [type]);
 
     function onSubmit(values) {
         // toast.success("Person verknüpft.");
@@ -228,8 +234,51 @@ function RelationForm({
                     render={({ field }) => (
                         <FormItem className="grow">
                             <FormLabel>Verbindung</FormLabel>
+                            <FormDescription>
+                                Nur Personen mit der Verbindung{" "}
+                                <span className="bg-secondary p-1 rounded font-bold">
+                                    Eigentümer
+                                </span>{" "}
+                                wird eine Kampagne zugesendet.
+                            </FormDescription>
                             <FormControl>
-                                <Input placeholder="Nachbar" {...field} />
+                                <RadioGroup
+                                    onValueChange={setType}
+                                    defaultValue={field.value}
+                                    className="flex flex-col space-y-1"
+                                >
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value="Eigentümer" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">
+                                            Eigentümer
+                                        </FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value="Nachbar" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">
+                                            Nachbar
+                                        </FormLabel>
+                                    </FormItem>
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value="andere" />
+                                        </FormControl>
+                                        <FormLabel className="font-normal grid items-center gap-2 w-full">
+                                            andere Verbindung
+                                            <Input
+                                                className={
+                                                    type != "andere" && "hidden"
+                                                }
+                                                placeholder="Nachbar"
+                                                {...field}
+                                            />
+                                        </FormLabel>
+                                    </FormItem>
+                                </RadioGroup>
                             </FormControl>
 
                             <FormMessage />
@@ -321,7 +370,7 @@ function SelectContact({ setStep, getContactData = null, domain }) {
                                               <span className="grow">
                                                   {person.name}
                                               </span>
-                                              <ArrowRight className="invisible group-hover:visible ease-in"/>
+                                              <ArrowRight className="invisible group-hover:visible ease-in" />
                                           </CardContent>
                                       </Card>
                                   </li>
