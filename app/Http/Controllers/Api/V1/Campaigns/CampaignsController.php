@@ -14,9 +14,14 @@ class CampaignsController extends Controller
     public function storeSettings(Request $request)
     {
         $this->authorize('settings', Campaign::class);
-        
+
         $validated = $request->validate([
-            'logo' => [File::image()->max(1024 * 12), 'nullable'],
+            'logo' => [
+                File::image()
+                    ->extensions(['jpg', 'jpeg', 'png'])
+                    ->max(1024 * 12),
+                'nullable'
+            ],
             'sender' => ['string', 'max:255', "required"],
             'footer' => ['string', 'nullable'],
         ]);

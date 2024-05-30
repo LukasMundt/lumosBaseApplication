@@ -20,7 +20,21 @@ class CampaignController extends Controller
         // $campaigns = Campaign::where('owned_by_type', Team::class)
         //     ->where('owned_by_id', session('team'))
         //     ->get();
-        $campaigns = Campaign::ownedByTeam(session('team'))->get(['deleted_at', 'id', 'name', 'sent_at', 'created_at', 'updated_at']);
+        $campaigns = Campaign::ownedByTeam(session('team'))
+            ->get()
+            ->load('addressList')
+            ->makeHidden([
+                'content',
+                'date_for_print',
+                'line1_no_owner',
+                'list_id',
+                'list_type',
+                'content_type',
+                'salutations',
+                'salutation_no_owner',
+                'owned_by_id',
+                'owned_by_type'
+            ]);
         // TODO: only show campaigns owned by the team of the sender of the request
         return Inertia::render('Campaigns/Campaign/Index', ['campaigns' => $campaigns]);
     }
@@ -28,16 +42,19 @@ class CampaignController extends Controller
     public function edit(Request $request, $domain, Campaign $campaign)
     {
         $this->authorize('update', $campaign);
-        // TODO: Policy and Validation
+        
         return Inertia::render(
             'Campaigns/Campaign/Edit',
-            ['campaign' => $campaign->load('addressList')]
+            ['campaign' => $campaign->makeVisible('content')->load('addressList')]
         );
     }
 
     public function preview(Request $request, $domain, Campaign $campaign)
     {
         $this->authorize('view', $campaign);
+
+        $campaign->makeVisible("content");
+
         // TODO: Ersetzung von Anrede usw. in preview genau so machen, wie in eigentlichem serienbrief
         $logoPath = "/teams//" . session('team') . "/";
         $files = Storage::allFiles("/teams//" . session('team') . "/");

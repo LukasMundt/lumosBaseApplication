@@ -49,7 +49,7 @@ class CampaignController extends Controller
         $campaign->update(
             [
                 'name' => $validated['name'],
-                'content' => $validated['content']??"",
+                'content' => $validated['content'] ?? "",
                 'date_for_print' => $validated['date_for_print'],
                 'content_type' => 'html',
                 'line1_no_owner' => $validated['line1_no_owner'],
@@ -69,6 +69,7 @@ class CampaignController extends Controller
         if ($campaign->sent_at != null) {
             abort(422, "Kampagne ist bereits abgesendet.");
         }
+        $campaign->makeVisible('content');
         // validate
         $validator = validator($campaign->toArray(), [
             'name' => ['string', 'max:255', 'required'],
@@ -82,7 +83,7 @@ class CampaignController extends Controller
         if ($validator->fails()) {
             abort(response(['errors' => $validator->errors()], 400));
         } else {
-            PrintCampaign::dispatch($campaign);
+            PrintCampaign::dispatch($campaign->makeVisible('content'));
         }
 
 
@@ -96,6 +97,8 @@ class CampaignController extends Controller
         // Nutzer muss das Recht haben, die zu duplizierende Kampagne einzusehen um sie duplizieren zu können
         $this->authorize('view', $campaign);
         $this->authorize('create', Campaign::class);
+
+        $campaign->makeVisible('content');
 
         $newCampaign = $campaign->replicate();
         $newCampaign->save();

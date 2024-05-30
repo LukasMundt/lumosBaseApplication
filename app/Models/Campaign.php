@@ -32,6 +32,10 @@ class Campaign extends Model implements Ownable
         'salutation_no_owner'
     ];
 
+    protected $hidden = [
+        'content'
+    ];
+
     protected function content(): Attribute
     {
         return Attribute::make(

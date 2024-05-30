@@ -220,18 +220,55 @@ export default function CampaignsTable({
                     </Button>
                 );
             },
-            cell: ({ row }) => (
-                <div className="">
-                    <a
-                        href={route("campaigns.campaigns.edit", {
-                            domain: domain,
-                            campaign: row.original.id,
-                        })}
+            cell: ({ row }) => {
+                console.log(row.original);
+                return (
+                    <div className="">
+                        <a
+                            href={route("campaigns.campaigns.edit", {
+                                domain: domain,
+                                campaign: row.original.id,
+                            })}
+                        >
+                            <Button variant="link">
+                                {row.getValue("name")}
+                            </Button>
+                        </a>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "list_id",
+            id: "Liste",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
                     >
-                        <Button variant="link">{row.getValue("name")}</Button>
-                    </a>
-                </div>
-            ),
+                        Liste
+                        <CaretSortIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                );
+            },
+            cell: ({ row }) =>
+                row.orignial?.address_list ? (
+                    <div className="">
+                        <a
+                            href={route("campaigns.lists.edit", {
+                                domain: domain,
+                                list: row.original.list_id,
+                            })}
+                        >
+                            <Button variant="link">-</Button>
+                        </a>
+                    </div>
+                ) : (
+                    <div>-</div>
+                ),
         },
         {
             accessorKey: "updated_at",

@@ -406,6 +406,9 @@ export default function Edit({ auth, domain, campaign }) {
                                         <FormControl>
                                             <Input
                                                 placeholder="Beispiel Kampagne"
+                                                disabled={
+                                                    campaign.sent_at != null
+                                                }
                                                 {...field}
                                             />
                                         </FormControl>
@@ -477,6 +480,9 @@ export default function Edit({ auth, domain, campaign }) {
                                         <FormControl>
                                             <Input
                                                 placeholder={new Date().toLocaleDateString()}
+                                                disabled={
+                                                    campaign.sent_at != null
+                                                }
                                                 {...field}
                                             />
                                         </FormControl>
@@ -505,6 +511,10 @@ export default function Edit({ auth, domain, campaign }) {
                                                             )}
                                                             onClick={() =>
                                                                 loadLists()
+                                                            }
+                                                            disabled={
+                                                                campaign.sent_at !=
+                                                                null
                                                             }
                                                         >
                                                             {field.value &&
@@ -609,6 +619,9 @@ export default function Edit({ auth, domain, campaign }) {
                                                 onClick={() => loadLists(true)}
                                                 title="Listen neu laden"
                                                 aria-label="Listen neu laden"
+                                                disabled={
+                                                    campaign.sent_at != null
+                                                }
                                             >
                                                 <RefreshCw size={20} />
                                             </Button>
@@ -650,7 +663,16 @@ export default function Edit({ auth, domain, campaign }) {
                                                 </FormDescription>
                                                 <FormControl>
                                                     <Input
-                                                        placeholder="Sehr geehrte Damen und Herren"
+                                                        placeholder={
+                                                            campaign.sent_at !=
+                                                            null
+                                                                ? ""
+                                                                : "Sehr geehrte Damen und Herren"
+                                                        }
+                                                        disabled={
+                                                            campaign.sent_at !=
+                                                            null
+                                                        }
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -672,7 +694,16 @@ export default function Edit({ auth, domain, campaign }) {
                                                 </FormDescription>
                                                 <FormControl>
                                                     <Input
-                                                        placeholder="Sehr geehrte Frau //nachname//"
+                                                        placeholder={
+                                                            campaign.sent_at !=
+                                                            null
+                                                                ? ""
+                                                                : "Sehr geehrte Frau //nachname//"
+                                                        }
+                                                        disabled={
+                                                            campaign.sent_at !=
+                                                            null
+                                                        }
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -694,7 +725,16 @@ export default function Edit({ auth, domain, campaign }) {
                                                 </FormDescription>
                                                 <FormControl>
                                                     <Input
-                                                        placeholder="Sehr geehrter Herr //nachname//"
+                                                        placeholder={
+                                                            campaign.sent_at !=
+                                                            null
+                                                                ? ""
+                                                                : "Sehr geehrter Herr //nachname//"
+                                                        }
+                                                        disabled={
+                                                            campaign.sent_at !=
+                                                            null
+                                                        }
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -716,7 +756,16 @@ export default function Edit({ auth, domain, campaign }) {
                                                 </FormDescription>
                                                 <FormControl>
                                                     <Input
-                                                        placeholder="Sehr geehrt* //nachname//"
+                                                        placeholder={
+                                                            campaign.sent_at !=
+                                                            null
+                                                                ? ""
+                                                                : "Sehr geehrt* //nachname//"
+                                                        }
+                                                        disabled={
+                                                            campaign.sent_at !=
+                                                            null
+                                                        }
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -746,7 +795,14 @@ export default function Edit({ auth, domain, campaign }) {
 
                                         <FormControl>
                                             <Input
-                                                placeholder="An die Eigentümer"
+                                                placeholder={
+                                                    campaign.sent_at != null
+                                                        ? ""
+                                                        : "An die Eigentümer"
+                                                }
+                                                disabled={
+                                                    campaign.sent_at != null
+                                                }
                                                 {...field}
                                             />
                                         </FormControl>
@@ -778,7 +834,14 @@ export default function Edit({ auth, domain, campaign }) {
                                         </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="An die Eigentümer"
+                                                placeholder={
+                                                    campaign.sent_at != null
+                                                        ? ""
+                                                        : "An die Eigentümer"
+                                                }
+                                                disabled={
+                                                    campaign.sent_at != null
+                                                }
                                                 {...field}
                                             />
                                         </FormControl>

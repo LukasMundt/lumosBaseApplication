@@ -20,7 +20,12 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { ArrowBigRight, UploadCloud } from "lucide-react";
 import { Textarea } from "@/Components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader } from "@/Components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+} from "@/Components/ui/card";
 
 const formSchema = z.object({
     logo: z
@@ -29,14 +34,17 @@ const formSchema = z.object({
             (files) => {
                 return Array.from(files).every((file) => file instanceof File);
             },
-            { message: "Expected a file" }
+            { message: "Datei erwartet." }
         )
         .refine(
             (files) =>
                 Array.from(files).every((file) =>
-                    ACCEPTED_IMAGE_TYPES.includes(file.type)
+                    ["jpg", "jpeg", "png"].includes(file.type.toLowerCase())
                 ),
-            "Only these types are allowed .jpg, .jpeg, .png and .webp"
+            "Nur diese Dateitypen sind erlaubt: .jpg, .jpeg, .png"
+        )
+        .refine((files) =>
+            Array.from(files).every((file) => file.size <= 10_000),"Die Datei darf maximal 10 MB groß sein."
         )
         .optional(),
     // .refine(
@@ -125,9 +133,14 @@ export default function Settings({ auth, domain, settings }) {
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Einstellungen
-                </h2>
+                <div className="flex justify-between w-full">
+                    <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        Einstellungen
+                    </h2>
+                    <Button type="submit" form="settings-form">
+                        Änderung speichern
+                    </Button>
+                </div>
             }
         >
             <Head title="Einstellungen" />
@@ -137,10 +150,8 @@ export default function Settings({ auth, domain, settings }) {
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-8 flex flex-col h-full"
+                        id="settings-form"
                     >
-                        <div>
-                            <Button type="submit">Änderung speichern</Button>
-                        </div>
                         <FormField
                             control={form.control}
                             name="sender"
@@ -208,7 +219,7 @@ export default function Settings({ auth, domain, settings }) {
 
                                                 <p className="mt-2 text-sm ">
                                                     <span className="font-semibold">
-                                                        Drag files
+                                                        Dateien hineinziehen
                                                     </span>
                                                 </p>
                                                 <p className="text-xs ">
