@@ -12,6 +12,7 @@ class ContactController extends Controller
 {
     public function connect(ConnectContactRequest $request)
     {
+        // TODO: policy
         $contact = $request->validated('contact_type')::find($request->validated('contact_id'));
         $model = $request->validated('this_type')::find($request->validated('this_id'));
 

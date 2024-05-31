@@ -179,6 +179,13 @@ return new class extends Migration {
             'route' => "campaigns.index",
         ]);
 
+        $items = NavItem::where('top_item', $top->id)->where('label', 'Karte')->get();
+        foreach($items as $item)
+        {
+            $item->delete();
+        }
+        NavItem::where('top_item', $top->id)->where('label', 'Index')->update(['label' => 'Übersicht']);
+
         // create team permission
         Permission::findOrCreate('tp-lumos-campaigns-basic');
 

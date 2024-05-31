@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Table } from "flowbite-react";
 import Checkbox from "@/Components/Inputs/Checkbox";
@@ -10,11 +10,12 @@ import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { Search } from "lucide-react";
 import { Label } from "@/Components/ui/label";
+import { Tabs, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 
 export default function Index({}) {
-    const { user, auth, projekte, domain, search} = usePage().props;
+    const { user, auth, projekte, domain, search } = usePage().props;
 
-    console.log(usePage().props);
+    // console.log(usePage().props);
 
     return (
         <AuthenticatedLayout
@@ -26,10 +27,25 @@ export default function Index({}) {
             }
         >
             <Head title="Übersicht" />
-
-            <div className="py-12">
-                <div className="mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <Tabs
+                defaultValue="table"
+                className="w-[200px]"
+                onValueChange={(value) => {
+                    if (value === "map") {
+                        router.visit(
+                            route("akquise.akquise.map", { domain: domain })
+                        );
+                    }
+                }}
+            >
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="table">Tabelle</TabsTrigger>
+                    <TabsTrigger value="map">Karte</TabsTrigger>
+                </TabsList>
+            </Tabs>
+            <div className="py-5">
+                <div className=" space-y-6">
+                    <div className=" grid-cols-1 lg:grid-cols-5 gap-4">
                         {/* <div className="row-span-2 space-y-4">
               <Index_Search className="flex-none" />
               <Index_Filter />
@@ -37,11 +53,11 @@ export default function Index({}) {
 
                         <div className="lg:col-span-4">
                             <div className="flex justify-between col-span-1 lg:col-span-4 mb-4">
-                                <form
-                                    method="get"
-                                    className="flex gap-2"
-                                >
-                                    <Label htmlFor="search" className="cursor-pointer content-center">
+                                <form method="get" className="flex gap-2">
+                                    <Label
+                                        htmlFor="search"
+                                        className="cursor-pointer content-center"
+                                    >
                                         <Search />
                                     </Label>
 

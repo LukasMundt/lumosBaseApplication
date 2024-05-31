@@ -63,6 +63,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/campaigns'
     Route::prefix('/lists')->name('lists.')->group(function () {
         Route::get('', [ListController::class, 'index'])->name('index');
         Route::post('', [ListController::class, 'store'])->name('store');
+        Route::post('/{list}', [ListController::class, 'update'])->name('update');
     });
 
 });

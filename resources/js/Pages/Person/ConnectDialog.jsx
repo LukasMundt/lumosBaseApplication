@@ -226,7 +226,7 @@ function RelationForm({
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-5 mx-1"
+                className="space-y-5"
             >
                 <FormField
                     control={form.control}
@@ -245,7 +245,7 @@ function RelationForm({
                                 <RadioGroup
                                     onValueChange={setType}
                                     defaultValue={field.value}
-                                    className="flex flex-col space-y-1"
+                                    className="flex flex-col space-y-2 pl-5 pt-4"
                                 >
                                     <FormItem className="flex items-center space-x-3 space-y-0">
                                         <FormControl>
