@@ -1,6 +1,7 @@
 import PrimaryLinkButton from "@/Components/PrimaryLinkButton";
 import { Avatar, AvatarFallback } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
 import { Card, CardContent } from "@/Components/ui/card";
 import {
     ArrowTopRightOnSquareIcon,
@@ -8,13 +9,16 @@ import {
     UserCircleIcon,
     UserIcon,
 } from "@heroicons/react/24/outline";
-import { Button } from "flowbite-react";
+import axios from "axios";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Show_Personen({
     personen = [],
     projektId,
     domain,
     button,
+    triggerReload = null,
 }) {
     return (
         <section className="mt-12 space-y-4">
@@ -43,6 +47,7 @@ export default function Show_Personen({
                                 domain={domain}
                                 person={contact}
                                 key={contact.id}
+                                triggerReload={triggerReload}
                             />
                         );
                     })}
@@ -52,7 +57,35 @@ export default function Show_Personen({
     );
 }
 
-function PersonCard({ person, domain, className = "" }) {
+function PersonCard({ person, domain, className = "", triggerReload = null}) {
+    const handleDeconnect = () => {
+        toast.promise(
+            axios.post(route("api.v1.contacts.deconnect", { domain: domain }), {
+                this_id: person.pivot.model_id,
+                this_type: "App\\Models\\Ci\\Akquise",
+                contact_id: person.id,
+                contact_type: person.pivot.contact_type,
+            }),
+            {
+                loading: "Wird entfernt...",
+                success: () => {
+                    triggerReload && triggerReload();
+                    return "Erfolgreich entfernt.";
+                },
+                error: (error) => {
+                    // console.log(error);
+                    handleServerError(error);
+                    if (error.response.status === 500) {
+                        return "Interner Serverfehler";
+                    }
+                    return "Fehler";
+                },
+            }
+        );
+    };
+
+    console.log(person);
+
     return (
         <div className={"flex space-x-3 justify-between " + className}>
             <div>
@@ -107,6 +140,14 @@ function PersonCard({ person, domain, className = "" }) {
                 )}
             </div>
             <div>
+                <Button
+                    type="button"
+                    size="icon"
+                    variant="outline"
+                    onClick={() => handleDeconnect()}
+                >
+                    <Trash2 size={20} className="text-red-500" />
+                </Button>
                 {/* <Button
                     color="gray"
                     href={route("projectci.person.show", {

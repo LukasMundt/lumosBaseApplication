@@ -15,7 +15,7 @@ class ListController extends Controller
     public function index()
     {
         $this->authorize('viewAny', SendList::class);
-        
+
         return AddressList::where('owned_by_type', Team::class)->where('owned_by_id', session('team'))->get();
     }
 
@@ -62,7 +62,6 @@ class ListController extends Controller
             'filtersStreets' => ['nullable', 'array'],
             'ignoreStreets' => ['boolean'],
         ]);
-        Log::debug($validated);
 
         if ($validated['ignoreDistricts']) {
             $validated['filtersDistricts'] = [];

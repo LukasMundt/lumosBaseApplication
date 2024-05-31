@@ -215,6 +215,7 @@ export default class Show extends React.Component {
                                             </Button>
                                         ),
                                     })}
+                                    triggerReload={toggleReload}
                                 />
                                 <Show_Notizen
                                     notizen={projekt.akquise.notizen}

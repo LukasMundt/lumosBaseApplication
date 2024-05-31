@@ -121,9 +121,6 @@ export default function Authenticated({ user, header, children }) {
                                                                   }
                                                               );
                                                           setOpened(newOpened);
-                                                          console.log(
-                                                              newOpened
-                                                          );
                                                       }}
                                                   >
                                                       <CollapsibleTrigger className="flex items-center gap-3 rounded-lg mt-2 px-4 py-2 text-muted-foreground transition-all hover:text-primary justify-between w-full">
@@ -235,6 +232,38 @@ export default function Authenticated({ user, header, children }) {
                                                   return (
                                                       <Collapsible
                                                           key={navItem.id}
+                                                          open={
+                                                              opened &&
+                                                              opened[
+                                                                  navItem.id
+                                                              ] &&
+                                                              opened[
+                                                                  navItem.id
+                                                              ] === true
+                                                          }
+                                                          onOpenChange={(
+                                                              value
+                                                          ) => {
+                                                              var current =
+                                                                  opened &&
+                                                                  opened[
+                                                                      navItem.id
+                                                                  ] &&
+                                                                  opened[
+                                                                      navItem.id
+                                                                  ] === true;
+                                                              var newOpened =
+                                                                  Object.assign(
+                                                                      opened,
+                                                                      {
+                                                                          [navItem.id]:
+                                                                              !current,
+                                                                      }
+                                                                  );
+                                                              setOpened(
+                                                                  newOpened
+                                                              );
+                                                          }}
                                                       >
                                                           <CollapsibleTrigger className=" flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground justify-between w-full">
                                                               <div className="flex items-center gap-4">
