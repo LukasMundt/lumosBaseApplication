@@ -4,6 +4,7 @@ namespace App\Models\Ci;
 
 use App\Models\Ci\Akquise;
 use App\Models\Model;
+use App\Models\Team;
 use App\Traits\Addressable;
 use Cog\Contracts\Ownership\Ownable;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
@@ -42,6 +43,11 @@ class Projekt extends Model implements Ownable
     public function akquise(): HasOne
     {
         return $this->hasOne(Akquise::class, 'id');
+    }
+
+    public function scopeOwnedByTeam($query, $teamId)
+    {
+        $query->where('owned_by_type', Team::class)->where('owned_by_id', $teamId);
     }
 
     /**
