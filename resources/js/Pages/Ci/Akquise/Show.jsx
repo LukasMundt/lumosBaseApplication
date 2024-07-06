@@ -20,6 +20,15 @@ import { Button } from "@/Components/ui/button";
 import { Card, CardContent } from "@/Components/ui/card";
 import axios from "axios";
 import { toast } from "sonner";
+import Show_Campaigns from "./partials/Show_Campaigns";
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/Components/ui/breadcrumb";
 
 export default class Show extends React.Component {
     render() {
@@ -48,19 +57,42 @@ export default class Show extends React.Component {
             <AuthenticatedLayout
                 user={auth.user}
                 header={
-                    <div className="flex justify-between w-full content-center">
-                        <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight align-middle">
-                            {projekt.address.street +
-                                " " +
-                                projekt.address.housenumber}
-                        </h2>
-                        {contactDialog({
-                            button: (
-                                <Button variant="outline">
-                                    Person verknüpfen
-                                </Button>
-                            ),
-                        })}
+                    <div className="w-full">
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="/">
+                                        Home
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="./../">
+                                        Projekte
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbPage>
+                                    {projekt.address.street +
+                                        " " +
+                                        projekt.address.housenumber}
+                                </BreadcrumbPage>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                        <div className="flex justify-between w-full content-center">
+                            <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight align-middle">
+                                {projekt.address.street +
+                                    " " +
+                                    projekt.address.housenumber}
+                            </h2>
+                            {contactDialog({
+                                button: (
+                                    <Button variant="outline">
+                                        Person verknüpfen
+                                    </Button>
+                                ),
+                            })}
+                        </div>
                     </div>
                 }
                 className="sm:px-15"
@@ -240,6 +272,13 @@ export default class Show extends React.Component {
                                     lat={projekt.address.lat}
                                     lon={projekt.address.lon}
                                 />
+
+                                <div className="">
+                                    <Show_Campaigns
+                                        campaigns={projekt.akquise.campaigns}
+                                        domain={domain}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

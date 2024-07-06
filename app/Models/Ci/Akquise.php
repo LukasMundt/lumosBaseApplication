@@ -2,6 +2,7 @@
 
 namespace App\Models\Ci;
 
+use App\Models\Campaign;
 use App\Models\Model;
 use App\Models\Notiz;
 use App\Models\Person;
@@ -80,12 +81,22 @@ class Akquise extends Model implements Ownable
         return $this->morphMany(Notiz::class, 'notierbar');
     }
 
-    // public function kampagnen(): MorphToMany
-    // {
-    //     return $this->morphToMany(Kampagne::class, 'bewerbbar');
-    // }
 
     // TODO: Kampagne verbinden können
+    public function campaigns(): MorphToMany
+    {
+        return $this->morphToMany(
+            Campaign::class,
+            'campaignable', // relation
+            'campaigns_campaignable', // table
+            'campaignable_id',
+            'campaign_id',
+            "id",
+            "id",
+            "campaignable",
+            false
+        )->withTimestamps()->withPivotValue('campaignable_type', $this::class)->withPivotValue('campaign_type', Campaign::class);
+    }
 
     // public function getRouteKeyName(): string
     // {

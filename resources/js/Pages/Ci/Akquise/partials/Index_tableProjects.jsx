@@ -149,17 +149,17 @@ export default function ProjectsTable({
                             <DropdownMenuLabel>Aktionen</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <a
-                                href={route("campaigns.campaigns.edit", {
+                                href={route("akquise.akquise.show", {
                                     domain: domain,
-                                    campaign: row.original.id,
+                                    projekt: row.original.id,
                                 })}
                                 className="cursor-pointer"
                             >
                                 <DropdownMenuItem className="cursor-pointer">
-                                    Bearbeiten
+                                    Ansehen
                                 </DropdownMenuItem>
                             </a>
-                            <DropdownMenuItem
+                            {/* <DropdownMenuItem
                                 className="cursor-pointer"
                                 type="button"
                                 onClick={() =>
@@ -168,7 +168,7 @@ export default function ProjectsTable({
                                 disabled
                             >
                                 Duplizieren
-                            </DropdownMenuItem>
+                            </DropdownMenuItem> */}
                             <DropdownMenuItem
                                 className="cursor-pointer"
                                 // type="button"
@@ -214,7 +214,19 @@ export default function ProjectsTable({
                     </div>
                 );
             },
-            cell: ({ row }) => <div>{row.original.address.street}</div>,
+            cell: ({ row }) => (
+                <a
+                    href={route("akquise.akquise.show", {
+                        domain: domain,
+                        projekt: row.original.id,
+                    })}
+                    target="_self"
+                >
+                    <Button variant="link">
+                        {row.original.address.street}
+                    </Button>
+                </a>
+            ),
         },
         {
             accessorKey: "address.housenumber",
