@@ -31,9 +31,9 @@ class AkquiseController extends Controller
     {
         $this->authorize('viewAny', Akquise::class);
 
-
-        $addresses = Address::search($request->input("search", ""))->where("owned_by_type", Team::class)->where("owned_by_id", session()->get('team'))->get()->toArray();
-        $addresses = data_get($addresses, "*.id");
+        $team = session()->get('team');
+        // $addresses = Address::search($request->input("search", ""))->where("owned_by_type", Team::class)->where("owned_by_id", $team)->get()->toArray();
+        // $addresses = data_get($addresses, "*.id");
 
         return Inertia::render('Ci/Akquise/Index', [
             // 'strasse' => $this->getClause()->select(DB::raw('count(strasse) as strasse_count,strasse'))
@@ -42,10 +42,10 @@ class AkquiseController extends Controller
             // 'plz' => $this->getClause()->select(DB::raw('count(plz) as count,plz'))->groupBy('plz')->get(),
             // 'projekte' => $this->getClause($request->search)->select('projectci_projekt.*', 'akquise_akquise.*')->paginate(15, null, 'page', $page),
             // 'projekte' => $projekteEmpty ? [] : $projekte->toQuery()->paginate(),
-
-            'projekte' => Projekt::with("address")->whereIn('address_id', $addresses)->paginate(15),
-
-            'search' => $request->input("search", ""),
+            // 'projekte' => [],
+            // 'projekte' => Projekt::with("address")->whereIn('address_id', $addresses)->paginate(15),
+            'projects' => Projekt::ownedByTeam($team)->with(["address", 'akquise'])->get()->setHidden(['deleted_at', 'created_by', 'updated_by', 'owned_by_id', 'owned_by_type', 'address_id']),
+            // 'search' => $request->input("search", ""),
             // 'filter' => $filterVals,
             // 'filterCols' => [
             //     'Stadtteil' => $projekteEmpty ? [] : Projekt::all()->toQuery()->select(DB::raw('count(stadtteil) as count,stadtteil as value'))->groupBy('stadtteil')->get(),
@@ -59,13 +59,24 @@ class AkquiseController extends Controller
     public function map(Request $request)
     {
         $this->authorize('viewAny', Akquise::class);
+        $defaultCenter = [
+            'latitude' => 53.55522722948935,
+            'longitude' => 9.995317259820599,
+        ];
 
         // $projekte = $this->getClause($request->search)->select('projectci_projekt.coordinates_lat', 'projectci_projekt.coordinates_lon', 'projectci_projekt.strasse', 'projectci_projekt.hausnummer', 'akquise_akquise.id', 'akquise_akquise.retour', 'akquise_akquise.nicht_gewuenscht')->get();
-        $projekte = Projekt::where("owned_by_type", Team::class)->where("owned_by_id", session()->get('team'))->get()->load(['address', 'akquise']);
+        $addresses = Address::search($request->input("search", ""))->where("owned_by_type", Team::class)->where("owned_by_id", session()->get('team'))->get()->toArray();
+        $addresses = data_get($addresses, "*.id");
+
+        $projekte = Projekt::ownedByTeam(session('team'))->with("address")->where("owned_by_type", Team::class)->where("owned_by_id", session()->get('team'))->whereIn('address_id', $addresses)->get()->load(['address', 'akquise']);
 
         $normalMarkers = [];
         $retourMarkers = [];
         $nichtGewuenschtMarkers = [];
+
+        $lat = 0;
+        $lon = 0;
+        $count = 0;
 
         foreach ($projekte as $projekt) {
             if ($projekt->akquise->retour ?? false) {
@@ -79,7 +90,7 @@ class AkquiseController extends Controller
                 $nichtGewuenschtMarkers[] = [
                     'lat' => $projekt->address->lat,
                     'lon' => $projekt->address->lon,
-                    'label' => $projekt->street . ' ' . $projekt->address->housenumber,
+                    'label' => $projekt->address->street . ' ' . $projekt->address->housenumber,
                     'url' => route('akquise.akquise.show', ['projekt' => $projekt->id, 'domain' => session()->get('team')])
                 ];
             } else if (isset($projekt->address->lat) && isset($projekt->address->lon)) {
@@ -90,6 +101,9 @@ class AkquiseController extends Controller
                     'url' => route('akquise.akquise.show', ['projekt' => $projekt->id, 'domain' => session()->get('team')])
                 ];
             }
+            $lat += $projekt->address->lat;
+            $lon += $projekt->address->lon;
+            $count++;
         }
         $markers = [
             'layers' => [
@@ -111,7 +125,8 @@ class AkquiseController extends Controller
         ];
         return Inertia::render('Ci/Akquise/IndexMap', [
             // 'projekte' => $projekte,
-            'markers' => $markers
+            'markers' => $markers,
+            'centerAdr' => $count == 0 ? $defaultCenter : ['latitude' => $lat / $count, 'longitude' => $lon / $count]
         ]);
     }
 
@@ -193,7 +208,7 @@ class AkquiseController extends Controller
         $projekt = $projekt->projekt;
 
         return Inertia::render('Ci/Akquise/Show', [
-            'projekt' => $projekt->load(['akquise', 'akquise.notizen', "akquise.personen.telefonnummern", 'address']),
+            'projekt' => $projekt->load(['akquise', 'akquise.notizen', "akquise.personen.telefonnummern", 'address', 'akquise.campaigns']),
             'creationUrlNotes' => URL::signedRoute('api.v1.notes.save', ['class' => hash('sha256', get_class($akquise)), 'model_id' => $akquise->id], null, true),
             'this_type' => $akquise::class,
             // 'notiz' => $notiz,

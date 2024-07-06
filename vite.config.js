@@ -6,7 +6,10 @@ import { VitePWA } from "vite-plugin-pwa";
 import viteCompression from "vite-plugin-compression";
 import manifestSRI from "vite-plugin-manifest-sri";
 
+process.env.IS_PREACT = "false";
+
 export default defineConfig({
+    define: { "process.env": {} },
     build: {
         minify: "terser",
         sourcemap: true,

@@ -11,7 +11,7 @@ class CoordinatesService
         $results = [];
 
         // hier wird die Anfrage an OSM gestellt
-        $response = Http::get('https://nominatim.openstreetmap.org/search.php', [
+        $response = Http::get(config("lumos.nominatim.uri").'/search.php', [
             'addressdetails' => '1',
             'street' => $strasseUndNummer,
             'country' => $country,
@@ -29,8 +29,10 @@ class CoordinatesService
                 }
             }
         } else {
+            Log::error($response);
             return null;
         }
+        
 
         return $results;
     }
@@ -54,6 +56,7 @@ class CoordinatesService
         $composed['lat'] = isset($item['lat']) ? $item['lat'] : 0;
         $composed['lon'] = isset($item['lon']) ? $item['lon'] : 0;
 
+        Log::debug($composed);
         return $composed;
     }
 
@@ -70,7 +73,7 @@ class CoordinatesService
         //     'lon' => 0,
         // ];
 
-        $secondResponse = Http::get('https://nominatim.openstreetmap.org/reverse.php', [
+        $secondResponse = Http::get(config("lumos.nominatim.uri").'/reverse.php', [
             'addressdetails' => '1',
             // 'osmtype' => $response->json()[0]['osm_type'],
             // 'osmid' => $response->json()[0]['osm_id'],
@@ -81,6 +84,7 @@ class CoordinatesService
             'format' => 'jsonv2',
         ]);
         if (!$secondResponse->successful()) {
+            Log::error($secondResponse);
             return null;
         }
         $result = self::composeDetails($secondResponse->json());
