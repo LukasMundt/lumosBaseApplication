@@ -39,10 +39,11 @@ export default function IndexMap({ domain }) {
                 setCenterChanged(true);
             }
             setCenter(newCenter);
-        } else if (center != centerAdr) {
-            setCenter(centerAdr);
-            setCenterChanged(true);
         }
+        // else if (center != centerAdr) {
+        //     setCenter(centerAdr);
+        //     setCenterChanged(true);
+        // }
     }, [location, search, centerAdr]);
 
     const handleCoordinatesClick = (lat, lng) => {
@@ -98,7 +99,7 @@ export default function IndexMap({ domain }) {
                                 <TabsTrigger value="map">Karte</TabsTrigger>
                             </TabsList>
                         </Tabs>
-                        <Input
+                        {/* <Input
                             id="search"
                             onKeyDown={(e) => {
                                 if (e.code === "Enter") {
@@ -114,7 +115,7 @@ export default function IndexMap({ domain }) {
                             title="Search"
                         >
                             <Search width={40}/>
-                        </Button>
+                        </Button> */}
                     </div>
                     <div>
                         <Switch
@@ -138,18 +139,19 @@ export default function IndexMap({ domain }) {
                 </div>
                 <div className="mx-auto space-y-6 w-full h-full">
                     <MyMapMulti
-                        center={[center.latitude, center.longitude]}
+                        // center={[center.latitude, center.longitude]}
+                        center={
+                            location.loading || location.error
+                                ? [53.55522722948935, 9.995317259820599]
+                                : [location.latitude, location.longitude]
+                        }
                         markers={markers}
                         zoom={18}
                         height={null}
                         getCoordinates={
                             creatorMode ? handleCoordinatesClick : null
                         }
-                        locationLoaded={
-                            !location.loading &&
-                            !location.error &&
-                            centerChanged
-                        }
+                        locationLoaded={!location.loading && !location.error}
                     />
                 </div>
             </div>
