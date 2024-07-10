@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class CoordinatesService
 {
-    public static function getNominatimShortResponse($strasseUndNummer, $city = "", $country = "de", $zip_code = "", array $listOfAddressTypes = []): array|null
+    public static function getNominatimShortResponse($strasseUndNummer, $city = "", $country = "de", $zip_code = "", array $listOfAddressTypes = []): array
     {
         $results = [];
 
@@ -30,7 +30,7 @@ class CoordinatesService
             }
         } else {
             Log::error($response);
-            return null;
+            return [];
         }
         
 
@@ -60,7 +60,7 @@ class CoordinatesService
         return $composed;
     }
 
-    public static function detailsByCoordinates($lat, $lon): array|null
+    public static function detailsByCoordinates($lat, $lon): array
     {
         // hier wird das Array initialiesiert, und alle Werte leer gesetzt. Einige werden später ggf. geändert
         // $result = [
@@ -85,7 +85,7 @@ class CoordinatesService
         ]);
         if (!$secondResponse->successful()) {
             Log::error($secondResponse);
-            return null;
+            return [];
         }
         $result = self::composeDetails($secondResponse->json());
         // $result['street'] = isset($secondResponse->json()['address']['road']) ? $secondResponse->json()['address']['road'] : "";

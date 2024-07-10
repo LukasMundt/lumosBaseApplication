@@ -31,7 +31,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
-// import { DataTablePagination } from "../../../Components/datatable/Pagination";
 import moment from "moment";
 import "moment/locale/de";
 import { Filter, Pencil, Send, X } from "lucide-react";
@@ -64,24 +63,24 @@ export default function ProjectsTable({
         table.getColumn(column)?.setFilterValue(filterValue);
     }
 
-    // React.useEffect(() => {
-    //     if (isSmallDevice) {
-    //         // var newVisibilities = colum;
-    //         table
-    //             .getAllColumns()
-    //             .filter((column) => column.getCanHide())
-    //             .map((column) => {
-    //                 column.toggleVisibility(false);
-    //             });
-    //     } else {
-    //         table
-    //             .getAllColumns()
-    //             .filter((column) => column.getCanHide())
-    //             .map((column) => {
-    //                 column.toggleVisibility(true);
-    //             });
-    //     }
-    // }, [isSmallDevice]);
+    React.useEffect(() => {
+        if (isSmallDevice) {
+            // var newVisibilities = colum;
+            table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                    column.toggleVisibility(false);
+                });
+        } else {
+            table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                    column.toggleVisibility(true);
+                });
+        }
+    }, [isSmallDevice]);
 
     // const duplicateCampaign = (campaignId) => {
     //     toast.promise(
@@ -175,7 +174,7 @@ export default function ProjectsTable({
                                 // onClick={() =>
                                 //     duplicateCampaign(row.original.id)
                                 // }
-                                // TODO: Kampagne löschen können
+                                // TODO: Projekt löschen können
                                 disabled
                             >
                                 Löschen
@@ -240,12 +239,14 @@ export default function ProjectsTable({
                             column.toggleSorting(column.getIsSorted() === "asc")
                         }
                     >
-                        Hausnummer
+                        {isSmallDevice ? "Nr" : "Hausnummer"}
                         <CaretSortIcon className="ml-2 h-4 w-4" />
                     </Button>
                 );
             },
-            cell: ({ row }) => <div>{row.original.address.housenumber}</div>,
+            cell: ({ row }) => (
+                <div className="pl-4">{row.original.address.housenumber}</div>
+            ),
         },
         {
             accessorKey: "address.zip_code",
@@ -273,7 +274,9 @@ export default function ProjectsTable({
                     </div>
                 );
             },
-            cell: ({ row }) => <div>{row.original.address.zip_code}</div>,
+            cell: ({ row }) => (
+                <div className="pl-4">{row.original.address.zip_code}</div>
+            ),
         },
         {
             accessorKey: "address.district",
@@ -301,7 +304,9 @@ export default function ProjectsTable({
                     </div>
                 );
             },
-            cell: ({ row }) => <div>{row.original.address.district}</div>,
+            cell: ({ row }) => (
+                <div className="pl-4">{row.original.address.district}</div>
+            ),
         },
         {
             accessorKey: "updated_at",
@@ -320,7 +325,7 @@ export default function ProjectsTable({
                 );
             },
             cell: ({ row }) => (
-                <div className="px-4">
+                <div className="pl-4">
                     {moment(row.original.updated_at).locale("de").fromNow()}
                 </div>
             ),
@@ -352,7 +357,39 @@ export default function ProjectsTable({
                 );
             },
             cell: ({ row }) => (
-                <div className="px-4">{row.original.akquise.status}</div>
+                <div className="pl-4">{row.original.akquise.status}</div>
+            ),
+        },
+        {
+            accessorKey: "akquise.personen_count",
+            id: "Personen",
+            header: ({ column }) => {
+                return (
+                    <div className="flex">
+                        <Button
+                            variant="ghost"
+                            onClick={() =>
+                                column.toggleSorting(
+                                    column.getIsSorted() === "asc"
+                                )
+                            }
+                        >
+                            Personen
+                            <CaretSortIcon className="ml-2 h-4 w-4" />
+                        </Button>
+                        <Filter_Popup
+                            filters={filters}
+                            setFilters={setFilters}
+                            column="Personen"
+                            setFilterForColumn={setFilterForColumn}
+                        />
+                    </div>
+                );
+            },
+            cell: ({ row }) => (
+                <div className="pl-4">
+                    {row.original.akquise.personen_count}
+                </div>
             ),
         },
     ];
@@ -484,7 +521,10 @@ export default function ProjectsTable({
                 </Table>
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
-                <DataTablePagination table={table} />
+                <DataTablePagination
+                    table={table}
+                    isSmallDevice={isSmallDevice}
+                />
             </div>
         </div>
     );

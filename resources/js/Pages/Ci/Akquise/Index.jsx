@@ -20,6 +20,8 @@ export default function Index({}) {
         router.reload();
     };
 
+    console.log(projects);
+
     return (
         <AuthenticatedLayout
             user={auth.user}

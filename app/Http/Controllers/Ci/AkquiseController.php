@@ -9,8 +9,10 @@ use App\Http\Requests\ListAddressesRequest;
 use App\Models\Address;
 use App\Models\Ci\Akquise;
 use App\Models\Ci\Projekt;
+use App\Models\Person;
 use App\Models\Team;
 use App\Services\CoordinatesService;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -35,6 +37,14 @@ class AkquiseController extends Controller
         // $addresses = Address::search($request->input("search", ""))->where("owned_by_type", Team::class)->where("owned_by_id", $team)->get()->toArray();
         // $addresses = data_get($addresses, "*.id");
 
+        // $projects = Projekt::ownedByTeam($team)->with('akquise')->get();
+        // $teamModel = Team::where('id', $team)->first();
+        // foreach($projects as $project)
+        // {
+        //     $akquise = $project->akquise;
+        //     $akquise->changeOwnerTo($teamModel)->save();
+        // }
+
         return Inertia::render('Ci/Akquise/Index', [
             // 'strasse' => $this->getClause()->select(DB::raw('count(strasse) as strasse_count,strasse'))
             //     ->groupBy('strasse')
@@ -44,7 +54,13 @@ class AkquiseController extends Controller
             // 'projekte' => $projekteEmpty ? [] : $projekte->toQuery()->paginate(),
             // 'projekte' => [],
             // 'projekte' => Projekt::with("address")->whereIn('address_id', $addresses)->paginate(15),
-            'projects' => Projekt::ownedByTeam($team)->with(["address", 'akquise'])->get()->setHidden(['deleted_at', 'created_by', 'updated_by', 'owned_by_id', 'owned_by_type', 'address_id']),
+            'projects' => Projekt::ownedByTeam($team)->with([
+                "address",
+                // 'akquise',
+                'akquise' => function (HasOne $hasOne) {
+                    $hasOne->withCount('personen');
+                }
+            ])->get()->setHidden(['deleted_at', 'created_by', 'updated_by', 'owned_by_id', 'owned_by_type', 'address_id']),
             // 'search' => $request->input("search", ""),
             // 'filter' => $filterVals,
             // 'filterCols' => [
