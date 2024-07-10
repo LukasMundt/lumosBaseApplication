@@ -505,7 +505,7 @@ export default function Edit({ auth, domain, campaign }) {
                                                             variant="outline"
                                                             role="combobox"
                                                             className={cn(
-                                                                "w-[200px] justify-between",
+                                                                "w-[300px] justify-between",
                                                                 !field.value &&
                                                                     "text-muted-foreground"
                                                             )}
@@ -516,18 +516,39 @@ export default function Edit({ auth, domain, campaign }) {
                                                                 campaign.sent_at !=
                                                                 null
                                                             }
+                                                            title={
+                                                                field.value &&
+                                                                lists
+                                                                    ? lists?.data?.find(
+                                                                          (
+                                                                              list
+                                                                          ) =>
+                                                                              list.id ===
+                                                                              field.value
+                                                                      )?.name
+                                                                    : field.value
+                                                                    ? campaign
+                                                                          .list
+                                                                          .name
+                                                                    : "Liste"
+                                                            }
                                                         >
-                                                            {field.value &&
-                                                            lists
-                                                                ? lists?.data?.find(
-                                                                      (list) =>
-                                                                          list.id ===
-                                                                          field.value
-                                                                  )?.name
-                                                                : field.value
-                                                                ? campaign.list
-                                                                      .name
-                                                                : "Liste"}
+                                                            <span className="truncate">
+                                                                {field.value &&
+                                                                lists
+                                                                    ? lists?.data?.find(
+                                                                          (
+                                                                              list
+                                                                          ) =>
+                                                                              list.id ===
+                                                                              field.value
+                                                                      )?.name
+                                                                    : field.value
+                                                                    ? campaign
+                                                                          .list
+                                                                          .name
+                                                                    : "Liste"}
+                                                            </span>
                                                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                         </Button>
                                                     </FormControl>

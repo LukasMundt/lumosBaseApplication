@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Rawilk\Settings\Facades\Settings;
@@ -25,6 +26,8 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
      * @var int
      */
     public $uniqueFor = 3600;
+
+    public $tries = 3;
 
     /**
      * Get the unique ID for the job.
@@ -71,16 +74,16 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
             $salutations = Settings::withoutTeams()->get('campaigns.salutations');
         }
         $salutations = [
-            'not specified' => "Not specified",
-            'female' => "female",
-            'male' => 'male',
-            'diverse' => "diverse"
+            'not specified' => "Sehr geehrte Damen und Herren",
+            'female' => "Sehr geehrte Frau //nachname//",
+            'male' => 'Sehr geehrter Herr //nachname//',
+            'diverse' => "Sehr geehrt* //nachname//"
         ];
         $this->salutations = $salutations;
 
         // get addresses
         $akquiseObjects = $this->campaign->addressList->getAddresses(["personen.address", "personen", "projekt.address"]);
-
+        Log::debug(count($akquiseObjects));
         $recipients = [];
         $persons = [];
 
@@ -102,11 +105,13 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
                     if ($person->lastname && $person->pivot->type == "Eigentümer" && !in_array($person->id, $persons)) {
                         $person = $person->append('name');
                         $recipients[] = $this->handleOwnerWithLastname($person, $recipient);
+                        $persons[] = $person;
                         $printedRecipients++;
                     }
                     // owner without last name
                     else if ($person->pivot->type == "Eigentümer") {
                         $recipients[] = $this->handleOwner($recipient);
+                        $persons[] = $person;
                         $printedRecipients++;
                     }
                     // only neighbours with address
@@ -127,6 +132,7 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
         // generation of the pdf
         Pdf::withBrowsershot(function (Browsershot $browsershot) {
             $browsershot->noSandbox();
+            $browsershot->timeout(120);
         })->view('campaigns.multi', [
                     'content' => $this->campaign->content,
                     'title' => 'Dies ist der Titel',
@@ -141,6 +147,15 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
             ])
             ->margins(20, 20, 20, 20)
             ->save(Storage::path("/teams//" . $team . '/campaigns//' . $this->campaign->id . ".pdf"));
+
+        // associate campaign with persons
+        $akquiseArr = [];
+        foreach ($akquiseObjects as $akquise) {
+            $akquiseArr[] = $akquise;
+        }
+        // Log::debug($akquiseObjects);
+        $this->campaign->akquise()->saveMany($akquiseObjects);
+        $this->campaign->personen()->saveMany($persons);
     }
 
     private function handlePersonWithDifferentAddress($person, array $recipient): array

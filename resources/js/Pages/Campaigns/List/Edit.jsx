@@ -4,6 +4,7 @@ import ListForm from "./partials/ListForm";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
     name: z.string().min(2).max(255),
@@ -16,25 +17,29 @@ const formSchema = z.object({
 });
 
 export default function Edit({ auth, domain, list }) {
+    const [dataCopied, setDataCopied] = useState(false);
+
     const toggleReload = () => {
         router.reload({ only: ["list"] });
     };
+    console.log(list);
 
-    // console.log(list);
-
+    // useEffect()
     // 1. Define your form.
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: list.name,
             filtersDistricts: list.filters.filtersDistricts ?? [],
-            ignoreDistricts: list.filters.ignoreDistricts ?? false,
+            ignoreDistricts: list.filters.ignoreDistricts ?? true,
             filtersZipCodes: list.filters.filtersZipCodes ?? [],
             ignoreZipCodes: list.filters.ignoreZipCodes ?? true,
             filtersStreets: list.filters.filtersStreets ?? [],
             ignoreStreets: list.filters.ignoreStreets ?? true,
         },
     });
+
+    console.log(form.getValues());
 
     return (
         <AuthenticatedLayout
@@ -49,6 +54,7 @@ export default function Edit({ auth, domain, list }) {
 
             <div className="">
                 <ListForm
+                    edit={true}
                     form={form}
                     toggleReload={toggleReload}
                     domain={domain}

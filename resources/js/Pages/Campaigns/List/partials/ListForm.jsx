@@ -36,6 +36,7 @@ export default function ListForm({
     domain,
     buttonText,
     listId,
+    edit = false,
 }) {
     const [loaded, setLoaded] = useState(false);
     const [addressAttributes, setAddressAttributes] = useState([]);
@@ -52,7 +53,12 @@ export default function ListForm({
                 .then((response) => {
                     // console.log(response);
                     setAddressAttributes(response.data);
-                    form.setValue("filtersDistricts", response.data.district);
+                    if (!edit) {
+                        form.setValue(
+                            "filtersDistricts",
+                            response.data.district
+                        );
+                    }
                     setLoaded(true);
                 })
                 .catch((error) => {
@@ -204,6 +210,7 @@ export default function ListForm({
 }
 
 function Filter({ form, formField, ignoreFormField, options, label }) {
+    console.log(form.getValues());
     return (
         <FormField
             control={form.control}
@@ -263,9 +270,13 @@ function Filter({ form, formField, ignoreFormField, options, label }) {
                                         <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                                             <Checkbox
                                                 checked={field.value}
+                                                id={field.id}
                                                 onCheckedChange={field.onChange}
                                             />
-                                            <FormLabel className="text-sm font-normal">
+                                            <FormLabel
+                                                htmlFor={field.id}
+                                                className="text-sm font-normal"
+                                            >
                                                 Nicht beachten
                                             </FormLabel>
                                         </FormItem>
