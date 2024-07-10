@@ -56,6 +56,7 @@ export function CreatePopup({
           <Create_Form
             latLon={location != null ? location : null}
             showMapInLastStep={false}
+            closeDialog={setOpen}
           />
         </div>
       </DrawerContent>

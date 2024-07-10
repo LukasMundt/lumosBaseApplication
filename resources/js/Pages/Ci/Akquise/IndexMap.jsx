@@ -8,7 +8,7 @@ import { useState } from "react";
 import { CreatePopup } from "./partials/CreatePopup";
 import { Tabs, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 
-export default function IndexMap({}) {
+export default function IndexMap({ domain }) {
     const { user, auth, markers } = usePage().props;
     const location = useGeolocation();
     const [creatorMode, setCreatorMode] = useRemember(false);

@@ -5,6 +5,7 @@ import SecondStep from "./Create_SecondStep";
 import ThirdStep from "./Create_ThirdStep";
 import { useEffect } from "react";
 import axios from "axios";
+import LoadingIcon from "@/Components/LoadingIcon";
 
 export default function Create_Form({
     latLon = null,
@@ -135,12 +136,19 @@ export default function Create_Form({
     return (
         <div className={className}>
             {/* Eingabe Adresse */}
-            {step != 3 ? (
+            {step != 3 && latLon == null ? (
                 <FirstStep
                     setInput={setFromFirstToSecond}
                     streetAndNumber={streetAndNumber}
                     errors={errorsFirst}
                 />
+            ) : (
+                ""
+            )}
+            {step != 3 && latLon ? (
+                <div className="w-full flex justify-center items-center h-32">
+                    <LoadingIcon />
+                </div>
             ) : (
                 ""
             )}
