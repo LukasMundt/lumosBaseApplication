@@ -111,9 +111,9 @@ class TeamController extends Controller
         return Inertia::render('Admin/Teams/Edit', [
             'team' => $team,
             'allUsers' => User::all(),
-            'currentUsers' => User::with('roles')->get(['email','id','name','status'])->filter(
+            'currentUsers' => array_values(User::with('roles')->get(['email','id','name','status'])->filter(
                 fn($user) => $user->roles->where('team_id', $team->id)->toArray()
-            ),
+            )->toArray()),
             'roles' => $roles,
             'teamPermissions' => $teamPermissions,
             'teamPermissionsCurrent' => $team->permissions()->allRelatedIds(),
