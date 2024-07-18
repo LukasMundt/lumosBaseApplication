@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -33,6 +34,10 @@ class RootController extends Controller
 
   public function domainDashboard(Request $request, string $domain)
   {
-    return Inertia::render('Dashboard');
+    $team = session('team');
+    if ($team == 0) {
+      return Inertia::render("PersonalDashboard");
+    }
+    return Inertia::render('Dashboard', ['team' => Team::where('id', $team)->first()]);
   }
 }

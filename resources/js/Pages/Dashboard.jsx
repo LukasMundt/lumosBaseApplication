@@ -1,12 +1,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({ auth, team}) {
     // console.log(usePage().props);
     const { str, domain } = usePage().props;
-
+console.log(team);
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -22,7 +21,7 @@ export default function Dashboard({ auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
-                            You're logged in!
+                            {"Team: "+team.name}
                         </div>
                         <div>{str}</div>
                     </div>
