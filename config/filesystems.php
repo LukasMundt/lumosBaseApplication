@@ -32,14 +32,26 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => env('APP_ON_CLOUDRON', false)
+                ? str_replace(['/app/code/storage', '\app\code\storage'], '/app/data/storage', storage_path('app')) :
+                storage_path('app'),
+            'throw' => false,
+        ],
+        'filesRaw' => [
+            'driver' => 'local',
+            'root' => storage_path('app/files'),
+            'throw' => false,
+        ],
+        'files' => [
+            'driver' => 'filesDriver',
+            'root' => "",
             'throw' => false,
         ],
 
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
