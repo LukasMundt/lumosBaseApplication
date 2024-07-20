@@ -52,7 +52,7 @@ class Campaign extends Model implements Ownable
             set: function (string $value) {
                 $dir = "/teams//' . session('team') . '/campaigns";
                 if (!Storage::directoryExists($dir)) {
-                    Storage::createDirectory("/teams//' . session('team') . '/campaigns");
+                    Storage::createDirectory("/teams//" . session('team') . "/campaigns");
                 }
 
 
