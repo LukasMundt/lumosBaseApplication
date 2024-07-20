@@ -27,8 +27,6 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
      */
     public $uniqueFor = 3600;
 
-    public $tries = 3;
-
     /**
      * Get the unique ID for the job.
      */
@@ -38,13 +36,14 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
     }
 
     private $salutations;
+    private $line1_noOwner;
+    private $logoPath;
 
     /**
      * Create a new job instance.
      */
     public function __construct(public Campaign $campaign)
     {
-        //
     }
 
     /**
@@ -54,32 +53,10 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
     {
         $team = session('team');
 
-        $logoPath = "/teams//" . $team . "/";
-        $files = Storage::allFiles("/teams//" . $team . "/");
-        $logoPath = null;
-        foreach ($files as $file) {
-            if (Str::of($file)->contains($logoPath . "logo.")) {
-                $logoPath = $file;
-            }
-        }
+        $this->findLogo($team);
+        $this->findSalutations($team);
+        $this->findFirstLine_noOwner($team);
 
-        // TODO: what to do if no logo saved
-
-        // get salutation (priorities: campaign -> team -> app)
-        if (isset($this->campaign->salutations)) {
-            $salutations = $this->campaign->salutations;
-        } else if (Settings::get('campaigns.salutations', null)) {
-            $salutations = Settings::get('campaigns.salutations');
-        } else {
-            $salutations = Settings::withoutTeams()->get('campaigns.salutations');
-        }
-        $salutations = [
-            'not specified' => "Sehr geehrte Damen und Herren",
-            'female' => "Sehr geehrte Frau //nachname//",
-            'male' => 'Sehr geehrter Herr //nachname//',
-            'diverse' => "Sehr geehrt* //nachname//"
-        ];
-        $this->salutations = $salutations;
 
         // get addresses
         $akquiseObjects = $this->campaign->addressList->getAddresses(["personen.address", "personen", "projekt.address"]);
@@ -138,7 +115,7 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
                     'title' => 'Dies ist der Titel',
                     'date_for_print' => $this->campaign->date_for_print,
                     'sender' => Settings::get('sender', ""),
-                    'logo' => "data:image/png;base64," . base64_encode(Storage::get($logoPath)),
+                    'logo' => "data:image/png;base64," . base64_encode(Storage::get($this->logoPath)),
                     'recipients' => $recipients,
                 ])
             ->footerView('campaigns.footer.default', [
@@ -158,6 +135,55 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
         $this->campaign->personen()->saveMany($persons);
     }
 
+    private function findLogo(int $team)
+    {
+        $logoPath = "/teams//" . $team . "/";
+        $files = Storage::allFiles($logoPath);
+        // $_logoPath = null;
+        foreach ($files as $file) {
+            if (Str::of($file)->contains($logoPath . "logo.")) {
+                $logoPath = $file;
+            }
+        }
+
+        $this->logoPath = $logoPath;
+        // TODO: what to do if no logo saved
+    }
+
+    private function findSalutations(int $team)
+    {
+        // get salutation (priorities: campaign -> team -> app)
+        if (isset($this->campaign->salutations)) {
+            $salutations = $this->campaign->salutations;
+        } else if (Settings::get('campaigns.salutations', null)) {
+            $salutations = Settings::get('campaigns.salutations');
+        } else {
+            $salutations = Settings::withoutTeams()->get('campaigns.salutations', null);
+        }
+        // fallback
+        if (!$salutations) {
+            $salutations = [
+                'not specified' => "Sehr geehrte Damen und Herren",
+                'female' => "Sehr geehrte Frau //nachname//",
+                'male' => 'Sehr geehrter Herr //nachname//',
+                'diverse' => "Sehr geehrt* //nachname//"
+            ];
+        }
+
+        $this->salutations = $salutations;
+    }
+
+    private function findFirstLine_noOwner($team, )
+    {
+        // get salutation (priorities: campaign -> team -> app)
+        // TODO: richtig machen
+        $temp = "Die Bewohner";
+        if (isset($this->campaign->line1_no_owner)) {
+            $temp = $this->campaign->line1_no_owner;
+        }
+
+    }
+
     private function handlePersonWithDifferentAddress($person, array $recipient): array
     {
         if ($person->address) {
@@ -170,7 +196,7 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
 
     private function handleOwner(array $recipient): array
     {
-        $recipient['line1'] = "Die Eigentümer";
+        $recipient['line1'] = $this->line1_noOwner;
         $recipient['anrede'] = $this->salutations['not specified'];
         return $recipient;
     }
@@ -178,7 +204,7 @@ class PrintCampaign implements ShouldQueue, ShouldBeUnique
     private function handleOwnerWithLastname($person, $recipient): array
     {
         $recipient = $this->handlePersonWithDifferentAddress($person, $recipient);
-        $recipient["line1"] = $person->name;
+        $recipient["line1"] = "Familie " . $person->name;
         $recipient["anrede"] = str_replace("//nachname//", $person->nachname, $this->salutations[$person->gender]);
         return $recipient;
     }
