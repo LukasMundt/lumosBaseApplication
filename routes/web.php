@@ -40,6 +40,8 @@ use Inertia\Inertia;
 //     ]);
 // });
 Route::redirect("/", "/personal");
+// Health route
+Route::get("/health", fn() => []);
 // Route::redirect("/dashboard","/personal");
 
 Route::get('/planner', function () {
