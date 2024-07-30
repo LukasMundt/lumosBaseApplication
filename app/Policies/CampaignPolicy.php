@@ -18,10 +18,10 @@ class CampaignPolicy
     public function before(User $user, string $ability): bool|null
     {
 
-        if ($this->team->permissions()->where('name', 'tp-lumos-akquise-basic')->count() < 1) {
+        if ($this->team->permissions()->where('name', 'tp-lumos-campaigns-basic')->count() < 1) {
             return false;
         }
-
+        
         setPermissionsTeamId(session("team"));
         $user->unsetRelation("roles");
         $user->unsetRelation("permissions");
@@ -61,7 +61,7 @@ class CampaignPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyPermission('lumos-campaigns-create-campaign');
+        return $user->hasAnyPermission(['lumos-campaigns-create-campaign']);
     }
 
     /**

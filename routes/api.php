@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/campaigns'
         Route::post('/{campaign}', [CampaignController::class, 'update'])->name('update');
         Route::patch('/{campaign}/send', [CampaignController::class, 'send'])->name('send');
         Route::post('/{campaign}/replicate', [CampaignController::class, 'replicate'])->name('replicate');
+        Route::delete("/{campaign}", [CampaignController::class, "delete"])->name("delete");
     });
     // lists
     Route::prefix('/lists')->name('lists.')->group(function () {
