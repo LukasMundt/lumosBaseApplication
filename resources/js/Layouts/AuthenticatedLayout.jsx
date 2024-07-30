@@ -26,8 +26,10 @@ import { ThemeProvider } from "../Components/theme-provider";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { TeamCombobox } from "../Components/TeamCombobox";
 import { Toaster } from "@/Components/ui/sonner";
-import { useLocalStorage, useNetworkState } from "@uidotdev/usehooks";
-import { useEffect } from "react";
+import {
+    useLocalStorage,
+    useNetworkState,
+} from "@uidotdev/usehooks";
 
 export default function Authenticated({ user, header, children }) {
     const { nav, teams } = usePage().props;
@@ -382,6 +384,7 @@ export default function Authenticated({ user, header, children }) {
                                 <DropdownMenuLinkItem
                                     href={route("logout")}
                                     method="post"
+                                    as="button"
                                 >
                                     Logout
                                 </DropdownMenuLinkItem>
@@ -389,25 +392,8 @@ export default function Authenticated({ user, header, children }) {
                         </DropdownMenu>
                     </header>
                     {network.online ? (
-                        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 ">
-                            <div className="flex items-center">
-                                {/* <h1 className="text-lg font-semibold md:text-2xl">
-                                Inventory
-                            </h1> */}
-                                {header}
-                            </div>
-                            {/* <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
-                            <div className="flex flex-col items-center gap-1 text-center">
-                                <h3 className="text-2xl font-bold tracking-tight">
-                                    You have no products
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
-                                    You can start selling as soon as you add a
-                                    product.
-                                </p>
-                                <Button className="mt-4">Add Product</Button>
-                            </div>
-                        </div> */}
+                        <main className="w-full flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 ">
+                            <div className="flex items-center">{header}</div>
                             {children}
                         </main>
                     ) : (

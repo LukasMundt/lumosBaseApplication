@@ -9,7 +9,6 @@ import ReactSelect from "@/Components/Inputs/ReactSelect";
 
 export default function EditForm({ className = "" }) {
     const { user, roles, teams} = usePage().props;
-    console.log(user);
 
     const rolesOptions = [];
     roles.map((role) => {
@@ -39,7 +38,7 @@ export default function EditForm({ className = "" }) {
     });
 
     const teamsDefault = [];
-    user.teams.map((team) => {
+    user.reduced_teams.map((team) => {
         teamsDefault.push({
             // key: team.id,
             value: team.id,

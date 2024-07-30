@@ -6,12 +6,10 @@ import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import { Select } from "flowbite-react";
 import ReactSelect from "@/Components/Inputs/ReactSelect";
+import { Label } from "@/Components/ui/label";
+import { Input } from "@/Components/ui/input";
 
-export default function CreateForm({
-    
-    status,
-    className = "",
-}) {
+export default function CreateForm({ status, className = "" }) {
     const { teams, roles } = usePage().props;
 
     const teamsOptions = [];
@@ -49,9 +47,8 @@ export default function CreateForm({
         <section className={className}>
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
-
-                    <TextInput
+                    <Label htmlFor="name">Name</Label>
+                    <Input
                         id="name"
                         className="mt-1 block w-full"
                         value={data.name}
@@ -65,9 +62,9 @@ export default function CreateForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <Label htmlFor="email">E-Mail</Label>
 
-                    <TextInput
+                    <Input
                         id="email"
                         type="email"
                         className="mt-1 block w-full"
@@ -98,7 +95,7 @@ export default function CreateForm({
                     <InputError className="mt-2" message={errors.status} />
                 </div>
 
-                <div>
+                {/* <div>
                     <InputLabel htmlFor="roles" value="Rollen" />
                     <div className="text-gray-800">
                         <ReactSelect
@@ -112,9 +109,9 @@ export default function CreateForm({
                         />
                     </div>
                     <InputError className="mt-2" message={errors.roles} />
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                     <InputLabel htmlFor="teams" value="Teams" />
                     <div className="text-gray-800">
                         <ReactSelect
@@ -128,7 +125,7 @@ export default function CreateForm({
                         />
                     </div>
                     <InputError className="mt-2" message={errors.teams} />
-                </div>
+                </div> */}
 
                 {/* {mustVerifyEmail && user.email_verified_at === null && (
                     <div>

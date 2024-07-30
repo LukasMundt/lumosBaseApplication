@@ -9,6 +9,7 @@ use App\Models\Campaign;
 use App\Models\Team;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class CampaignController extends Controller
@@ -16,6 +17,7 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', Campaign::class);
+
         $validated = $request->validate(['name' => ['string', 'max:255', 'required']]);
 
         $campaign = Campaign::create([
@@ -38,7 +40,7 @@ class CampaignController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => ['string', 'max:255', 'required'],
+            'name' => ['string', 'max:255', 'nullable'],
             'content' => ['string', 'nullable'],
             'date_for_print' => ['string', 'max:255', 'nullable'],
             'list_id' => ['string', 'nullable', Rule::exists('campaigns_lists_address', 'id')],
@@ -47,17 +49,19 @@ class CampaignController extends Controller
         ]);
 
         $campaign->update(
-            [
-                'name' => $validated['name'],
-                'content' => $validated['content'] ?? "",
-                'date_for_print' => $validated['date_for_print'],
-                'content_type' => 'html',
-                'line1_no_owner' => $validated['line1_no_owner'],
-                'salutation_no_owner' => $validated['salutation_no_owner']
-            ]
+            array_merge(
+                [
+                    'content' => $validated['content'] ?? "",
+                    'content_type' => 'html',
+                ],
+                isset($validated['name']) ? ['name' => $validated['name']] : [],
+                isset($validated['date_for_print']) ? ['date_for_print' => $validated['date_for_print']] : [],
+                isset($validated['line1_no_owner']) ? ['line1_no_owner' => $validated['line1_no_owner']] : [],
+                isset($validated['salutation_no_owner']) ? ['salutation_no_owner' => $validated['salutation_no_owner']] : []
+            )
         );
 
-        if ($validated['list_id']) {
+        if (isset($validated['list_id'])) {
             AddressList::find($validated['list_id'])->campaign()->save($campaign);
         }
     }
@@ -101,11 +105,21 @@ class CampaignController extends Controller
         $campaign->makeVisible('content');
 
         $newCampaign = $campaign->replicate();
+        $newCampaign->sent_at = null;
         $newCampaign->save();
         $newCampaign->update(['name' => $campaign->name . "_kopie", 'content' => $campaign->content]);
 
         return $newCampaign->refresh()->only(['id', 'name']);
     }
 
-    // TODO: Kampagne löschen können
+    public function delete($domain, Campaign $campaign)
+    {
+        $this->authorize('delete', $campaign);
+        if ($campaign->sent_at != null) {
+            abort(405, "This campaign has been sent and can therefore not be deleted.");
+        }
+        $campaign->delete();
+    }
+
+    // ggf. Kampagne wiederherstellen können
 }

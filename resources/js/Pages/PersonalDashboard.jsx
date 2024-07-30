@@ -19,7 +19,7 @@ export default function Dashboard({ auth, domain, teams }) {
         >
             <Head title="Dashboard" />
             <ScrollArea className="w-full py-2">
-                <div className="flex">
+                <div className="flex gap-3">
                     {teams.map((team) => (
                         <a href={route("team.dashboard", { domain: team })}>
                             <Card className="pr-4">

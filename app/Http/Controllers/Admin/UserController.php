@@ -107,7 +107,7 @@ class UserController extends Controller
         return Inertia::render(
             'Admin/Users/Edit',
             [
-                'user' => $user->load(['roles', 'teams']),
+                'user' => $user->load(['roles'])->append('reduced_teams'),
                 'roles' => $roles,
                 'teams' => Team::all()->except([0]),
             ]

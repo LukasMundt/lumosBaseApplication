@@ -38,6 +38,16 @@ import { Pencil, Send } from "lucide-react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 import axios from "axios";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/Components/ui/alert-dialog";
 
 export default function CampaignsTable({
     data,
@@ -50,6 +60,8 @@ export default function CampaignsTable({
     const [columnVisibility, setColumnVisibility] = React.useState({});
     const [rowSelection, setRowSelection] = React.useState({});
     const isSmallDevice = useMediaQuery("only screen and (max-width : 907px)");
+    const [deleteOpen, setDeleteOpen] = React.useState(false);
+    const [campaignToDelete, setCampaignToDelete] = React.useState(null);
 
     React.useEffect(() => {
         if (isSmallDevice) {
@@ -95,6 +107,33 @@ export default function CampaignsTable({
         );
     };
 
+    const deleteCampaign = () => {
+        campaignToDelete &&
+            toast.promise(
+                axios.delete(
+                    route("api.v1.campaigns.campaigns.delete", {
+                        domain: domain,
+                        campaign: campaignToDelete,
+                    })
+                ),
+                {
+                    loading: "Wird gelöscht...",
+                    success: () => {
+                        triggerReload();
+                        return "Erfolgreich in den Papierkorb verschoben.";
+                    },
+                    error: (error) => {
+                        if (error.response.status === 500) {
+                            return "Interner Serverfehler";
+                        } else if (error.response.status === 405) {
+                            return error.response.data.message ?? "Fehler";
+                        }
+                        return "Fehler";
+                    },
+                }
+            );
+    };
+
     const columns = [
         {
             id: "select",
@@ -134,11 +173,6 @@ export default function CampaignsTable({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aktionen</DropdownMenuLabel>
-                            {/* <DropdownMenuItem
-                    onClick={() => navigator.clipboard.writeText(payment.id)}
-                  >
-                    Copy payment ID
-                  </DropdownMenuItem> */}
                             <DropdownMenuSeparator />
                             <a
                                 href={route("campaigns.campaigns.edit", {
@@ -163,11 +197,11 @@ export default function CampaignsTable({
                             <DropdownMenuItem
                                 className="cursor-pointer"
                                 // type="button"
-                                // onClick={() =>
-                                //     duplicateCampaign(row.original.id)
-                                // }
-                                // TODO: Kampagne löschen können
-                                disabled
+                                onClick={() => {
+                                    setDeleteOpen(true);
+                                    setCampaignToDelete(row.original.id);
+                                }}
+                                disabled={row.original.sent_at != null}
                             >
                                 Löschen
                             </DropdownMenuItem>
@@ -315,6 +349,28 @@ export default function CampaignsTable({
 
     return (
         <div className="w-full">
+            <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Bist du dir wirklich sicher?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Möchtest du die Kampagne wirklich in den Papierkorb
+                            verschieben?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Abbrechen</AlertDialogCancel>
+                        <AlertDialogAction
+                            type="button"
+                            onClick={() => deleteCampaign()}
+                        >
+                            Verschieben
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
             <div className="flex items-center py-4">
                 {/* <Input
           placeholder="Filter emails..."

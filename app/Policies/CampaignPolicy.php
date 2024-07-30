@@ -17,11 +17,10 @@ class CampaignPolicy
 
     public function before(User $user, string $ability): bool|null
     {
-
         if ($this->team->permissions()->where('name', 'tp-lumos-campaigns-basic')->count() < 1) {
             return false;
         }
-        
+
         setPermissionsTeamId(session("team"));
         $user->unsetRelation("roles");
         $user->unsetRelation("permissions");
@@ -35,7 +34,7 @@ class CampaignPolicy
     {
         return $user->hasAnyPermission([
             "lumos-campaigns-view-own-campaigns",
-            'lumos-campaigns-view-all-campaigns'
+            "lumos-campaigns-view-all-campaigns"
         ]);
 
     }
