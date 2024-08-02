@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\Ci\Gruppe;
+use App\Contracts\Contact;
+use App\Models\Ci\Akquise;
 use App\Traits\Addressable;
 use Cog\Contracts\Ownership\Ownable;
 use Cog\Laravel\Ownership\Traits\HasMorphOwner;
-use Cog\Laravel\Ownership\Traits\HasOwner;
 use Database\Factories\PersonFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,7 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Laravel\Scout\Searchable;
 
-class Person extends Model implements Ownable
+class Person extends Model implements Ownable, Contact
 {
     use SoftDeletes, HasUlids, HasFactory, HasMorphOwner, Searchable;
     use Addressable;
@@ -100,5 +99,27 @@ class Person extends Model implements Ownable
             //     'created_at' => $this->created_at->timestamp,
             // ]
         );
+    }
+
+    public function akquise(): MorphToMany
+    {
+        return $this->morphToMany(
+            Akquise::class,
+            'model', // name
+            'model_has_contacts', // table
+            'contact_id', //foreignPivotKey
+            'model_id', // related pivot key
+            "id", // related
+            "id", // related
+            "model", // relation
+            true
+        )->withTimestamps()
+            ->withPivotValue('contact_type', $this::class)
+            ->withPivot(["priority", "type"]);
+    }
+
+    public function scopeOwnedByTeam($query, $teamId)
+    {
+        $query->where('owned_by_type', Team::class)->where('owned_by_id', $teamId);
     }
 }

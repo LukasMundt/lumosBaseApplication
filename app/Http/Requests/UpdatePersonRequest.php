@@ -15,17 +15,24 @@ class UpdatePersonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "anrede" => ["string", "max:255", "nullable", Rule::in(['', 'Frau', 'Herr', 'Familie'])],
-            "titel" => "nullable|string|max:255",
-            "vorname" => "nullable|string|max:255",
-            "nachname" => "nullable|string|max:255",
+            "title" => "nullable|string|max:255",
+            "prename" => "nullable|string|max:255",
+            "additional_prenames" => "nullable|string|max:255",
+            "lastname" => "nullable|string|max:255",
+            "gender" => ["string", Rule::in(['not specified', 'female', 'male', 'diverse'])],
+            "phone" => ['nullable', 'string', 'regex:/([0-9+; ])*/'],
             "email" => "nullable|string|max:255|email",
-            "strasse" => "nullable|string|max:255",
-            "hausnummer" => "nullable|string|max:255",
-            "plz" => ["nullable", "string", "max:5"],
-            // nur zahlen hinzufügen
-            "stadt" => "nullable|string|max:255",
-            "telefonnummern.*.value" => ["sometimes", "string", "max:30"] // nur zahlen, bindestrich, plus und leerzeichen
+            'address' => ["nullable","string",Rule::exists('addresses','id')],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            '*.required_with' => 'Wenn eines der anderen Adress-Felder gefüllt ist müssen auch alle anderen befüllt sein.',
+            'email.email' => 'Bitte gib eine gültige E-Mail-Adresse ein.',
+            '*.string' => "Bitte gib eine Zeichenkette ein.",
+            '*.max' => "Bitte kürze deine Eingabe."
         ];
     }
 }

@@ -11,6 +11,7 @@ use App\Policies\Admin\TeamPolicy;
 use App\Policies\CampaignPolicy;
 use App\Policies\Campaigns\ListPolicy;
 use App\Policies\Ci\AkquisePolicy;
+use App\Policies\ContactPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -25,6 +26,8 @@ class AuthServiceProvider extends ServiceProvider
         Akquise::class => AkquisePolicy::class,
         Campaign::class => CampaignPolicy::class,
         SendList::class => ListPolicy::class,
+        Contact::class => ContactPolicy::class,
+        Person::class => ContactPolicy::class,
     ];
 
     /**

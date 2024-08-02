@@ -43,6 +43,8 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/contacts')
     Route::prefix('/persons')->name('persons.')->group(function () {
         Route::get("", [PersonController::class, 'index'])->name('index');
         Route::post("", [PersonController::class, 'store'])->name('store');
+        Route::get("/{person}", [PersonController::class, "show"])->name("show");
+        Route::post("/{person}", [PersonController::class, "update"])->name("update");
         Route::post("/{person}/associate", [PersonController::class, 'associate'])->name('associate')->middleware(['auth:sanctum', 'verified', 'signed']);
     });
 });

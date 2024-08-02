@@ -12,6 +12,18 @@ use Illuminate\Validation\Rule;
 
 class ContactController extends Controller
 {
+    /**
+     * Returns contacts matching the search criteria
+     */
+    public function index(Request $request)
+    {
+        // TODO: Policy
+        $result = [
+            'persons' => Person::search($request->input('search'))->where('owned_by_type', Team::class)->where('owned_by_id', session()->get('team'))->get(),
+        ];
+        return $result;
+    }
+    
     public function connect(ConnectContactRequest $request)
     {
         // TODO: policy
@@ -38,17 +50,5 @@ class ContactController extends Controller
         $model = $validated['this_type']::find($validated['this_id']);
 
         $model->personen()->detach($contact);
-    }
-
-    /**
-     * Returns contacts matching the search criteria
-     */
-    public function index(Request $request)
-    {
-        // TODO: Policy
-        $result = [
-            'persons' => Person::search($request->input('search'))->where('owned_by_type', Team::class)->where('owned_by_id', session()->get('team'))->get(),
-        ];
-        return $result;
     }
 }

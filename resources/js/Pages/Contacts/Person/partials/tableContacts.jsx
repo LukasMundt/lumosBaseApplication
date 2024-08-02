@@ -21,7 +21,6 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import {
@@ -34,47 +33,22 @@ import {
 } from "@/Components/ui/table";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { DataTablePagination } from "@/Components/datatable/Pagination";
-import { Badge } from "@/Components/ui/badge";
-import moment from "moment";
-import { Link } from "@inertiajs/react";
-import { TrashIcon } from "lucide-react";
-import { toast } from "sonner";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader } from "@/Components/ui/dialog";
+import { PersonForm } from "./PersonForm";
+import PersonForm_Dialog from "./PersonForm_Dialog";
 
-export default function UserTable({ triggerReload, data }) {
+export function ContactTable({ domain, data, buttons, triggerReload }) {
     const [sorting, setSorting] = React.useState([]);
     const [columnFilters, setColumnFilters] = React.useState([]);
     const [columnVisibility, setColumnVisibility] = React.useState({});
     const [rowSelection, setRowSelection] = React.useState({});
     const isSmallDevice = useMediaQuery("only screen and (max-width : 907px)");
     const [filters, setFilters] = React.useState({});
+    const [editPerson, setEditPerson] = React.useState(null);
 
     function setFilterForColumn(column, filterValue) {
         table.getColumn(column)?.setFilterValue(filterValue);
-    }
-
-    function deleteUser(id) {
-        toast.promise(
-            axios.delete(
-                route("admin.users.delete", {
-                    user: id,
-                })
-            ),
-            {
-                loading: "Wird gelöscht...",
-                success: () => {
-                    triggerReload && triggerReload();
-                    return "Erfolgreich gelöscht.";
-                },
-                error: (error) => {
-                    handleServerError(error);
-                    if (error.response.status === 500) {
-                        return "Interner Serverfehler";
-                    }
-                    return "Fehler";
-                },
-            }
-        );
     }
 
     React.useEffect(() => {
@@ -121,7 +95,6 @@ export default function UserTable({ triggerReload, data }) {
             enableSorting: false,
             enableHiding: false,
         },
-
         {
             id: "actions",
             enableHiding: false,
@@ -137,36 +110,21 @@ export default function UserTable({ triggerReload, data }) {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aktionen</DropdownMenuLabel>
 
-                            <a
-                                href={route("admin.users.show", {
-                                    user: row.original.id,
-                                })}
-                                className="cursor-pointer"
+                            <Link
+                                to={"/" + row.original.id}
+                                reloadDocument={false}
                             >
                                 <DropdownMenuItem className="cursor-pointer">
                                     Ansehen
                                 </DropdownMenuItem>
-                            </a>
-                            <a
-                                href={route("admin.users.edit", {
-                                    user: row.original.id,
-                                })}
-                                className="cursor-pointer"
+                            </Link>
+                            <button
+                                type="button"
+                                className="w-full"
+                                onClick={() => setEditPerson(row.original.id)}
                             >
                                 <DropdownMenuItem className="cursor-pointer">
                                     Bearbeiten
-                                </DropdownMenuItem>
-                            </a>
-
-                            <button
-                                type="button"
-                                onClick={() => deleteUser(row.original.id)}
-                            >
-                                <DropdownMenuItem className="cursor-pointer">
-                                    <div className="flex gap-2">
-                                        <TrashIcon className="w-5 text-red-500" />{" "}
-                                        Löschen
-                                    </div>
                                 </DropdownMenuItem>
                             </button>
                         </DropdownMenuContent>
@@ -174,8 +132,9 @@ export default function UserTable({ triggerReload, data }) {
                 );
             },
         },
+
         {
-            accessorKey: "name",
+            accessorKey: "prename",
             enableHiding: false,
             header: ({ column }) => (
                 <div className="flex">
@@ -185,7 +144,7 @@ export default function UserTable({ triggerReload, data }) {
                             column.toggleSorting(column.getIsSorted() === "asc")
                         }
                     >
-                        Name
+                        Vorname
                         <CaretSortIcon className="ml-2 h-4 w-4" />
                     </Button>
                     {/* <Filter_Popup
@@ -197,38 +156,13 @@ export default function UserTable({ triggerReload, data }) {
                 </div>
             ),
             cell: ({ row }) => (
-                <div className="font-medium pl-4">{row.getValue("name")}</div>
-            ),
-        },
-        {
-            accessorKey: "teams",
-            enableHiding: true,
-            header: ({ column }) => (
-                <div className="flex">
-                    {/* <Button
-                        variant="ghost"
-                        onClick={() =>
-                            column.toggleSorting(column.getIsSorted() === "asc")
-                        }
-                        // disabled
-                    > */}
-                    Teams
-                    {/* <CaretSortIcon className="ml-2 h-4 w-4" />
-                    </Button> */}
-                </div>
-            ),
-            cell: ({ row }) => (
-                <div className="flex gap-2 flex-wrap">
-                    {row.original.reduced_teams.map((team) => (
-                        <Badge variant="secondary" key={team.id}>
-                            {team.name}
-                        </Badge>
-                    ))}
+                <div className="font-medium pl-4">
+                    {row.getValue("prename")}
                 </div>
             ),
         },
         {
-            accessorKey: "email",
+            accessorKey: "lastname",
             enableHiding: false,
             header: ({ column }) => (
                 <div className="flex">
@@ -238,7 +172,35 @@ export default function UserTable({ triggerReload, data }) {
                             column.toggleSorting(column.getIsSorted() === "asc")
                         }
                     >
-                        Mail-Adresse
+                        Nachname
+                        <CaretSortIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                    {/* <Filter_Popup
+                      filters={filters}
+                      setFilters={setFilters}
+                      column="Straße"
+                      setFilterForColumn={setFilterForColumn}
+                  /> */}
+                </div>
+            ),
+            cell: ({ row }) => (
+                <div className="font-medium pl-4">
+                    {row.getValue("lastname")}
+                </div>
+            ),
+        },
+        {
+            accessorKey: "gender",
+            enableHiding: false,
+            header: ({ column }) => (
+                <div className="flex">
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Geschlecht
                         <CaretSortIcon className="ml-2 h-4 w-4" />
                     </Button>
                     {/* <Filter_Popup
@@ -250,11 +212,19 @@ export default function UserTable({ triggerReload, data }) {
                 </div>
             ),
             cell: ({ row }) => (
-                <div className="font-medium pl-4">{row.getValue("email")}</div>
+                <div className="font-medium pl-4">
+                    {row.getValue("gender") == "female"
+                        ? "weiblich"
+                        : row.getValue("gender") == "male"
+                        ? "männlich"
+                        : row.getValue("gender") == "diverse"
+                        ? "divers"
+                        : "unbekannt"}
+                </div>
             ),
         },
         {
-            accessorKey: "status",
+            accessorKey: "akquise_count",
             enableHiding: true,
             header: ({ column }) => (
                 <div className="flex">
@@ -264,7 +234,7 @@ export default function UserTable({ triggerReload, data }) {
                             column.toggleSorting(column.getIsSorted() === "asc")
                         }
                     >
-                        Status
+                        Akquise
                         <CaretSortIcon className="ml-2 h-4 w-4" />
                     </Button>
                     {/* <Filter_Popup
@@ -276,33 +246,36 @@ export default function UserTable({ triggerReload, data }) {
                 </div>
             ),
             cell: ({ row }) => (
-                <div className="font-medium pl-4">{row.getValue("status")}</div>
+                <div className="font-medium pl-4">
+                    {row.getValue("akquise_count")}
+                </div>
             ),
         },
         {
-            accessorKey: "created_at",
-            id: "Erstellt",
-            header: ({ column }) => {
-                return (
+            accessorKey: "address",
+            enableHiding: true,
+            header: ({ column }) => (
+                <div className="flex">
                     <Button
                         variant="ghost"
                         onClick={() =>
                             column.toggleSorting(column.getIsSorted() === "asc")
                         }
                     >
-                        Erstellt
+                        Adresse
                         <CaretSortIcon className="ml-2 h-4 w-4" />
                     </Button>
-                );
-            },
+                    {/* <Filter_Popup
+                    filters={filters}
+                    setFilters={setFilters}
+                    column="Straße"
+                    setFilterForColumn={setFilterForColumn}
+                /> */}
+                </div>
+            ),
             cell: ({ row }) => (
-                <div
-                    className="px-4"
-                    title={new Date(row.original.created_at).toLocaleString(
-                        "de-DE"
-                    )}
-                >
-                    {moment(row.original.created_at).locale("de").fromNow()}
+                <div className="font-medium pl-4">
+                    {row.original.address == null ? "-" : "adresse"}
                 </div>
             ),
         },
@@ -329,15 +302,34 @@ export default function UserTable({ triggerReload, data }) {
 
     return (
         <div className="w-full">
+            {/* <Dialog
+                open={editPerson != null}
+                onOpenChange={(open) => !open && setEditPerson(null)}
+            >
+                <DialogContent>
+                    <DialogHeader>Person bearbeiten</DialogHeader>
+                    <div>
+                        <PersonForm
+                            domain={domain}
+                            submitButtonText={"Änderungen speichern"}
+                            triggerReload={triggerReload}
+                            personId={editPerson}
+                            closeForm={(open) => !open && setEditPerson(null)}
+                        />
+                    </div>
+                </DialogContent>
+            </Dialog> */}
+            <PersonForm_Dialog
+                open={editPerson != null}
+                onOpenChange={(open) => !open && setEditPerson(null)}
+                domain={domain}
+                submitButtonText={"Änderungen speichern"}
+                triggerReload={triggerReload}
+                personId={editPerson}
+                closeForm={(open) => !open && setEditPerson(null)}
+            />
             <div className="flex items-center py-4">
-                {/* <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue()) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        /> */}
+                {buttons}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">

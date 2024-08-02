@@ -95,7 +95,7 @@ require __DIR__ . '/webPci.php';
 require __DIR__ . '/webPciA.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Route::get('/{domain}/contacts/persons', [PersonController::class, 'index']);
+    Route::get('/{domain}/contacts/persons/{path?}', [PersonController::class, 'index']);
 });
 
 Route::middleware(['auth', 'verified'])->prefix('/{domain}/campaigns')->name('campaigns.')->group(function () {
@@ -111,5 +111,6 @@ Route::middleware(['auth', 'verified'])->prefix('/{domain}/campaigns')->name('ca
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/{domain}/logo', [RootController::class, 'logo'])->name('team.logo');
+    // TODO: Check if user has got any rights in team
     Route::get('/{domain}/{path?}', [RootController::class, 'domainDashboard'])->name('team.dashboard');
 });

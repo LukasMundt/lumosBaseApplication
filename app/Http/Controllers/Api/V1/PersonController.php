@@ -14,60 +14,17 @@ use Illuminate\Http\Request;
 
 class PersonController extends Controller
 {
-
-    // public function show(Request $request, Person $person)
-    // {
-    //     $person = $person->load('gruppe');
-    //     $personenAuchInGruppe = [];
-    //     foreach ($person->load('gruppe.personen')['gruppe']['personen'] as $value) {
-    //         if ($value->id != $person->id) {
-    //             $personenAuchInGruppe[] = $value;
-    //         }
-    //     }
-    //     return Inertia::render('Person/Show', [
-    //         'person' => $person,
-    //         'personenAuchInGruppe' => $personenAuchInGruppe,
-    //         'personStr' => $person->nameAsString(),
-    //     ]);
-    // }
-
-    // public function store(StorePersonRequest $request): Response
-    // {
-    //     $person = Person::create($request->validated());
-
-    //     return Inertia::render('lukasmundt/projectci::Person/Update', [
-    //         'person' => $person,
-    //     ]);
-    // }
-
-    // public function edit(Request $request, Person $person): Response
-    // {
-    //     // $person = Person::create($request->validated());
-
-    //     return Inertia::render('lukasmundt/projectci::Person/Update', [
-    //         'person' => $person,
-    //     ]);
-    // }
-
     public function index(Request $request)
     {
+        $this->authorize("viewAny", Person::class);
         $personen = Person::whereOwnedBy(Team::find(session('team')))->paginate();
         return $personen;
         // return Inertia::render("lukasmundt/projectci::Person/Index", ['personen' => $personen]);
     }
 
-    // public function create(Request $request)
-    // {
-    //     return Inertia::render("lukasmundt/projectci::Person/Create");
-    // }
-
     public function store(StorePersonRequest $request)
     {
-        // Gruppe erzeugt
-        // $gruppe = Gruppe::factory()->create();
-        // $gruppe->update($request->validated());
-        // $gruppe->save();
-
+        $this->authorize("show", Person::class);
         // Person erzeugt
         $person = Person::factory()->create();
         $person->update($request->validated());
@@ -91,58 +48,33 @@ class PersonController extends Controller
         return $person->refresh();
     }
 
-    public function edit(Request $request, Person $person)
+    public function show(Request $request, $domain, Person $person)
     {
-        $telefonnummern = [];
-        foreach ($person->telefonnummern as $telefonnummer) {
-            $telefonnummern[] = ["label" => $telefonnummer->telefonnummer, "value" => $telefonnummer->telefonnummer];
-        }
-
-        return Inertia::render("lukasmundt/projectci::Person/Edit", [
-            'personId' => $person->id,
-            'person' => $person->load('gruppe'),
-            'personStr' => $person->nameAsString(),
-            'telefonnummernDefault' => $telefonnummern,
-        ]);
+        $this->authorize("show", $person);
+        $person = $person->load(['akquise', 'address']);
+        return $person;
     }
 
-    public function update(UpdatePersonRequest $request, Person $person)
+    public function update(UpdatePersonRequest $request, $domain, Person $person)
     {
-        // Ändern der Informationen der Person
+        $this->authorize("update", $person);
+        // Person updaten
         $person->update($request->validated());
-        // Ändern der Informationen der Gruppe
-        $person->gruppe->update($request->validated());
 
-
-        if ($request->validated('telefonnummern') != null) {
-            // Hinzufügen neuer Telefonnummern
-            foreach ($request->validated('telefonnummern') as $newNumber) {
-                $telefonnummerAdded = false;
-                foreach ($person->telefonnummern as $addedNumber) {
-                    if ($addedNumber['telefonnummer'] == $newNumber['value']) {
-                        $telefonnummerAdded = true;
-                    }
-                }
-                if (!$telefonnummerAdded) {
-                    $person->telefonnummern()->save(Telefonnummer::create(['telefonnummer' => $newNumber['value']]));
-                }
-            }
-
-            // Entfernen alter Telefonnummern
-            foreach ($person->telefonnummern as $telefonnummer) {
-                $detachNumber = true;
-                foreach ($request->validated('telefonnummern') as $newNumber) {
-                    if ($telefonnummer['telefonnummer'] == $newNumber['value']) {
-                        $detachNumber = false;
-                    }
-                }
-                if ($detachNumber) {
-                    Telefonnummer::where('id', $telefonnummer['id'])->first()->delete();
-                }
-            }
+        // Adresse zuordnen
+        if (!empty($request->validated('address'))) {
+            $person->address_id = $request->validated('address');
+            $person->save();
         }
 
-
-        return redirect(route('projectci.person.show', ['person' => $person->id]));
+        // Hinzufügen neuer Telefonnummern
+        foreach (explode(";", $request->validated('telefonnummern')) as $newNumber) {
+            if ($newNumber == "") {
+                continue;
+            }
+            $person->telefonnummern()->save(Telefonnummer::create(['telefonnummer' => trim($newNumber)]));
+        }
+        // $person->fresh()->changeOwnerTo(Team::find(session()->get('team')))->save();
+        return $person->refresh();
     }
 }

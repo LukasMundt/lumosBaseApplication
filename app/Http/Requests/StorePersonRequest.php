@@ -15,9 +15,6 @@ class StorePersonRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // "anrede" => ["string", "max:255", "nullable", Rule::in(['', 'Frau', 'Herr', 'Familie'])],
-
-
             "title" => "nullable|string|max:255",
             "prename" => "nullable|string|max:255",
             "additional_prenames" => "nullable|string|max:255",
@@ -26,12 +23,6 @@ class StorePersonRequest extends FormRequest
             "phone" => ['nullable', 'string', 'regex:/([0-9+; ])*/'],
             "email" => "nullable|string|max:255|email",
             'address' => ["nullable","string",Rule::exists('addresses','id')],
-            // "strasse" => "required_with:hausnummer,plz,stadt|nullable|string|max:255",
-            // "hausnummer" => "required_with:strasse,plz,stadt|nullable|string|max:255",
-            // "plz" => ["required_with:strasse,hausnummer,stadt", "nullable", "string", "max:5"],
-            // nur zahlen hinzufügen
-            // "stadt" => "required_with:strasse,hausnummer,plz|nullable|string|max:255",
-            // "telefonnummern.*.value" => ["sometimes", "string", "max:30"] // nur zahlen, bindestrich, plus und leerzeichen
         ];
     }
 

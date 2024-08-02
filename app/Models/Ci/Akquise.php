@@ -53,27 +53,21 @@ class Akquise extends Model implements Ownable
         'owned_by_type'
     ];
 
-    // public function gruppen(): MorphToMany
-    // {
-    //     return $this->morphToMany(Gruppe::class, 'gruppeverknuepfung', 'projectci_gruppeverknuepfung')->withPivot('typ', 'prioritaet');
-    // }
-
     public function personen(): MorphToMany
     {
-        // return $this->morphedByMany(User::class, 'owner', 'model_has_owner', 'ownable_id')->withPivot('ownable_type');
-        // return $this->morphToMany(User::class, 'owner', 'model_has_owner', 'ownable_id', 'owner_id', "id", "id", "owner")->withPivot('ownable_type');
         return $this->morphToMany(
             Person::class,
-            'contact',
-            'model_has_contacts',
-            'model_id',
-            'contact_id',
-            "id",
-            "id",
-            "contact",
+            'contact', // name
+            'model_has_contacts', // table
+            'model_id', //foreignPivotKey
+            'contact_id', // related pivot key
+            "id", // related
+            "id", // related
+            "contact", // relation
             true
         )->withTimestamps()
-            ->withPivotValue('model_type', $this::class)->withPivot(["priority", "type"]);
+            ->withPivotValue('model_type', $this::class)
+            ->withPivot(["priority", "type"]);
     }
 
     public function notizen(): MorphMany
@@ -95,7 +89,9 @@ class Akquise extends Model implements Ownable
             "id",
             "campaignable",
             false
-        )->withTimestamps()->withPivotValue('campaignable_type', $this::class)->withPivotValue('campaign_type', Campaign::class);
+        )->withTimestamps()
+            ->withPivotValue('campaignable_type', $this::class)
+            ->withPivotValue('campaign_type', Campaign::class);
     }
 
     // public function getRouteKeyName(): string
