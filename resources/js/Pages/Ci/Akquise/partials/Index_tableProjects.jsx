@@ -548,7 +548,7 @@ function Filter_Popup({ column, filters, setFilters, setFilterForColumn }) {
                             const temp = filters;
                             temp[column] = event.target.value;
                             setFilters(temp);
-                            console.log(temp);
+                            // console.log(temp);
                         }}
                         onKeyPress={(e) => {
                             if (e.code === "Enter") {

@@ -10,12 +10,10 @@ import {
     MinusCircleIcon,
 } from "@heroicons/react/24/solid";
 import Show_KartenModal from "./partials/Show_KartenModal";
-import Drawer from "@/Components/Drawer";
-import Form from "../../Notiz/Form";
 import Show_Notizen from "../../Notiz/Show_Notizen";
 import Show_Personen from "./partials/Show_Personen";
 import NotizPopup from "@/Pages/Notiz/NotizPopup";
-import ConnectDialog from "@/Pages/Person/ConnectDialog";
+import ConnectDialog from "@/Pages/Contacts/Person/ConnectDialog";
 import { Button } from "@/Components/ui/button";
 import { Card, CardContent } from "@/Components/ui/card";
 import axios from "axios";

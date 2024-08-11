@@ -84,8 +84,6 @@ function PersonCard({ person, domain, className = "", triggerReload = null}) {
         );
     };
 
-    console.log(person);
-
     return (
         <div className={"flex space-x-3 justify-between " + className}>
             <div>

@@ -2,7 +2,7 @@ import { Card } from "@/Components/ui/card";
 import { MegaphoneIcon } from "@heroicons/react/24/outline";
 
 export default function Show_Campaigns({ campaigns, domain }) {
-    console.log(campaigns);
+    // console.log(campaigns);
     return (
         <section className="mt-12 space-y-4">
             <div className="flex justify-center">

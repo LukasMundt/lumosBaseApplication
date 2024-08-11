@@ -1,14 +1,4 @@
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
-import { ContactTable } from "./tableContacts";
 import { Button } from "@/Components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTrigger,
-} from "@/Components/ui/dialog";
-import { PersonForm } from "./PersonForm";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -50,6 +40,8 @@ export default function Show({ domain, setPersonBreadcrumb = null }) {
                 .catch((error) => {
                     if (error?.response?.status == 403) {
                         toast.error("Die Aktion ist nicht erlaubt.");
+                    } else if (error?.response?.status == 404) {
+                        toast.error("Person nicht gefunden.");
                     } else {
                         toast.error("Etwas ist schiefgelaufen.");
                     }
@@ -57,7 +49,6 @@ export default function Show({ domain, setPersonBreadcrumb = null }) {
         }
     }, [loaded, person]);
 
-    console.log(person);
     return (
         <div className="flex gap-4">
             <div className="">

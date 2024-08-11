@@ -26,10 +26,7 @@ import { ThemeProvider } from "../Components/theme-provider";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { TeamCombobox } from "../Components/TeamCombobox";
 import { Toaster } from "@/Components/ui/sonner";
-import {
-    useLocalStorage,
-    useNetworkState,
-} from "@uidotdev/usehooks";
+import { useLocalStorage, useNetworkState } from "@uidotdev/usehooks";
 
 export default function Authenticated({ user, header, children }) {
     const { nav, teams } = usePage().props;
@@ -43,7 +40,7 @@ export default function Authenticated({ user, header, children }) {
 
     return (
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-            <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+            <div className="grid min-h-screen w-screen grid-cols-1 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                 <div className="hidden border-r bg-muted/40 md:block">
                     <div className="flex h-full max-h-screen flex-col gap-2">
                         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
@@ -183,132 +180,144 @@ export default function Authenticated({ user, header, children }) {
                         </div> */}
                     </div>
                 </div>
-                <div className="flex flex-col w-full h-full">
-                    <header className="flex-none flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    className="shrink-0 md:hidden"
-                                >
-                                    <Menu className="h-5 w-5" />
-                                    <span className="sr-only">
-                                        Toggle navigation menu
-                                    </span>
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent side="left" className="flex flex-col">
-                                <nav className="grid gap-2 text-lg font-medium">
-                                    <Link
-                                        href="#"
-                                        className="flex items-center gap-2 text-lg font-semibold"
+                <div className="h-screen md:col-span-3 lg:col-span-4 xl:col-span-5">
+                    <div className="flex flex-col w-full h-full">
+                        <header className="flex-none flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        className="shrink-0 md:hidden"
                                     >
-                                        <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                                        <Menu className="h-5 w-5" />
+                                        <span className="sr-only">
+                                            Toggle navigation menu
+                                        </span>
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent
+                                    side="left"
+                                    className="flex flex-col"
+                                >
+                                    <nav className="grid gap-2 text-lg font-medium">
+                                        <Link
+                                            href="#"
+                                            className="flex items-center gap-2 text-lg font-semibold"
+                                        >
+                                            <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
 
-                                        <span className="sr-only">Lumos</span>
-                                    </Link>
-                                    <TeamCombobox
-                                        teams={teams}
-                                        currentTeam={domain}
-                                    />
-                                    {nav === null
-                                        ? ""
-                                        : nav.map((navItem) => {
-                                              if (navItem.childs.length === 0) {
-                                                  return (
-                                                      <Link
-                                                          href={route(
-                                                              navItem.route,
-                                                              {
-                                                                  domain: domain,
-                                                              }
-                                                          )}
-                                                          key={navItem.id}
-                                                          className=" flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                                                      >
-                                                          {navItem.label}
-                                                      </Link>
-                                                  );
-                                              } else {
-                                                  return (
-                                                      <Collapsible
-                                                          key={navItem.id}
-                                                          open={
-                                                              opened &&
-                                                              opened[
-                                                                  navItem.id
-                                                              ] &&
-                                                              opened[
-                                                                  navItem.id
-                                                              ] === true
-                                                          }
-                                                          onOpenChange={(
-                                                              value
-                                                          ) => {
-                                                              var current =
+                                            <span className="sr-only">
+                                                Lumos
+                                            </span>
+                                        </Link>
+                                        <TeamCombobox
+                                            teams={teams}
+                                            currentTeam={domain}
+                                        />
+                                        {nav === null
+                                            ? ""
+                                            : nav.map((navItem) => {
+                                                  if (
+                                                      navItem.childs.length ===
+                                                      0
+                                                  ) {
+                                                      return (
+                                                          <Link
+                                                              href={route(
+                                                                  navItem.route,
+                                                                  {
+                                                                      domain: domain,
+                                                                  }
+                                                              )}
+                                                              key={navItem.id}
+                                                              className=" flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                                                          >
+                                                              {navItem.label}
+                                                          </Link>
+                                                      );
+                                                  } else {
+                                                      return (
+                                                          <Collapsible
+                                                              key={navItem.id}
+                                                              open={
                                                                   opened &&
                                                                   opened[
                                                                       navItem.id
                                                                   ] &&
                                                                   opened[
                                                                       navItem.id
-                                                                  ] === true;
-                                                              var newOpened =
-                                                                  Object.assign(
-                                                                      opened,
-                                                                      {
-                                                                          [navItem.id]:
-                                                                              !current,
-                                                                      }
-                                                                  );
-                                                              setOpened(
-                                                                  newOpened
-                                                              );
-                                                          }}
-                                                      >
-                                                          <CollapsibleTrigger className=" flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground justify-between w-full">
-                                                              <div className="flex items-center gap-4">
-                                                                  <Home className="h-5 w-5" />
-                                                                  {
-                                                                      navItem.label
-                                                                  }
-                                                              </div>
-                                                              <ChevronsUpDown className="h-4 w-4" />
-                                                          </CollapsibleTrigger>
-                                                          <CollapsibleContent>
-                                                              {navItem.childs.map(
-                                                                  (
-                                                                      navDropdownItem
-                                                                  ) => {
-                                                                      return (
-                                                                          <Link
-                                                                              key={
-                                                                                  navDropdownItem.id
-                                                                              }
-                                                                              href={route(
-                                                                                  navDropdownItem.route,
-                                                                                  {
-                                                                                      domain: domain,
-                                                                                  }
-                                                                              )}
-                                                                              className="ml-5 flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                                                                          >
-                                                                              <Home className="h-5 w-5" />
-                                                                              {
-                                                                                  navDropdownItem.label
-                                                                              }
-                                                                          </Link>
+                                                                  ] === true
+                                                              }
+                                                              onOpenChange={(
+                                                                  value
+                                                              ) => {
+                                                                  var current =
+                                                                      opened &&
+                                                                      opened[
+                                                                          navItem
+                                                                              .id
+                                                                      ] &&
+                                                                      opened[
+                                                                          navItem
+                                                                              .id
+                                                                      ] ===
+                                                                          true;
+                                                                  var newOpened =
+                                                                      Object.assign(
+                                                                          opened,
+                                                                          {
+                                                                              [navItem.id]:
+                                                                                  !current,
+                                                                          }
                                                                       );
-                                                                  }
-                                                              )}
-                                                          </CollapsibleContent>
-                                                      </Collapsible>
-                                                  );
-                                              }
-                                          })}
+                                                                  setOpened(
+                                                                      newOpened
+                                                                  );
+                                                              }}
+                                                          >
+                                                              <CollapsibleTrigger className=" flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground justify-between w-full">
+                                                                  <div className="flex items-center gap-4">
+                                                                      <Home className="h-5 w-5" />
+                                                                      {
+                                                                          navItem.label
+                                                                      }
+                                                                  </div>
+                                                                  <ChevronsUpDown className="h-4 w-4" />
+                                                              </CollapsibleTrigger>
+                                                              <CollapsibleContent>
+                                                                  {navItem.childs.map(
+                                                                      (
+                                                                          navDropdownItem
+                                                                      ) => {
+                                                                          return (
+                                                                              <Link
+                                                                                  key={
+                                                                                      navDropdownItem.id
+                                                                                  }
+                                                                                  href={route(
+                                                                                      navDropdownItem.route,
+                                                                                      {
+                                                                                          domain: domain,
+                                                                                      }
+                                                                                  )}
+                                                                                  className="ml-5 flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                                                                              >
+                                                                                  <Home className="h-5 w-5" />
+                                                                                  {
+                                                                                      navDropdownItem.label
+                                                                                  }
+                                                                              </Link>
+                                                                          );
+                                                                      }
+                                                                  )}
+                                                              </CollapsibleContent>
+                                                          </Collapsible>
+                                                      );
+                                                  }
+                                              })}
 
-                                    {/* <Link
+                                        {/* <Link
                                         href="#"
                                         className=" flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
                                     >
@@ -318,8 +327,8 @@ export default function Authenticated({ user, header, children }) {
                                             6
                                         </Badge>
                                     </Link> */}
-                                </nav>
-                                {/* <div className="mt-auto">
+                                    </nav>
+                                    {/* <div className="mt-auto">
                                     <Card>
                                         <CardHeader>
                                             <CardTitle>
@@ -341,10 +350,10 @@ export default function Authenticated({ user, header, children }) {
                                         </CardContent>
                                     </Card>
                                 </div> */}
-                            </SheetContent>
-                        </Sheet>
-                        <div className="w-full flex-1">
-                            {/* <form>
+                                </SheetContent>
+                            </Sheet>
+                            <div className="w-full flex-1">
+                                {/* <form>
                                 <div className="relative">
                                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                                     <Input
@@ -354,63 +363,70 @@ export default function Authenticated({ user, header, children }) {
                                     />
                                 </div>
                             </form> */}
-                        </div>
-
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="secondary"
-                                    size="icon"
-                                    className="rounded-full"
-                                >
-                                    <CircleUser className="h-5 w-5" />
-                                    <span className="sr-only">
-                                        Toggle user menu
-                                    </span>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>
-                                    {user.name}
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLinkItem
-                                    href={route("profile.edit")}
-                                >
-                                    Profil
-                                </DropdownMenuLinkItem>
-                                {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLinkItem
-                                    href={route("logout")}
-                                    method="post"
-                                    as="button"
-                                >
-                                    Logout
-                                </DropdownMenuLinkItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </header>
-                    {network.online ? (
-                        <main className="w-full flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 ">
-                            <div className="flex items-center">{header}</div>
-                            {children}
-                        </main>
-                    ) : (
-                        <main className="flex justify-center items-center h-full">
-                            <div className="grid justify-center">
-                                <div className="flex justify-center mb-3">
-                                    <WifiOffIcon className="h-32 w-32" />
-                                </div>
-
-                                <span className="text-center text-2xl">
-                                    You are offline
-                                </span>
                             </div>
-                        </main>
-                    )}
 
-                    <Toaster />
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="secondary"
+                                        size="icon"
+                                        className="rounded-full"
+                                    >
+                                        <CircleUser className="h-5 w-5" />
+                                        <span className="sr-only">
+                                            Toggle user menu
+                                        </span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>
+                                        {user.name}
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLinkItem
+                                        href={route("profile.edit")}
+                                    >
+                                        Profil
+                                    </DropdownMenuLinkItem>
+                                    {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLinkItem
+                                        href={route("logout")}
+                                        method="post"
+                                        as="button"
+                                    >
+                                        Logout
+                                    </DropdownMenuLinkItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </header>
+                        {network.online ? (
+                            <div className="w-full h-full flex-1">
+                                <div className="flex flex-col gap-4 p-4 lg:gap-6 lg:p-6 h-full">
+                                    <div className="flex items-center">
+                                        {header}
+                                    </div>
+                                    <main className="grow w-full h-full">
+                                        {children}
+                                    </main>
+                                </div>
+                            </div>
+                        ) : (
+                            <main className="flex justify-center items-center h-full">
+                                <div className="grid justify-center">
+                                    <div className="flex justify-center mb-3">
+                                        <WifiOffIcon className="h-32 w-32" />
+                                    </div>
+
+                                    <span className="text-center text-2xl">
+                                        You are offline
+                                    </span>
+                                </div>
+                            </main>
+                        )}
+
+                        <Toaster />
+                    </div>
                 </div>
             </div>
         </ThemeProvider>
