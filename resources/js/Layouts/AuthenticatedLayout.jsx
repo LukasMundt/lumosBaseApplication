@@ -70,8 +70,8 @@ export default function Authenticated({ user, header, children }) {
                             <div className="px-4">
                                 <TeamCombobox
                                     teams={teams}
-                                    className=""
                                     currentTeam={domain}
+                                    user={user}
                                 />
                             </div>
                             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -214,6 +214,7 @@ export default function Authenticated({ user, header, children }) {
                                         <TeamCombobox
                                             teams={teams}
                                             currentTeam={domain}
+                                            user={user}
                                         />
                                         {nav === null
                                             ? ""

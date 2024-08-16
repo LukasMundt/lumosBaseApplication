@@ -20,8 +20,15 @@ import {
 import { Link, router } from "@inertiajs/react";
 import { Building2 } from "lucide-react";
 import { useEffect } from "react";
+import { AvatarFallback } from "@radix-ui/react-avatar";
+import { Avatar } from "./ui/avatar";
 
-export function TeamCombobox({ teams = [], className = "", currentTeam }) {
+export function TeamCombobox({
+    teams = [],
+    className = "",
+    currentTeam,
+    user,
+}) {
     const [open, setOpen] = React.useState(false);
     const isDesktop = useMediaQuery("(min-width: 768px)");
     const [selectedStatus, setSelectedStatus] = React.useState(currentTeam);
@@ -42,9 +49,11 @@ export function TeamCombobox({ teams = [], className = "", currentTeam }) {
                     variant="secondary"
                     className={"w-full justify-start " + className}
                 >
-                    <Building2 className="h-5 w-5 mr-3" />
-                    {currentTeam && currentTeamElement ? (
-                        <>Team: {currentTeamElement.name}</>
+                    {/* <Building2 className="h-5 w-5 mr-3" /> */}
+                    {currentTeam && currentTeamElement.id == 0 ? (
+                        <>{user.name}</>
+                    ) : currentTeamElement ? (
+                        <>{currentTeamElement.name}</>
                     ) : (
                         <>Team festlegen</>
                     )}
@@ -55,6 +64,7 @@ export function TeamCombobox({ teams = [], className = "", currentTeam }) {
                     setOpen={setOpen}
                     setSelectedStatus={setSelectedStatus}
                     teams={teams}
+                    user={user}
                 />
             </PopoverContent>
         </Popover>
@@ -89,31 +99,35 @@ export function TeamCombobox({ teams = [], className = "", currentTeam }) {
     );
 }
 
-function TeamList({ setOpen, setSelectedTeam, teams = [] }) {
+function TeamList({ setOpen, setSelectedTeam, teams = [], user }) {
     return (
         <Command>
             <CommandInput placeholder="Filter teams..." />
             <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup>
-                    {teams.map((team) => (
-                        <CommandLinkItem
-                            key={team.id}
-                            value={team.id}
-                            href={route("team.dashboard", {
-                                domain: team.id,
-                            })}
-                            // onSelect={(value) => {
-                            //     // router.get(
-                            //     //     route("team.dashboard", { domain: value })
-                            //     // );
-                            //     setSelectedTeam(value);
-                            //     setOpen(false);
-                            // }}
-                        >
-                            {team.name}
-                        </CommandLinkItem>
-                    ))}
+                <CommandGroup heading="Persönlicher Account">
+                    <CommandLinkItem
+                        value={0}
+                        href={route("team.dashboard", { domain: 0 })}
+                    >
+                        {user.name}
+                    </CommandLinkItem>
+                </CommandGroup>
+                <CommandGroup heading="Teams">
+                    {teams.map(
+                        (team) =>
+                            team.id != 0 && (
+                                <CommandLinkItem
+                                    key={team.id}
+                                    value={team.id}
+                                    href={route("team.dashboard", {
+                                        domain: team.id,
+                                    })}
+                                >
+                                    {team.name}
+                                </CommandLinkItem>
+                            )
+                    )}
                 </CommandGroup>
             </CommandList>
         </Command>
