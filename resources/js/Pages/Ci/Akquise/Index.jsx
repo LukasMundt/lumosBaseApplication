@@ -20,8 +20,6 @@ export default function Index({}) {
         router.reload();
     };
 
-    console.log(projects);
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -34,7 +32,7 @@ export default function Index({}) {
             <Head title="Übersicht" />
             <Tabs
                 defaultValue="table"
-                className="w-[200px]"
+                className="w-[200px] mb-2"
                 onValueChange={(value) => {
                     if (value === "map") {
                         router.visit(

@@ -88,6 +88,14 @@ export default function IndexMap({ domain }) {
                                 : [location.latitude, location.longitude]
                         }
                         markers={markers}
+                        currentLocation={
+                            location.loading || location.error
+                                ? null
+                                : {
+                                      lat: location.latitude,
+                                      lon: location.longitude,
+                                  }
+                        }
                         zoom={18}
                         height={null}
                         getCoordinates={
