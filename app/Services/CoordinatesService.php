@@ -11,7 +11,7 @@ class CoordinatesService
         $results = [];
 
         // hier wird die Anfrage an OSM gestellt
-        $response = Http::get(config("lumos.nominatim.uri").'/search.php', [
+        $response = Http::get(config("lumos.nominatim.uri") . '/search.php', [
             'addressdetails' => '1',
             'street' => $strasseUndNummer,
             'country' => $country,
@@ -32,7 +32,7 @@ class CoordinatesService
             Log::error($response);
             return [];
         }
-        
+
 
         return $results;
     }
@@ -73,7 +73,7 @@ class CoordinatesService
         //     'lon' => 0,
         // ];
 
-        $secondResponse = Http::get(config("lumos.nominatim.uri").'/reverse.php', [
+        $secondResponse = Http::get(config("lumos.nominatim.uri") . '/reverse.php', [
             'addressdetails' => '1',
             // 'osmtype' => $response->json()[0]['osm_type'],
             // 'osmid' => $response->json()[0]['osm_id'],
@@ -99,5 +99,34 @@ class CoordinatesService
         // Log::debug($secondResponse->json());
 
         return self::composeDetails($secondResponse->json());
+    }
+
+    /**
+     * This function calculates the distance between two coordinates in kilometers.
+     * @param float $lat1 Latitude of the first coordinate
+     * @param float $lon1 Longitude of the first coordinate
+     * @param float $lat2 Latitude of the second coordinate
+     * @param float $lon2 Longitude of the second coordinate
+     * @return float distance in kilometers
+     */
+    public static function getDistanceFromCoordinates(float $lat1, float $lon1, float $lat2, float $lon2): float
+    {
+        $R = 6371; // Radius of the earth in km
+        $dLat = self::deg2rad($lat2 - $lat1); // deg2rad below
+        $dLon = self::deg2rad($lon2 - $lon1);
+        $a =
+            sin($dLat / 2) * sin($dLat / 2) +
+            cos(self::deg2rad($lat1)) *
+            cos(self::deg2rad($lat2)) *
+            sin($dLon / 2) *
+            sin($dLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $d = $R * $c; // Distance in km
+        return $d;
+    }
+
+    private static function deg2rad($deg)
+    {
+        return $deg * (pi() / 180);
     }
 }

@@ -6,12 +6,15 @@ namespace App\Providers;
 use App\Contracts\SendList;
 use App\Models\Campaign;
 use App\Models\Ci\Akquise;
+use App\Models\Ci\Recording;
+use App\Models\Person;
 use App\Models\Team;
 use App\Policies\Admin\TeamPolicy;
 use App\Policies\CampaignPolicy;
 use App\Policies\Campaigns\ListPolicy;
 use App\Policies\Ci\AkquisePolicy;
-use App\Policies\ContactPolicy;
+use App\Policies\Ci\RecordingPolicy;
+use App\Policies\Contacts\PersonPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -24,10 +27,10 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Team::class => TeamPolicy::class,
         Akquise::class => AkquisePolicy::class,
+        Recording::class => RecordingPolicy::class,
         Campaign::class => CampaignPolicy::class,
         SendList::class => ListPolicy::class,
-        Contact::class => ContactPolicy::class,
-        Person::class => ContactPolicy::class,
+        Person::class => PersonPolicy::class,
     ];
 
     /**

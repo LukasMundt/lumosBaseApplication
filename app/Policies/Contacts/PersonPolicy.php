@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Contacts;
 
-use App\Contracts\Contact;
+use App\Models\Person;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\DB;
 
-class ContactPolicy
+class PersonPolicy
 {
     public function before(User $user, string $ability): bool|null
     {
@@ -32,6 +33,7 @@ class ContactPolicy
 
         return null;
     }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -42,13 +44,12 @@ class ContactPolicy
         //     "lumos-campaigns-view-own-campaigns",
         //     "lumos-campaigns-view-all-campaigns"
         // ]);
-
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Contact $contact): bool
+    public function view(User $user, Person $person): bool
     {
         return true;
         // if ($user->hasAnyPermission(['lumos-campaigns-view-all-campaigns']) && $campaign->isOwnedBy($this->team)) {
@@ -74,7 +75,7 @@ class ContactPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Contact $contact): bool
+    public function update(User $user, Person $person): bool
     {
         return true;
         // if ($user->hasAnyPermission('lumos-campaigns-edit-all-campaigns') && $campaign->isOwnedBy($this->team)) {
@@ -88,7 +89,7 @@ class ContactPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Contact $contact): bool
+    public function delete(User $user, Person $person): bool
     {
         return true;
         // if ($user->hasAnyPermission('lumos-campaigns-delete-all-campaigns') && $campaign->isOwnedBy($this->team)) {
@@ -102,7 +103,7 @@ class ContactPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Contact $contact): bool
+    public function restore(User $user, Person $person): bool
     {
         return false;
     }
@@ -110,7 +111,7 @@ class ContactPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Contact $contact): bool
+    public function forceDelete(User $user, Person $person): bool
     {
         return false;
     }

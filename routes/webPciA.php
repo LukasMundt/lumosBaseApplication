@@ -3,19 +3,26 @@
 use App\Http\Controllers\Ci\AkquiseController;
 use App\Http\Controllers\ToolController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
+// tools
 Route::middleware(['web', 'auth', 'verified'])->group(function () {
     Route::get('/tools/fixbauantrag2link', [ToolController::class, 'fixBauantrag2LinkView'])->name('tools.fixBauantrag2LinkView');
     Route::post('/tools/fixbauantrag2link', [ToolController::class, 'fixBauantrag2Link'])->name('tools.fixBauantrag2Link');
 });
 
+// TODO: verschieben, auch die methoden sollen in addressController
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/creatables/list', [AkquiseController::class, 'listCreatables'])->name('akquise.akquise.listcreatables');
     Route::get('/creatables/details', [AkquiseController::class, 'detailsByCoordinates'])->name('akquise.akquise.detailsOfCreatable');
 });
 
+// construnction industry
 Route::middleware(['web', 'auth', 'verified'])->prefix("/{domain}/ci")->group(function () {
     // Route::get('', [Controller::class, 'dashboard'])->name('akquise.dashboard');
+    Route::get("/akquise/mobile-recording/{path?}", function(){
+        return Inertia::render("Ci/Akquise/MobileRecording/page");
+    })->where('path', '.*')->name("akquise.mobile-recording");
 
     Route::middleware([])->prefix("/projects")->group(function () {
         // Karte

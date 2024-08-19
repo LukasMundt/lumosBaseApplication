@@ -17,14 +17,14 @@ class PersonController extends Controller
     public function index(Request $request)
     {
         $this->authorize("viewAny", Person::class);
-        $personen = Person::whereOwnedBy(Team::find(session('team')))->paginate();
+        $personen = Person::ownedByTeam(session("team"))->paginate();
         return $personen;
         // return Inertia::render("lukasmundt/projectci::Person/Index", ['personen' => $personen]);
     }
 
     public function store(StorePersonRequest $request)
     {
-        $this->authorize("show", Person::class);
+        $this->authorize("create", Person::class);
         // Person erzeugt
         $person = Person::factory()->create();
         $person->update($request->validated());

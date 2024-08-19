@@ -23,7 +23,7 @@ class ContactController extends Controller
         ];
         return $result;
     }
-    
+
     public function connect(ConnectContactRequest $request)
     {
         // TODO: policy

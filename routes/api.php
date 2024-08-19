@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\Campaigns\CampaignController;
 use App\Http\Controllers\Api\V1\Campaigns\CampaignsController;
 use App\Http\Controllers\Api\V1\Campaigns\ListController;
+use App\Http\Controllers\Api\V1\Ci\RecordingController;
 use App\Http\Controllers\Api\V1\ContactController;
 use App\Http\Controllers\Api\V1\NotizController;
 use App\Http\Controllers\Api\V1\PersonController;
@@ -29,6 +30,14 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/addresses')->name('api.v1.addresses.')->group(function () {
     Route::post('', [AddressController::class, 'findOrCreate'])->name('findOrCreate');
     Route::get("/autocomplete", [AddressController::class, 'autocomplete'])->name('autocomplete');
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->prefix("v1/{domain}/akquise")->name("api.v1.ci.akquise.")->group(function () {
+    Route::get('/mobile-recording', [RecordingController::class, "index"])->name("mobile-recording.index");
+    Route::post('/mobile-recording', [RecordingController::class, "store"])->name("mobile-recording.store");
+    Route::get('/mobile-recording/{recording}/audio.mp3', [RecordingController::class, "getAudio"])->name("mobile-recording.get-audio");
+    Route::get('/mobile-recording/{recording}', [RecordingController::class, "show"])->name("mobile-recording.show");
+    // Route::post("/mobile-recording/{recording}", [RecordingController::class, "update"])->name("mobile-recording.update");
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->prefix('/v1/{domain}/projects')->name('api.v1.projects.')->group(function () {

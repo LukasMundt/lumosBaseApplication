@@ -7,6 +7,7 @@ import {
     WMSTileLayer,
     LayersControl,
     LayerGroup,
+    Polyline,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -16,7 +17,8 @@ import { useState } from "react";
 
 export default function MyMapMulti({
     center,
-    markers = {},
+    markers = [],
+    paths = [],
     zoom = 18,
     height = "450px",
     scrollWheelZoom = true,
@@ -28,6 +30,8 @@ export default function MyMapMulti({
     const [map, setMap] = useState(null);
     const [gotCentered, setGotCentered] = useState(false);
 
+    console.log(paths);
+    
     const svgIcon = L.divIcon({
         html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fill-blue-600 stroke-blue-600 w-8 h-8 "><path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" /></svg>',
         className: "bg-transparent",
@@ -104,10 +108,6 @@ export default function MyMapMulti({
                                 layers: "stadtplan",
                                 SINGLETILE: false,
                             }}
-                            // https://geodienste.hamburg.de/HH_WMS_Cache_Stadtplan?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&CACHEID=9994582&LAYERS=stadtplan&SINGLETILE=false&WIDTH=512&HEIGHT=512&SRS=EPSG%3A25832&STYLES=  &BBOX=563365.2682280885%2C5942570.061205501%2C563500.7348216032%2C5942705.527799016
-                            // https://geodienste.hamburg.de/HH_WMS_Cache_Stadtplan?service=WMS&request=GetMap&layers=stadtplan&styles=&format=image%2Fpng&transparent=true&version=1.1.1&srs=Earth%3A25832&CACHEID=9994582&SINGLETILE=false&width=256&height=256 &bbox=1108489.7841916261,7100235.557410023,1108642.6582481964,7100388.4314665925
-
-                            // url="https://geodienste.hamburg.de/HH_WMS_Cache_Stadtplan?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=true&CACHEID=7441758&LAYERS=stadtplan&SINGLETILE=false&WIDTH=512&HEIGHT=512&SRS=EPSG:25832&STYLES=&BBOX=564719.9341632356,5933629.266033529,567429.2660335298,5936338.5979038235"
                             url="https://geodienste.hamburg.de/HH_WMS_Cache_Stadtplan"
                         />
                     </LayersControl.BaseLayer>
@@ -175,8 +175,7 @@ export default function MyMapMulti({
                         </LayersControl.Overlay>
                     )}
 
-                    {markers.layers.map((layer) => {
-                        // console.log(layer);
+                    {markers?.layers?.map((layer) => {
                         return (
                             <LayersControl.Overlay
                                 checked={
@@ -241,6 +240,15 @@ export default function MyMapMulti({
                                     })}
                                 </LayerGroup>
                             </LayersControl.Overlay>
+                        );
+                    })}
+                    {paths?.map((path, index) => {
+                        return (
+                            <Polyline
+                                pathOptions={{ color: "blue" }}
+                                positions={path.positions}
+                                key={index}
+                            />
                         );
                     })}
                 </LayersControl>

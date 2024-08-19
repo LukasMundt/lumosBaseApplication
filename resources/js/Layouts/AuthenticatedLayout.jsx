@@ -88,8 +88,9 @@ export default function Authenticated({ user, header, children }) {
                                                           }
                                                       )}
                                                       key={navItem.id}
+                                                      className="flex items-center gap-3 rounded-lg mt-2 px-4 py-2 text-muted-foreground transition-all hover:text-primary justify-between w-full"
                                                   >
-                                                      {navItem.label}
+                                                          {navItem.label}
                                                   </Link>
                                               );
                                           } else {
