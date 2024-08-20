@@ -95,7 +95,7 @@ require __DIR__ . '/webPci.php';
 require __DIR__ . '/webPciA.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/{domain}/contacts/persons/{path?}', [PersonController::class, 'index']);
+    Route::get('/{domain}/contacts/persons/{path?}', [PersonController::class, 'index'])->name("contacts");
 });
 
 Route::middleware(['auth', 'verified'])->prefix('/{domain}/campaigns')->name('campaigns.')->group(function () {
