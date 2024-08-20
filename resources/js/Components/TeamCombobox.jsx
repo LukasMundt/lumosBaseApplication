@@ -50,7 +50,7 @@ export function TeamCombobox({
                     className={"w-full justify-start " + className}
                 >
                     {/* <Building2 className="h-5 w-5 mr-3" /> */}
-                    {currentTeam && currentTeamElement.id == 0 ? (
+                    {currentTeam && currentTeam == "0" ? (
                         <>{user.name}</>
                     ) : currentTeamElement ? (
                         <>{currentTeamElement.name}</>
