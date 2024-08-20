@@ -12,10 +12,7 @@ class PersonController extends Controller
 {
     public function index()
     {
-        $this->authorize("viewAny", Contact::class);
-
-        $project = Project::create(['title' => fake()->text(), "description" => fake()->text(), "icon" => "123",]);
-        $project->phases()->saveMany([new Phase(['title' => fake()->text(), "icon" => "123"])]);
+        $this->authorize("viewAny", Person::class);
 
         return Inertia::render('Contacts/Person/Index', [
             'persons' => Person::ownedByTeam(session("team"))
