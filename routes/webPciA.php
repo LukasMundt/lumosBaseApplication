@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Ci\AkquiseController;
+use App\Http\Controllers\Ci\ProjectsController;
 use App\Http\Controllers\ToolController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,19 +25,20 @@ Route::middleware(['web', 'auth', 'verified'])->prefix("/{domain}/ci")->group(fu
         return Inertia::render("Ci/Akquise/MobileRecording/page");
     })->where('path', '.*')->name("akquise.mobile-recording");
 
+    // Projekt
     Route::middleware([])->prefix("/projects")->group(function () {
-        // Karte
-        Route::get('/map', [AkquiseController::class, 'map'])->name('akquise.akquise.map');
-
-        // Route::get('/{projekt}/notiz/{notiz}', [AkquiseController::class, 'show'])->name('akquise.akquise.showMitNotiz');
+        // TODO: Dashboard akquise browserrouter
         Route::get('/{projekt}/akquise', [AkquiseController::class, 'show'])->name('akquise.akquise.show');
         Route::post('/{projekt}/akquise', [AkquiseController::class, 'update'])->name('akquise.akquise.update');
 
+        // Karte
+        Route::get('/map', [AkquiseController::class, 'map'])->name('akquise.akquise.map');
 
         Route::get('', [AkquiseController::class, 'index'])->name('akquise.akquise.index');
         Route::get('/create/1', [AkquiseController::class, 'create'])->name('akquise.akquise.create');
         Route::post('', [AkquiseController::class, 'store'])->name('akquise.akquise.store');
         Route::get('/{projekt}/edit', [AkquiseController::class, 'edit'])->name('akquise.akquise.edit');
+        Route::delete('/{projekt}', [ProjectsController::class, "delete"])->name("projects.project.delete");
 
 
         // Routen fuer Personen

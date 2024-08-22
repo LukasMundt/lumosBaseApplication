@@ -82,30 +82,30 @@ export default function ProjectsTable({
         }
     }, [isSmallDevice]);
 
-    // const duplicateCampaign = (campaignId) => {
-    //     toast.promise(
-    //         axios.post(
-    //             route("api.v1.campaigns.campaigns.replicate", {
-    //                 domain: domain,
-    //                 campaign: campaignId,
-    //             })
-    //         ),
-    //         {
-    //             loading: "Wird dupliziert...",
-    //             success: () => {
-    //                 triggerReload();
-    //                 return "Duplikat erstellt.";
-    //             },
-    //             error: (error) => {
-    //                 console.log(error);
-    //                 if (error.response.status === 500) {
-    //                     return "Interner Serverfehler";
-    //                 }
-    //                 return "Fehler";
-    //             },
-    //         }
-    //     );
-    // };
+    const deleteProject = (projectId) => {
+        toast.promise(
+            axios.delete(
+                route("projects.project.delete", {
+                    domain: domain,
+                    projekt: projectId,
+                })
+            ),
+            {
+                loading: "Wird gelöscht...",
+                success: () => {
+                    triggerReload();
+                    return "Erfolgreich gelöscht.";
+                },
+                error: (error) => {
+                    console.log(error);
+                    if (error.response.status === 500) {
+                        return "Interner Serverfehler";
+                    }
+                    return "Fehler";
+                },
+            }
+        );
+    };
 
     const columns = [
         {
@@ -158,24 +158,12 @@ export default function ProjectsTable({
                                     Ansehen
                                 </DropdownMenuItem>
                             </a>
-                            {/* <DropdownMenuItem
-                                className="cursor-pointer"
-                                type="button"
-                                onClick={() =>
-                                    duplicateCampaign(row.original.id)
-                                }
-                                disabled
-                            >
-                                Duplizieren
-                            </DropdownMenuItem> */}
                             <DropdownMenuItem
                                 className="cursor-pointer"
                                 // type="button"
-                                // onClick={() =>
-                                //     duplicateCampaign(row.original.id)
-                                // }
-                                // TODO: Projekt löschen können
-                                disabled
+                                onClick={() =>
+                                    deleteProject(row.original.id)
+                                }
                             >
                                 Löschen
                             </DropdownMenuItem>
